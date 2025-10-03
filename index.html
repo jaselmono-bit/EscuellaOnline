@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <base target="_top">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Learning Path - Dashboard</title>
@@ -100,6 +99,28 @@
             border-radius: 15px;
             font-size: 11px;
             font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        /* BOTÓN LOGOUT EN CABECERA */
+        .logout-btn-header {
+            background: var(--error) !important;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .logout-btn-header:hover {
+            background: #c0392b !important;
+            transform: translateY(-2px);
         }
 
         /* === CABECERA DE CURSO === */
@@ -153,7 +174,7 @@
             margin-bottom: 15px;
         }
 
-        .course-manual-btn {
+        .course-manual-btn, .course-whatsapp-btn, .course-calendar-btn, .course-message-btn {
             background: linear-gradient(to right, var(--naranja), var(--azul-claro));
             color: white;
             border: none;
@@ -166,9 +187,23 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            margin-right: 10px;
+            margin-bottom: 10px;
         }
 
-        .course-manual-btn:hover {
+        .course-whatsapp-btn {
+            background: linear-gradient(to right, #25D366, #128C7E);
+        }
+
+        .course-calendar-btn {
+            background: linear-gradient(to right, var(--azul), var(--azul-claro));
+        }
+
+        .course-message-btn {
+            background: linear-gradient(to right, var(--naranja-claro), var(--naranja));
+        }
+
+        .course-manual-btn:hover, .course-whatsapp-btn:hover, .course-calendar-btn:hover, .course-message-btn:hover {
             transform: scale(1.05);
         }
 
@@ -239,15 +274,6 @@
 
         .module-manual-btn:hover {
             transform: scale(1.05);
-        }
-
-        /* === ESTILOS DE PÁGINAS === */
-        .page1_class1-off, .page2_id1-off, .page3_id1-off, .page4_id1-off {
-            display: none;
-        }
-
-        .page2_class1, .page3_class1, .page4_class1 {
-            display: none;
         }
 
         /* === LOGIN === */
@@ -804,23 +830,40 @@
             cursor: pointer;
         }
 
+        /* === CORNER BOX MEJORADO - POSICIÓN CORREGIDA === */
         .corner-box {
             position: absolute;
-            bottom: 60px;
-            right: 10px;
-            width: 120px;
-            height: 50px;
+            bottom: 70px; /* Ajustado para que no quede en mitad de pantalla */
+            right: 15px;
+            width: 80px;
+            height: 35px;
             background: rgba(0,0,0,0.8);
             border-radius: 8px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 28px;
+            font-size: 18px;
             z-index: 20;
             pointer-events: auto;
             cursor: default;
             color: #fff;
             backdrop-filter: blur(5px);
+        }
+
+        .corner-box.has-logo .school-logo-mini {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+        
+        .corner-box.has-logo::after {
+            display: none;
+        }
+
+        .corner-box::after {
+            content: "🎓";
         }
 
         .exit-fullscreen {
@@ -916,167 +959,56 @@
             background: var(--azul-oscuro);
         }
 
-        /* === VISOR DE PDF === */
-        .manual-container {
-            background: var(--neutro);
-            border-radius: 10px;
-            padding: 15px;
-            margin: 15px 0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border-left: 4px solid var(--azul);
+        /* === MODAL UNIFICADO PARA MANUALES === */
+        #universalManualModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 10000;
             display: none;
+            justify-content: center;
+            align-items: center;
         }
 
-        .manual-header {
-            background-color: var(--azul-profundo);
-            color: white;
+        #universalManualModal .modal-content {
+            position: relative;
+            width: 90%;
+            height: 90%;
+            max-width: 1000px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        #universalManualModal .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             padding: 15px;
-            text-align: center;
-            border-radius: 8px;
-            margin-bottom: 15px;
+            background: var(--azul-oscuro);
+            color: white;
         }
 
-        .manual-header h4 {
-            margin: 0 0 5px 0;
+        #universalManualModal .modal-header h3 {
+            margin: 0;
             font-size: 18px;
         }
 
-        .manual-header p {
-            margin: 0;
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
-        .manual-controls {
-            background-color: var(--azul-oscuro);
-            padding: 15px;
-            text-align: center;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-
-        .btn-manual {
-            padding: 10px 20px;
+        #universalManualModal .close-modal {
+            background: none;
             border: none;
-            border-radius: 25px;
+            color: white;
+            font-size: 24px;
             cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            color: white;
         }
 
-        .btn-download {
-            background-color: var(--success);
-        }
-
-        .btn-download:hover {
-            background-color: #229954;
-            transform: translateY(-2px);
-        }
-
-        .btn-print {
-            background-color: var(--naranja);
-        }
-
-        .btn-print:hover {
-            background-color: #e67e22;
-            transform: translateY(-2px);
-        }
-
-        .welcome-message {
-            padding: 20px;
-            text-align: center;
-            color: var(--gray);
-            background: white;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-
-        .welcome-message h5 {
-            margin-bottom: 10px;
-            color: var(--azul-profundo);
-            font-size: 16px;
-        }
-
-        .welcome-message p {
-            margin: 5px 0;
-            font-size: 14px;
-        }
-
-        .pdf-frame {
+        #universalManualModal iframe {
             width: 100%;
-            height: 70vh;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background: white;
-            display: none;
-        }
-
-        .icon {
-            width: 18px;
-            height: 18px;
-            fill: currentColor;
-        }
-
-        /* === SISTEMA DE NOTAS === */
-        .notes-area {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 10px;
-            padding: 15px;
-            margin-top: 10px;
-            border-left: 4px solid var(--naranja);
-            display: none;
-        }
-
-        .notes-area h4 {
-            margin: 0 0 10px 0;
-            color: var(--azul-profundo);
-            font-size: 14px;
-        }
-
-        .notes-textarea {
-            width: 100%;
-            min-height: 100px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            resize: vertical;
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-            margin-bottom: 10px;
-            box-sizing: border-box;
-        }
-
-        .save-notes-btn {
-            background: var(--success);
-            color: white;
+            height: calc(100% - 60px);
             border: none;
-            padding: 8px 15px;
-            border-radius: 25px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-
-        .save-notes-btn:hover {
-            background: #219653;
-            transform: translateY(-2px);
-        }
-
-        .save-notes-btn:disabled {
-            background: #95a5a6;
-            cursor: not-allowed;
-            transform: none;
         }
 
         /* === SISTEMA DE NOTIFICACIONES === */
@@ -1106,41 +1038,8 @@
             background: var(--error);
         }
 
-        /* === BOTÓN LOGOUT === */
-        .logout-btn {
-            background: var(--error) !important;
-            float: right;
-            margin-top: 20px;
-        }
-
-        .logout-btn:hover {
-            background: #c0392b !important;
-            transform: translateY(-2px);
-        }
-
-        .no-content {
-            text-align: center;
-            color: var(--gray);
-            font-style: italic;
-            margin: 20px 0;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: var(--gray);
-        }
-
-        .error {
-            background: #FEE2E2;
-            color: #DC2626;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 16px;
-        }
-
         /* === RESPONSIVE === */
-        @media (max-width: 900px) {
+        @media (max-width: 768px) {
             .header-container {
                 flex-direction: column;
                 text-align: center;
@@ -1151,106 +1050,18 @@
                 text-align: center;
             }
 
-            .course-content, .module-content {
-                flex-direction: column;
-            }
-
-            .course-image-container, .module-image-container {
-                align-self: center;
-            }
-
-            .manual-controls {
+            .user-welcome {
+                display: flex;
                 flex-direction: column;
                 align-items: center;
             }
-            
-            .btn-manual {
-                width: 200px;
-                justify-content: center;
-            }
-        }
 
-        @media (max-width: 768px) {
-            .lesson-preview {
-                flex-direction: column;
-            }
-            
-            .lesson-thumbnail {
-                width: 100%;
-                height: 180px;
-            }
-            
-            .video-container {
-                aspect-ratio: 16/9;
-            }
-            
-            .video-container div[id^="player-"] {
-                width: 100% !important;
-                height: 100% !important;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .form-container, .dashboard {
-                width: 90%;
-                min-width: unset;
-                padding: 20px;
-            }
-            
-            .modules-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .content-links {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .video-link, .manual-link, .notes-link, .next-class-link {
-                width: 100%;
-                text-align: center;
-                margin-bottom: 8px;
-            }
-
-            .notification {
-                right: 10px;
-                left: 10px;
-                width: auto;
-            }
-            
-            .course-image {
-                max-height: 120px;
-            }
-
-            .module-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .back-button {
-                margin-bottom: 10px;
-                width: 100%;
-                text-align: center;
-            }
-            
-            .lesson-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .lesson-checkbox {
-                margin-bottom: 8px;
-            }
-            
-            .pdf-frame {
-                height: 50vh;
-            }
-        }
-
-        @media (orientation: landscape) and (max-width: 900px) {
-            .video-container.fullscreen-mode div[id^="player-"] {
-                width: 100% !important;
-                height: 100% !important;
+            .corner-box {
+                bottom: 60px !important;
+                right: 10px !important;
+                width: 70px !important;
+                height: 30px !important;
+                font-size: 16px !important;
             }
         }
     </style>
@@ -1272,7 +1083,7 @@
         </div>
 
         <!-- Página 4: Dashboard del usuario -->
-        <div class="dashboard page4_class1" id="page4_id1">
+        <div class="dashboard page4_class1-off" id="page4_id1">
             <!-- Cabecera Superior -->
             <div class="header-container">
                 <div class="school-brand">
@@ -1282,6 +1093,7 @@
                 <div class="user-welcome">
                     <h2>¡Hola <span id="displayusername" style="color:var(--azul);"></span>!</h2>
                     <div class="status-badge">Estado: <span id="userStatus">Activo</span></div>
+                    <button class="logout-btn-header" onclick="logout()">🚪 Cerrar Sesión</button>
                 </div>
             </div>
 
@@ -1296,9 +1108,9 @@
                     </div>
                     <div class="course-info">
                         <p id="courseDescription" class="course-description">Descripción del curso...</p>
-                        <button id="courseManualBtn" class="course-manual-btn" style="display: none;">
-                            📘 Manual del Curso
-                        </button>
+                        <div id="courseButtons">
+                            <!-- Los botones se agregarán dinámicamente -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1312,12 +1124,28 @@
             <div id="modulesContainer">
                 <!-- Los módulos se cargarán aquí dinámicamente -->
             </div>
-            
-            <input type="button" class="logout-btn" value="🚪 Cerrar Sesión" onclick="logout()" />
+        </div>
+    </div>
+
+    <!-- Modal Unificado para Manuales -->
+    <div id="universalManualModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="manualModalTitle">Manual</h3>
+                <button class="close-modal" onclick="closeManualViewer()">✕</button>
+            </div>
+            <iframe id="manualModalFrame"></iframe>
         </div>
     </div>
 
     <script>
+        // === CONFIGURACIÓN GITHUB ===
+        const CONFIG = {
+            // ⚠️ REEMPLAZA ESTA URL CON LA DE TU APPS SCRIPT
+            API_BASE_URL: 'https://script.google.com/macros/s/AKfycbywTu6MLd7mU1mYx0pVv3QeYQ7Y9XbZq8k6QhLJ9w/exec',
+            SESSION_TIMEOUT: 30 * 60 * 1000, // 30 minutos
+        };
+
         // === VARIABLES GLOBALES ===
         let currentUser = null;
         let userProgress = {};
@@ -1329,17 +1157,83 @@
         let currentGrupoId = null;
         let escuelaData = null;
         let currentCourseData = null;
+        let sessionToken = null;
+        let lastActivity = Date.now();
+
+        // === SISTEMA DE SEGURIDAD ===
+        function validateSession() {
+            const now = Date.now();
+            const timeSinceLastActivity = now - lastActivity;
+            
+            if (timeSinceLastActivity > CONFIG.SESSION_TIMEOUT) {
+                logout();
+                return false;
+            }
+            
+            lastActivity = now;
+            return true;
+        }
+
+        function updateActivity() {
+            lastActivity = Date.now();
+        }
+
+        // === LLAMADAS API SEGURAS ===
+        async function callSecureAPI(action, data = {}) {
+            if (!validateSession()) {
+                throw new Error('Sesión expirada');
+            }
+
+            const payload = {
+                action: action,
+                token: sessionToken,
+                timestamp: Date.now(),
+                data: data
+            };
+
+            try {
+                const response = await fetch(CONFIG.API_BASE_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error en la respuesta del servidor');
+                }
+
+                const result = await response.json();
+                
+                if (result.success === false) {
+                    throw new Error(result.error || 'Error en la API');
+                }
+
+                return result;
+            } catch (error) {
+                console.error('Error en callSecureAPI:', error);
+                showNotification('Error de conexión: ' + error.message, 'error');
+                throw error;
+            }
+        }
 
         // === INICIALIZACIÓN ===
         document.addEventListener('DOMContentLoaded', function() {
             loadSchoolData();
+            
+            // Event listeners para detectar actividad
+            document.addEventListener('click', updateActivity);
+            document.addEventListener('keypress', updateActivity);
+            document.addEventListener('mousemove', updateActivity);
+            
+            // Verificar sesión cada minuto
+            setInterval(validateSession, 60000);
         });
 
         // === FUNCIONES PARA DATOS DE LA ESCUELA ===
         function loadSchoolData() {
-            const apiUrl = 'https://script.google.com/macros/s/AKfycbwXraaEyvKUe7GW3yBn2T1mwa1L8C43wnGajTCKYWFGol_ATkiKvTBbxAgjZ4-lPVT1yQ/exec?action=escuela';
-            
-            fetch(apiUrl)
+            fetch(CONFIG.API_BASE_URL + '?action=escuela')
                 .then(response => response.json())
                 .then(data => {
                     if (data && data.length > 0) {
@@ -1411,30 +1305,30 @@
             }
         }
 
-        // === FUNCIONES DE LOGIN Y NAVEGACIÓN ===
-        function LoginUser() {
-            var username = document.getElementById("username").value.trim();
-            var password = document.getElementById("password").value.trim();
+        // === FUNCIONES DE LOGIN SEGURAS ===
+        async function LoginUser() {
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value.trim();
             
-            if (username == "" || password == "") {
+            if (!username || !password) {
                 document.getElementById("errorMessage").innerHTML = "Complete todos los campos";
                 return;
             }
             
             document.getElementById("errorMessage").innerHTML = "🔐 Verificando credenciales...";
             
-            google.script.run
-                .withSuccessHandler(function(response) {
-                    if(response.success) {
-                        handleSuccessfulLogin(response);
-                    } else {
-                        document.getElementById("errorMessage").innerHTML = "❌ " + response.error;
-                    }
-                })
-                .withFailureHandler(function(error) {
-                    document.getElementById("errorMessage").innerHTML = "🔒 Error de conexión segura";
-                })
-                .login(username, password);
+            try {
+                const response = await callSecureAPI('login', { username, password });
+                
+                if(response.success) {
+                    sessionToken = response.token;
+                    handleSuccessfulLogin(response);
+                } else {
+                    document.getElementById("errorMessage").innerHTML = "❌ " + response.error;
+                }
+            } catch (error) {
+                document.getElementById("errorMessage").innerHTML = "🔒 Error de conexión segura";
+            }
         }
 
         function handleSuccessfulLogin(response) {
@@ -1443,8 +1337,8 @@
             document.getElementById("displayusername").innerHTML = currentUser.Nombre + " " + currentUser.Apellido;
             
             // Mostrar dashboard
-            document.getElementById("page1_id1").className = "page1_class1-off";
-            document.getElementById("page4_id1").className = "page4_id1";
+            document.getElementById("page1_id1").style.display = "none";
+            document.getElementById("page4_id1").style.display = "block";
             document.getElementById("errorMessage").innerHTML = "";
             
             // Cargar progreso del usuario
@@ -1453,59 +1347,28 @@
         }
 
         // === FUNCIÓN PARA CARGAR PROGRESO ===
-        function loadUserProgress(alumnoId) {
-            google.script.run
-                .withSuccessHandler(function(progresoData) {
-                    userProgress = {};
-                    if (progresoData && progresoData.length > 0) {
-                        progresoData.forEach(function(item) {
-                            userProgress[item.ID_Clase] = {
-                                completed: item.Completada === "Sí",
-                                notes: item.Notas_Alumno || '',
-                                lastUpdate: item.Fecha_Guardado || new Date()
-                            };
-                        });
-                    }
-                    console.log("Progreso cargado:", userProgress);
-                })
-                .withFailureHandler(function(error) {
-                    console.error("Error cargando progreso:", error);
-                    userProgress = {};
-                })
-                .getUserProgress(alumnoId);
-        }
-
-        function logout() {
-            // Limpiar reproductores
-            for (var lessonId in currentPlayers) {
-                if (currentPlayers[lessonId]) {
-                    currentPlayers[lessonId].pauseVideo();
+        async function loadUserProgress(alumnoId) {
+            try {
+                const result = await callSecureAPI('getUserProgress', { alumnoId });
+                userProgress = {};
+                if (result.data && result.data.length > 0) {
+                    result.data.forEach(function(item) {
+                        userProgress[item.ID_Clase] = {
+                            completed: item.Completada === "Sí",
+                            notes: item.Notas_Alumno || '',
+                            lastUpdate: item.Fecha_Guardado || new Date()
+                        };
+                    });
                 }
+                console.log("Progreso cargado:", userProgress);
+            } catch (error) {
+                console.error("Error cargando progreso:", error);
+                userProgress = {};
             }
-            currentPlayers = {};
-            
-            // Limpiar datos
-            currentUser = null;
-            userProgress = {};
-            userModules = [];
-            alumnoActual = null;
-            currentCourseData = null;
-            
-            // Limpiar cache local
-            sessionStorage.clear();
-            
-            // Ocultar cabecera del curso
-            document.getElementById('courseHeader').style.display = 'none';
-            
-            // Volver a login
-            document.getElementById("page4_id1").className = "page4_id1-off";
-            document.getElementById("page1_id1").className = "page1_id1";
-            clearErrors();
-            clearForms();
         }
 
         // === FUNCIONES DE CURSOS CON CACHE FRONTEND ===
-        function loadCursos() {
+        async function loadCursos() {
             const container = document.getElementById('cursosContainer');
             const cacheKey = `cursos_${alumnoActual.ID_Alumno}`;
             
@@ -1519,14 +1382,14 @@
             
             container.innerHTML = '<div class="loading">Cargando cursos...</div>';
             
-            google.script.run
-                .withSuccessHandler(function(cursos) {
-                    // Guardar en cache local
-                    sessionStorage.setItem(cacheKey, JSON.stringify(cursos));
-                    displayCursos(cursos);
-                })
-                .withFailureHandler(showCursosError)
-                .getCursosAlumno(alumnoActual.ID_Alumno);
+            try {
+                const result = await callSecureAPI('getCursosAlumno', { alumnoId: alumnoActual.ID_Alumno });
+                // Guardar en cache local
+                sessionStorage.setItem(cacheKey, JSON.stringify(result.data));
+                displayCursos(result.data);
+            } catch (error) {
+                showCursosError(error);
+            }
         }
 
         function displayCursos(cursos) {
@@ -1576,7 +1439,7 @@
             container.innerHTML = '<div class="error">Error al cargar los cursos: ' + error + '</div>';
         }
 
-        function accederAlCurso(cursoId, grupoId) {
+        async function accederAlCurso(cursoId, grupoId) {
             currentCourseId = cursoId;
             currentGrupoId = grupoId;
             
@@ -1598,15 +1461,8 @@
                     document.getElementById('courseHeaderImage').style.display = 'none';
                 }
                 
-                // Botón manual del curso
-                if (currentCourseData.Manual_c) {
-                    document.getElementById('courseManualBtn').style.display = 'inline-block';
-                    document.getElementById('courseManualBtn').onclick = function() {
-                        showCourseManual(currentCourseData.Manual_c);
-                    };
-                } else {
-                    document.getElementById('courseManualBtn').style.display = 'none';
-                }
+                // Actualizar botones del curso
+                updateCourseButtons();
                 
                 document.getElementById('courseHeader').style.display = 'block';
             }
@@ -1625,15 +1481,66 @@
                 console.log('Cargando módulos desde cache frontend');
                 displayModulos(JSON.parse(cached), cursoId, grupoId);
             } else {
-                google.script.run
-                    .withSuccessHandler((modulos) => {
-                        sessionStorage.setItem(cacheKey, JSON.stringify(modulos));
-                        displayModulos(modulos, cursoId, grupoId);
-                    })
-                    .withFailureHandler((error) => {
-                        container.innerHTML = '<button class="back-to-courses-btn" onclick="volverACursos()">← Volver a Mis Cursos</button><div class="error">Error al cargar módulos: ' + error + '</div>';
-                    })
-                    .getModulosCurso(alumnoActual.ID_Alumno, cursoId, grupoId);
+                try {
+                    const result = await callSecureAPI('getModulosCurso', {
+                        alumnoId: alumnoActual.ID_Alumno,
+                        cursoId: cursoId,
+                        grupoId: grupoId
+                    });
+                    sessionStorage.setItem(cacheKey, JSON.stringify(result.data));
+                    displayModulos(result.data, cursoId, grupoId);
+                } catch (error) {
+                    container.innerHTML = '<button class="back-to-courses-btn" onclick="volverACursos()">← Volver a Mis Cursos</button><div class="error">Error al cargar módulos: ' + error + '</div>';
+                }
+            }
+        }
+
+        function updateCourseButtons() {
+            const buttonsContainer = document.getElementById('courseButtons');
+            buttonsContainer.innerHTML = '';
+            
+            // Botón manual del curso
+            if (currentCourseData.Manual_c) {
+                const manualBtn = document.createElement('button');
+                manualBtn.className = 'course-manual-btn';
+                manualBtn.innerHTML = '📘 Manual del Curso';
+                manualBtn.onclick = function() {
+                    showCourseManual(currentCourseData.Manual_c);
+                };
+                buttonsContainer.appendChild(manualBtn);
+            }
+            
+            // Botón WhatsApp
+            if (currentCourseData.Whatsapp) {
+                const whatsappBtn = document.createElement('button');
+                whatsappBtn.className = 'course-whatsapp-btn';
+                whatsappBtn.innerHTML = '📱 WhatsApp del Grupo';
+                whatsappBtn.onclick = function() {
+                    window.open(currentCourseData.Whatsapp, '_blank');
+                };
+                buttonsContainer.appendChild(whatsappBtn);
+            }
+            
+            // Botón Calendario
+            if (currentCourseData.Calendario) {
+                const calendarBtn = document.createElement('button');
+                calendarBtn.className = 'course-calendar-btn';
+                calendarBtn.innerHTML = '📅 Calendario';
+                calendarBtn.onclick = function() {
+                    window.open(currentCourseData.Calendario, '_blank');
+                };
+                buttonsContainer.appendChild(calendarBtn);
+            }
+            
+            // Botón Mensaje
+            if (currentCourseData.Mensaje) {
+                const messageBtn = document.createElement('button');
+                messageBtn.className = 'course-message-btn';
+                messageBtn.innerHTML = '📢 Mensaje Importante';
+                messageBtn.onclick = function() {
+                    alert(currentCourseData.Mensaje);
+                };
+                buttonsContainer.appendChild(messageBtn);
             }
         }
 
@@ -1654,13 +1561,6 @@
             container.innerHTML = '';
             document.getElementById('cursosContainer').style.display = 'grid';
             document.getElementById('mainTitle').textContent = 'Mis Cursos';
-        }
-
-        // === MANUAL DEL CURSO ===
-        function showCourseManual(manualUrl) {
-            if (manualUrl) {
-                window.open(manualUrl, '_blank');
-            }
         }
 
         // === SISTEMA DE MÓDULOS Y CLASES ===
@@ -1725,15 +1625,16 @@
                 </div>
                 <div class='module-content'>
                     <div class='module-image-container'>
-                        ${selectedModule['imagen_m'] ? 
-                            `<img src="${selectedModule['imagen_m']}" class='module-header-image' alt='Imagen del módulo' onerror='this.style.display=\"none\"'>` : 
-                            '<div style="width: 180px; height: 120px; background: linear-gradient(135deg, var(--azul), var(--naranja)); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;">📚</div>'
+                        ${selectedModule['imagen_m'] && selectedModule['imagen_m'].trim() !== '' ? 
+                            `<img src="${selectedModule['imagen_m']}" class='module-header-image' alt='Imagen del módulo' onerror='this.style.display=\"none\"; this.nextElementSibling.style.display=\"flex\";' onload='this.style.display=\"block\"; this.nextElementSibling.style.display=\"none\";'>` : 
+                            ''
                         }
+                        <div style="width: 180px; height: 120px; background: linear-gradient(135deg, var(--azul), var(--naranja)); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; ${selectedModule['imagen_m'] && selectedModule['imagen_m'].trim() !== '' ? 'display: none;' : ''}">📚</div>
                     </div>
                     <div class='module-info'>
                         <p class='module-description'>${selectedModule['Descripción del Módulo'] || 'No hay descripción disponible para este módulo.'}</p>
-                        ${selectedModule['Manual_m'] ? 
-                            `<button class='module-manual-btn' onclick='showModuleManual(\"${selectedModule['Manual_m']}\")'>📘 Manual del Módulo</button>` : 
+                        ${selectedModule['Manual_m'] && selectedModule['Manual_m'].trim() !== '' ? 
+                            `<button class='module-manual-btn' onclick='showModuleManual("${selectedModule['Manual_m']}")'>📘 Manual del Módulo</button>` : 
                             ''
                         }
                     </div>
@@ -1905,13 +1806,9 @@
             expandedContainer.innerHTML = expandedContent;
             
             document.getElementById('modulesContainer').appendChild(expandedContainer);
-        }
-
-        // === MANUAL DEL MÓDULO ===
-        function showModuleManual(manualUrl) {
-            if (manualUrl) {
-                window.open(manualUrl, '_blank');
-            }
+            
+            // Actualizar logos en los reproductores después de expandir el módulo
+            setTimeout(updateVideoPlayersLogo, 100);
         }
 
         function collapseModule() {
@@ -1928,7 +1825,7 @@
         }
 
         // === SISTEMA DE PROGRESO MEJORADO ===
-        function markAsViewed(lessonId, moduleId, moduleName, lessonName, checkbox) {
+        async function markAsViewed(lessonId, moduleId, moduleName, lessonName, checkbox) {
             const completed = checkbox.checked;
             const notes = userProgress[lessonId] ? userProgress[lessonId].notes : '';
             
@@ -1939,70 +1836,79 @@
                 contentItem.classList.remove('completed');
             }
             
-            google.script.run
-                .withSuccessHandler(function(response) {
-                    if (response.success) {
-                        userProgress[lessonId] = {
-                            completed: completed,
-                            notes: notes,
-                            lastUpdate: new Date()
-                        };
-                        
-                        // Actualizar cache local
-                        updateLocalCache();
-                        showNotification(completed ? '✅ Lección completada' : '📝 Progreso actualizado');
-                    } else {
-                        showNotification('❌ Error: ' + response.message, 'error');
-                        checkbox.checked = !completed;
-                    }
-                })
-                .withFailureHandler(function(error) {
-                    showNotification('❌ Error de conexión', 'error');
+            try {
+                const response = await callSecureAPI('updateLessonProgress', {
+                    alumnoId: currentUser.ID_Alumno,
+                    lessonId: lessonId,
+                    moduloNombre: moduleName,
+                    claseNombre: lessonName,
+                    completada: completed,
+                    notes: notes
+                });
+                
+                if (response.success) {
+                    userProgress[lessonId] = {
+                        completed: completed,
+                        notes: notes,
+                        lastUpdate: new Date()
+                    };
+                    
+                    // Actualizar cache local
+                    updateLocalCache();
+                    showNotification(completed ? '✅ Lección completada' : '📝 Progreso actualizado');
+                } else {
+                    showNotification('❌ Error: ' + response.message, 'error');
                     checkbox.checked = !completed;
-                })
-                .updateLessonProgress(currentUser.ID_Alumno, lessonId, moduleName, lessonName, completed, notes);
+                }
+            } catch (error) {
+                showNotification('❌ Error de conexión', 'error');
+                checkbox.checked = !completed;
+            }
         }
 
-        function saveNotes(lessonId, moduleName, lessonName) {
+        async function saveNotes(lessonId, moduleName, lessonName) {
             const notesText = document.getElementById('notes-text-' + lessonId).value;
             const saveButton = document.getElementById('save-notes-btn-' + lessonId);
             
             saveButton.textContent = 'Guardando...';
             saveButton.disabled = true;
             
-            google.script.run
-                .withSuccessHandler(function(response) {
-                    if (response.success) {
-                        if (!userProgress[lessonId]) {
-                            userProgress[lessonId] = {};
-                        }
-                        userProgress[lessonId].notes = notesText;
-                        
-                        // Actualizar cache local
-                        updateLocalCache();
-                        
-                        showNotification('✅ Notas guardadas correctamente');
-                        saveButton.textContent = 'Guardado ✓';
-                        
-                        const notesButton = document.getElementById('notes-btn-' + lessonId);
-                        notesButton.textContent = '📝 Ver notas (' + (notesText.length > 0 ? "1" : "0") + ')';
-                        
-                        setTimeout(() => {
-                            saveButton.textContent = 'Guardar notas';
-                            saveButton.disabled = false;
-                        }, 2000);
-                    } else {
-                        showNotification('❌ Error: ' + response.message, 'error');
+            try {
+                const response = await callSecureAPI('saveLessonNotes', {
+                    alumnoId: currentUser.ID_Alumno,
+                    lessonId: lessonId,
+                    notes: notesText
+                });
+                
+                if (response.success) {
+                    if (!userProgress[lessonId]) {
+                        userProgress[lessonId] = {};
+                    }
+                    userProgress[lessonId].notes = notesText;
+                    
+                    // Actualizar cache local
+                    updateLocalCache();
+                    
+                    showNotification('✅ Notas guardadas correctamente');
+                    saveButton.textContent = 'Guardado ✓';
+                    
+                    const notesButton = document.getElementById('notes-btn-' + lessonId);
+                    notesButton.textContent = '📝 Ver notas (' + (notesText.length > 0 ? "1" : "0") + ')';
+                    
+                    setTimeout(() => {
                         saveButton.textContent = 'Guardar notas';
                         saveButton.disabled = false;
-                    }
-                })
-                .withFailureHandler(function(error) {
-                    showNotification('❌ Error: ' + error.message, 'error');
+                    }, 2000);
+                } else {
+                    showNotification('❌ Error: ' + response.message, 'error');
                     saveButton.textContent = 'Guardar notas';
                     saveButton.disabled = false;
-                })
-                .saveLessonNotes(currentUser.ID_Alumno, lessonId, notesText);
+                }
+            } catch (error) {
+                showNotification('❌ Error: ' + error.message, 'error');
+                saveButton.textContent = 'Guardar notas';
+                saveButton.disabled = false;
+            }
         }
 
         // === SISTEMA DE VIDEO MEJORADO ===
@@ -2117,6 +2023,7 @@
             adjustPlayerSize(lessonId);
             
             setupCustomControls(lessonId);
+            updateVideoPlayersLogo();
             
             setInterval(function() {
                 updateProgress(lessonId);
@@ -2368,53 +2275,72 @@
             }
         }
 
-        // === SISTEMA DE MANUALES PDF ===
-        function showManual(lessonId, manualUrl) {
-            var manualContainer = document.getElementById('manual-container-' + lessonId);
-            var showManualButton = document.getElementById('show-manual-' + lessonId);
-            var hideManualButton = document.getElementById('hide-manual-' + lessonId);
-            
-            if (manualContainer.style.display === 'none' || !manualContainer.style.display) {
-                manualContainer.style.display = 'block';
-                showManualButton.style.display = 'none';
-                hideManualButton.style.display = 'inline-block';
-                
-                var welcomeMessage = document.getElementById('welcome-message-' + lessonId);
-                var pdfFrame = document.getElementById('pdf-frame-' + lessonId);
-                
-                if (welcomeMessage) welcomeMessage.style.display = 'none';
-                if (pdfFrame) {
-                    pdfFrame.style.display = 'block';
-                    var viewerUrl = convertToGoogleDriveViewer(manualUrl);
-                    pdfFrame.src = viewerUrl;
+        // === ACTUALIZAR LOGO EN REPRODUCTOR ===
+        function updateVideoPlayersLogo() {
+            const cornerBoxes = document.querySelectorAll('.corner-box');
+            cornerBoxes.forEach(box => {
+                if (escuelaData && escuelaData.Logo_Escuela) {
+                    let logoImg = box.querySelector('.school-logo-mini');
+                    if (!logoImg) {
+                        logoImg = document.createElement('img');
+                        logoImg.className = 'school-logo-mini';
+                        logoImg.style.cssText = 'width: 100%; height: 100%; object-fit: contain; border-radius: 4px;';
+                        box.appendChild(logoImg);
+                    }
+                    logoImg.src = escuelaData.Logo_Escuela;
+                    logoImg.alt = escuelaData['Nombre_Escuela '] || 'Escuela';
+                    box.classList.add('has-logo');
+                } else {
+                    box.classList.remove('has-logo');
+                    const logoImg = box.querySelector('.school-logo-mini');
+                    if (logoImg) {
+                        logoImg.remove();
+                    }
                 }
-                
-                showManualButton.innerHTML = '📄 Ocultar Manual';
-            } else {
-                hideManual(lessonId);
+            });
+        }
+
+        // === SISTEMA UNIFICADO DE MANUALES ===
+        function showCourseManual(manualUrl) {
+            if (manualUrl) {
+                openManualViewer(manualUrl, 'Manual del Curso');
             }
         }
 
-        function hideManual(lessonId) {
-            var manualContainer = document.getElementById('manual-container-' + lessonId);
-            var showManualButton = document.getElementById('show-manual-' + lessonId);
-            var hideManualButton = document.getElementById('hide-manual-' + lessonId);
-            
-            manualContainer.style.display = 'none';
-            showManualButton.style.display = 'inline-block';
-            hideManualButton.style.display = 'none';
-            
-            var welcomeMessage = document.getElementById('welcome-message-' + lessonId);
-            var pdfFrame = document.getElementById('pdf-frame-' + lessonId);
-            
-            if (welcomeMessage) welcomeMessage.style.display = 'block';
-            if (pdfFrame) {
-                pdfFrame.style.display = 'none';
-                pdfFrame.src = '';
+        function showModuleManual(manualUrl) {
+            if (manualUrl) {
+                openManualViewer(manualUrl, 'Manual del Módulo');
             }
-            
-            showManualButton.innerHTML = '📄 Ver Manual';
         }
+
+        function openManualViewer(manualUrl, title) {
+            const modal = document.getElementById('universalManualModal');
+            const frame = document.getElementById('manualModalFrame');
+            const modalTitle = document.getElementById('manualModalTitle');
+            
+            if (modal && frame) {
+                modalTitle.textContent = title;
+                const viewerUrl = convertToGoogleDriveViewer(manualUrl);
+                frame.src = viewerUrl;
+                modal.style.display = 'flex';
+            }
+        }
+
+        function closeManualViewer() {
+            const modal = document.getElementById('universalManualModal');
+            const frame = document.getElementById('manualModalFrame');
+            if (modal && frame) {
+                modal.style.display = 'none';
+                frame.src = '';
+            }
+        }
+
+        // Cerrar modal con ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeManualViewer();
+            }
+        });
 
         function convertToGoogleDriveViewer(url) {
             var fileId = extractGoogleDriveFileId(url);
@@ -2562,6 +2488,79 @@
         function clearForms() {
             document.getElementById("username").value = "";
             document.getElementById("password").value = "";
+        }
+
+        function logout() {
+            // Limpiar todo
+            for (var lessonId in currentPlayers) {
+                if (currentPlayers[lessonId]) {
+                    currentPlayers[lessonId].pauseVideo();
+                }
+            }
+            
+            currentPlayers = {};
+            currentUser = null;
+            userProgress = {};
+            userModules = [];
+            alumnoActual = null;
+            currentCourseData = null;
+            sessionToken = null;
+            
+            sessionStorage.clear();
+            
+            document.getElementById('courseHeader').style.display = 'none';
+            document.getElementById("page4_id1").style.display = "none";
+            document.getElementById("page1_id1").style.display = "flex";
+            clearErrors();
+            clearForms();
+        }
+
+        // Funciones auxiliares para manuales
+        function showManual(lessonId, manualUrl) {
+            var manualContainer = document.getElementById('manual-container-' + lessonId);
+            var showManualButton = document.getElementById('show-manual-' + lessonId);
+            var hideManualButton = document.getElementById('hide-manual-' + lessonId);
+            
+            if (manualContainer.style.display === 'none' || !manualContainer.style.display) {
+                manualContainer.style.display = 'block';
+                showManualButton.style.display = 'none';
+                hideManualButton.style.display = 'inline-block';
+                
+                var welcomeMessage = document.getElementById('welcome-message-' + lessonId);
+                var pdfFrame = document.getElementById('pdf-frame-' + lessonId);
+                
+                if (welcomeMessage) welcomeMessage.style.display = 'none';
+                if (pdfFrame) {
+                    pdfFrame.style.display = 'block';
+                    var viewerUrl = convertToGoogleDriveViewer(manualUrl);
+                    pdfFrame.src = viewerUrl;
+                }
+                
+                showManualButton.innerHTML = '📄 Ocultar Manual';
+            } else {
+                hideManual(lessonId);
+            }
+        }
+
+        function hideManual(lessonId) {
+            var manualContainer = document.getElementById('manual-container-' + lessonId);
+            var showManualButton = document.getElementById('show-manual-' + lessonId);
+            var hideManualButton = document.getElementById('hide-manual-' + lessonId);
+            
+            manualContainer.style.display = 'none';
+            showManualButton.style.display = 'inline-block';
+            hideManualButton.style.display = 'none';
+            
+            var welcomeMessage = document.getElementById('welcome-message-' + lessonId);
+            var pdfFrame = document.getElementById('pdf-frame-' + lessonId);
+            
+            if (welcomeMessage) welcomeMessage.style.display = 'block';
+            if (pdfFrame) {
+                pdfFrame.style.display = 'none';
+                pdfFrame.src = '';
+            }
+            
+            showManualButton.innerHTML = '📄 Ver Manual';
         }
     </script>
 </body>
