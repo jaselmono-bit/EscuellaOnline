@@ -31,7 +31,6 @@
             font-family: 'Segoe UI', system-ui, sans-serif;
             background: linear-gradient(160deg, var(--azul) 0%, var(--naranja) 100%);
             min-height: 100vh;
-            padding: 20px;
             color: var(--azul-profundo);
             line-height: 1.6;
         }
@@ -39,6 +38,7 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
+            padding: 20px;
         }
 
         /* === NUEVA ESTRUCTURA DE CABECERA === */
@@ -281,7 +281,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 80vh;
+            min-height: 100vh;
+            padding: 20px;
         }
         
         .form-container {
@@ -1083,7 +1084,7 @@
         </div>
 
         <!-- Página 4: Dashboard del usuario -->
-        <div class="dashboard page4_class1-off" id="page4_id1">
+        <div class="dashboard page4_class1-off" id="page4_id1" style="display: none;">
             <!-- Cabecera Superior -->
             <div class="header-container">
                 <div class="school-brand">
@@ -1838,8 +1839,9 @@
             }
             
             try {
-                // Nota: Necesitarías implementar esta función en tu backend
-                // Por ahora solo actualizamos el frontend
+                // Guardar progreso en la base de datos
+                await saveProgressToDatabase(lessonId, completed, notes);
+                
                 userProgress[lessonId] = {
                     completed: completed,
                     notes: notes,
@@ -1856,6 +1858,29 @@
             }
         }
 
+        // Función para guardar progreso en la base de datos
+        async function saveProgressToDatabase(lessonId, completed, notes) {
+            try {
+                const params = {
+                    action: 'saveProgress',
+                    ID_Alumno: alumnoActual.ID_Alumno,
+                    ID_Clase: lessonId,
+                    Fecha_Guardado: new Date().toISOString(),
+                    Completada: completed ? "Sí" : "No",
+                    Notas_Alumno: notes || ''
+                };
+                
+                const response = await callJSONP('saveProgress', params);
+                if (!response.success) {
+                    throw new Error(response.error || 'Error al guardar el progreso');
+                }
+                return response;
+            } catch (error) {
+                console.error('Error guardando progreso:', error);
+                throw error;
+            }
+        }
+
         async function saveNotes(lessonId, moduleName, lessonName) {
             const notesText = document.getElementById('notes-text-' + lessonId).value;
             const saveButton = document.getElementById('save-notes-btn-' + lessonId);
@@ -1864,8 +1889,12 @@
             saveButton.disabled = true;
             
             try {
-                // Nota: Necesitarías implementar esta función en tu backend
-                // Por ahora solo actualizamos el frontend
+                // Guardar notas en la base de datos
+                await saveProgressToDatabase(lessonId, 
+                    userProgress[lessonId] ? userProgress[lessonId].completed : false, 
+                    notesText
+                );
+                
                 if (!userProgress[lessonId]) {
                     userProgress[lessonId] = {};
                 }
