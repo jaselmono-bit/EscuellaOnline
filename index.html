@@ -6,7 +6,7 @@
     <title>Learning Path - Dashboard</title>
     <script src="https://www.youtube.com/iframe_api"></script>
     <style>
-        /* === ESTILOS GENERALES SIMPLIFICADOS === */
+        /* === ESTILOS GENERALES === */
         :root {
             --naranja: #fbbf24;
             --naranja-claro: #fdba74;
@@ -49,7 +49,7 @@
             min-height: calc(100vh - 40px);
         }
 
-        /* === CABECERA SIMPLIFICADA === */
+        /* === ESTILOS EXISTENTES (MANTENIDOS) === */
         .header-container {
             background: rgba(255, 255, 255, 0.9);
             border-radius: 15px;
@@ -128,7 +128,6 @@
             transform: translateY(-2px);
         }
 
-        /* === CABECERA DEL CURSO SIMPLIFICADA === */
         .course-header {
             background: rgba(255, 255, 255, 0.9);
             border-radius: 15px;
@@ -210,7 +209,6 @@
             transform: scale(1.05);
         }
 
-        /* === CABECERA DE MÓDULO SIMPLIFICADA === */
         .module-header-expanded {
             background: rgba(255, 255, 255, 0.9);
             border-radius: 15px;
@@ -277,7 +275,6 @@
             transform: scale(1.05);
         }
 
-        /* === LOGIN SIMPLIFICADO === */
         .login-container {
             display: flex;
             justify-content: center;
@@ -369,14 +366,12 @@
             min-height: 18px;
         }
 
-        /* === DASHBOARD SIMPLIFICADO === */
         .dashboard {
             max-height: calc(100vh - 100px) !important;
             overflow-y: auto;
             margin-bottom: 10px !important;
         }
 
-        /* === GRID DE CURSOS SIN MARCOS EXCESIVOS === */
         .cursos-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -462,7 +457,6 @@
             font-weight: bold;
         }
 
-        /* === BOTÓN VOLVER SIMPLIFICADO === */
         .back-to-courses-btn {
             background: linear-gradient(to right, var(--azul), var(--azul-claro));
             color: white;
@@ -483,7 +477,6 @@
             transform: scale(1.05);
         }
 
-        /* === VISTA MÓDULOS SIN MARCOS EXCESIVOS === */
         .modules-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -559,7 +552,6 @@
             font-weight: 600;
         }
 
-        /* === CONTENIDO DE MÓDULO EXPANDIDO CON FONDO BLANCO === */
         .expanded-module {
             width: 100%;
             padding: 0;
@@ -610,7 +602,6 @@
             margin-bottom: 5px !important;
         }
 
-        /* === CLASES CON FONDO BLANCO === */
         .content-item {
             background: rgba(255, 255, 255, 0.9);
             border-radius: 8px;
@@ -653,7 +644,6 @@
             color: var(--gray);
         }
 
-        /* === MEJORAS PARA IMÁGENES Y CONTENIDO === */
         .lesson-preview {
             display: flex;
             gap: 12px;
@@ -764,7 +754,7 @@
             text-decoration: none;
         }
 
-        /* === REPRODUCTOR MEJORADO CON CONTROLES AL ESTILO YOUTUBE === */
+        /* === REPRODUCTOR MEJORADO CON CONTROLES INTEGRADOS === */
         .player-container {
             background: #000;
             border-radius: 10px;
@@ -774,6 +764,7 @@
             width: 100%;
             display: none;
             position: relative;
+            overflow: hidden;
         }
 
         .video-container {
@@ -794,6 +785,7 @@
             border-radius: 8px 8px 0 0;
         }
 
+        /* PANTALLA COMPLETA - CONTROLES INTEGRADOS */
         .video-container.fullscreen-mode {
             position: fixed;
             top: 0;
@@ -814,6 +806,22 @@
             border-radius: 0;
         }
 
+        .video-container.fullscreen-mode .video-controls-panel {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 10000;
+            background: rgba(0, 0, 0, 0.85);
+            border-radius: 0;
+            padding: 12px 15px;
+        }
+
+        .video-container.fullscreen-mode .exit-fullscreen {
+            display: flex !important;
+            opacity: 1 !important;
+        }
+
         .overlay {
             position: absolute;
             top: 0;
@@ -828,39 +836,41 @@
         .video-controls-panel {
             background: rgba(0, 0, 0, 0.8);
             border-radius: 0 0 8px 8px;
-            padding: 8px 12px;
+            padding: 10px 12px;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
             width: 100%;
             backdrop-filter: blur(5px);
+            position: relative;
+            z-index: 20;
         }
 
         .progress-controls {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             width: 100%;
         }
 
         .progress-bar-container {
             flex: 1;
-            height: 4px;
+            height: 5px;
             background: rgba(255, 255, 255, 0.3);
-            border-radius: 2px;
+            border-radius: 3px;
             position: relative;
             cursor: pointer;
             transition: height 0.2s;
         }
 
         .progress-bar-container:hover {
-            height: 6px;
+            height: 8px;
         }
 
         .progress-bar {
             height: 100%;
             background: var(--azul-claro);
-            border-radius: 2px;
+            border-radius: 3px;
             width: 0%;
             position: relative;
             transition: background 0.2s;
@@ -893,9 +903,9 @@
 
         .time-display {
             color: white;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 500;
-            min-width: 90px;
+            min-width: 100px;
             text-align: center;
             font-family: 'Roboto Mono', monospace;
             opacity: 0.9;
@@ -906,13 +916,13 @@
             align-items: center;
             justify-content: space-between;
             width: 100%;
-            gap: 8px;
+            gap: 10px;
         }
 
         .control-buttons-left {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
             flex: 1;
         }
 
@@ -926,87 +936,65 @@
             background: transparent;
             color: #fff;
             border: none;
-            padding: 6px 8px;
+            padding: 8px 12px;
             border-radius: 4px;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
             min-width: auto;
             opacity: 0.9;
         }
 
         .control-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.15);
             opacity: 1;
             transform: none;
         }
 
         .control-btn.play-pause {
             color: white;
-            padding: 4px 6px;
         }
 
         .control-btn.restart {
             color: white;
-            padding: 4px 6px;
         }
 
         .control-btn.fullscreen {
             color: white;
-            padding: 4px 6px;
         }
 
         .control-btn-icon {
-            font-size: 14px;
-            width: 16px;
-            height: 16px;
+            font-size: 16px;
+            width: 18px;
+            height: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .control-btn-text {
-            font-size: 11px;
-        }
-
-        /* Mostrar texto en desktop, ocultar en móvil */
-        @media (min-width: 769px) {
-            .control-btn-text {
-                display: block;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .control-btn-text {
-                display: none;
-            }
-            .control-btn {
-                padding: 6px 8px;
-            }
-            .time-display {
-                min-width: 70px;
-                font-size: 10px;
-            }
+            font-size: 12px;
+            white-space: nowrap;
         }
 
         /* === CORNER BOX MEJORADO === */
         .corner-box {
             position: absolute;
-            bottom: 50px !important;
-            right: 8px !important;
-            width: 32px !important;
-            height: 18px !important;
+            bottom: 60px !important;
+            right: 10px !important;
+            width: 36px !important;
+            height: 20px !important;
             background: rgba(0,0,0,0.8);
-            border-radius: 3px;
+            border-radius: 4px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 10px !important;
-            z-index: 20;
+            font-size: 11px !important;
+            z-index: 30;
             pointer-events: auto;
             cursor: default;
             color: #fff;
@@ -1028,23 +1016,23 @@
         /* === BOTÓN SALIR PANTALLA COMPLETA === */
         .exit-fullscreen {
             position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 32px;
-            height: 32px;
+            top: 10px;
+            right: 10px;
+            width: 40px;
+            height: 40px;
             background: rgba(255,255,255,0.9);
-            border-radius: 4px;
-            display: flex;
+            border-radius: 6px;
+            display: none;
             justify-content: center;
             align-items: center;
-            font-size: 16px;
-            z-index: 30;
+            font-size: 18px;
+            z-index: 100;
             cursor: pointer;
             color: #000;
             font-weight: bold;
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
             opacity: 0;
-            transition: opacity 0.3s;
+            transition: opacity 0.3s, background 0.3s;
         }
 
         .video-container:hover .exit-fullscreen,
@@ -1193,24 +1181,23 @@
             }
             
             .corner-box {
-                bottom: 50px !important;
-                right: 8px !important;
+                bottom: 70px !important;
+                right: 10px !important;
                 width: 32px !important;
                 height: 18px !important;
                 font-size: 10px !important;
             }
             
             .player-container {
-                padding: 0;
                 margin: 10px 0;
             }
             
             .exit-fullscreen {
-                top: 5px;
-                right: 5px;
-                width: 30px;
-                height: 30px;
-                font-size: 14px;
+                top: 8px;
+                right: 8px;
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
             }
 
             .video-controls-panel {
@@ -1222,11 +1209,39 @@
             }
 
             .control-btn {
-                padding: 4px 6px;
-                font-size: 10px;
+                padding: 6px 8px;
+                font-size: 11px;
+            }
+
+            .control-btn-text {
+                display: none;
+            }
+
+            .time-display {
+                min-width: 80px;
+                font-size: 11px;
+            }
+
+            /* CONTROLES EN MÓVIL EN PANTALLA COMPLETA */
+            .video-container.fullscreen-mode .video-controls-panel {
+                padding: 10px 12px;
+            }
+
+            .video-container.fullscreen-mode .control-btn {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+
+            .video-container.fullscreen-mode .control-btn-text {
+                display: inline;
+            }
+
+            .video-container.fullscreen-mode .time-display {
+                min-width: 90px;
+                font-size: 12px;
             }
         }
-        
+
         @media (max-width: 480px) {
             .form-container {
                 width: 100%;
@@ -1239,6 +1254,50 @@
                 width: 100%;
                 margin-right: 0;
                 justify-content: center;
+            }
+
+            .control-buttons {
+                gap: 5px;
+            }
+
+            .control-btn {
+                padding: 5px 6px;
+                font-size: 10px;
+            }
+
+            .control-btn-icon {
+                font-size: 14px;
+            }
+
+            .time-display {
+                min-width: 70px;
+                font-size: 10px;
+            }
+        }
+
+        /* MODO PAISAJE EN MÓVIL */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .video-controls-panel {
+                padding: 6px 8px;
+            }
+            
+            .control-btn {
+                padding: 4px 6px;
+                font-size: 10px;
+            }
+            
+            .time-display {
+                min-width: 70px;
+                font-size: 10px;
+            }
+            
+            .video-container.fullscreen-mode .video-controls-panel {
+                padding: 8px 10px;
+            }
+            
+            .video-container.fullscreen-mode .control-btn {
+                padding: 6px 8px;
+                font-size: 11px;
             }
         }
     </style>
@@ -1909,7 +1968,7 @@
                     
                     expandedContent += "</div>";
                     
-                    // === NUEVO REPRODUCTOR CON CONTROLES MEJORADOS ===
+                    // === NUEVO REPRODUCTOR CON CONTROLES INTEGRADOS ===
                     if (content['URL Video'] && content['URL Video'].trim() !== '') {
                         expandedContent += "<div id='player-container-" + lessonId + "' class='player-container' style='display: none;'>";
                         expandedContent += "<div class='video-container' id='videoContainer-" + lessonId + "'>";
@@ -1917,9 +1976,8 @@
                         expandedContent += "<div class='overlay' id='overlay-" + lessonId + "'></div>";
                         expandedContent += "<div class='corner-box'>🎓</div>";
                         expandedContent += "<div class='exit-fullscreen' id='exitFullscreenBtn-" + lessonId + "'>✖</div>";
-                        expandedContent += "</div>";
                         
-                        // Panel de controles estilo YouTube
+                        // Panel de controles DENTRO del contenedor del video
                         expandedContent += "<div class='video-controls-panel'>";
                         expandedContent += "<div class='progress-controls'>";
                         expandedContent += "<div class='progress-bar-container' id='progressBar-" + lessonId + "'>";
@@ -1948,8 +2006,9 @@
                         expandedContent += "</button>";
                         expandedContent += "</div>";
                         expandedContent += "</div>";
-                        expandedContent += "</div>";
-                        expandedContent += "</div>";
+                        expandedContent += "</div>"; // Cierra video-controls-panel
+                        expandedContent += "</div>"; // Cierra video-container
+                        expandedContent += "</div>"; // Cierra player-container
                     }
                     
                     // Contenedor para el manual PDF
@@ -2521,10 +2580,18 @@
                 container.msRequestFullscreen();
             }
             
+            // Ajustar controles en pantalla completa
             setTimeout(function() {
                 var player = currentPlayers[lessonId];
                 if (player && typeof player.setSize === 'function') {
                     adjustPlayerSizeForFullscreen(lessonId);
+                }
+                
+                // Mostrar botón de salir de pantalla completa
+                var exitBtn = document.getElementById("exitFullscreenBtn-" + lessonId);
+                if (exitBtn) {
+                    exitBtn.style.display = "flex";
+                    exitBtn.style.opacity = "1";
                 }
             }, 100);
         }
@@ -2554,6 +2621,12 @@
                         var player = currentPlayers[lessonId];
                         if (player && typeof player.setSize === 'function') {
                             adjustPlayerSize(lessonId);
+                        }
+                        
+                        // Ocultar botón de salir de pantalla completa
+                        var exitBtn = document.getElementById("exitFullscreenBtn-" + lessonId);
+                        if (exitBtn) {
+                            exitBtn.style.display = "none";
                         }
                     }, 100);
                 }
