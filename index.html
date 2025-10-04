@@ -128,7 +128,7 @@
             transform: translateY(-2px);
         }
 
-        /* === CABECERA DE CURSO SIMPLIFICADA === */
+        /* === CABECERA DEL CURSO SIMPLIFICADA === */
         .course-header {
             background: rgba(255, 255, 255, 0.9);
             border-radius: 15px;
@@ -764,15 +764,16 @@
             text-decoration: none;
         }
 
-        /* === REPRODUCTOR MEJORADO CON CONTROLES VISIBLES === */
+        /* === REPRODUCTOR MEJORADO CON CONTROLES AL ESTILO YOUTUBE === */
         .player-container {
             background: #000;
             border-radius: 10px;
-            padding: 10px;
+            padding: 0;
             margin: 12px 0;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             width: 100%;
             display: none;
+            position: relative;
         }
 
         .video-container {
@@ -780,7 +781,7 @@
             width: 100%;
             max-width: 100%;
             background: #000;
-            border-radius: 8px;
+            border-radius: 8px 8px 0 0;
             overflow: hidden;
             margin: 0 auto;
             aspect-ratio: 16/9;
@@ -790,7 +791,7 @@
             width: 100% !important;
             height: 100% !important;
             max-width: 100%;
-            border-radius: 8px;
+            border-radius: 8px 8px 0 0;
         }
 
         .video-container.fullscreen-mode {
@@ -823,19 +824,188 @@
             cursor: pointer;
         }
 
-        /* === CORNER BOX MEJORADO Y MÁS PEQUEÑO === */
+        /* === CONTROLES DE VIDEO MEJORADOS - ESTILO YOUTUBE === */
+        .video-controls-panel {
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 0 0 8px 8px;
+            padding: 8px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            width: 100%;
+            backdrop-filter: blur(5px);
+        }
+
+        .progress-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .progress-bar-container {
+            flex: 1;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            position: relative;
+            cursor: pointer;
+            transition: height 0.2s;
+        }
+
+        .progress-bar-container:hover {
+            height: 6px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--azul-claro);
+            border-radius: 2px;
+            width: 0%;
+            position: relative;
+            transition: background 0.2s;
+        }
+
+        .progress-bar:hover {
+            background: var(--azul);
+        }
+
+        .progress-thumb {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 25;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+            opacity: 0;
+            transition: opacity 0.2s, transform 0.2s;
+            left: 0px;
+        }
+
+        .progress-bar-container:hover .progress-thumb {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+
+        .time-display {
+            color: white;
+            font-size: 11px;
+            font-weight: 500;
+            min-width: 90px;
+            text-align: center;
+            font-family: 'Roboto Mono', monospace;
+            opacity: 0.9;
+        }
+
+        .control-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            gap: 8px;
+        }
+
+        .control-buttons-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .control-buttons-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-btn {
+            background: transparent;
+            color: #fff;
+            border: none;
+            padding: 6px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            min-width: auto;
+            opacity: 0.9;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            opacity: 1;
+            transform: none;
+        }
+
+        .control-btn.play-pause {
+            color: white;
+            padding: 4px 6px;
+        }
+
+        .control-btn.restart {
+            color: white;
+            padding: 4px 6px;
+        }
+
+        .control-btn.fullscreen {
+            color: white;
+            padding: 4px 6px;
+        }
+
+        .control-btn-icon {
+            font-size: 14px;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .control-btn-text {
+            font-size: 11px;
+        }
+
+        /* Mostrar texto en desktop, ocultar en móvil */
+        @media (min-width: 769px) {
+            .control-btn-text {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .control-btn-text {
+                display: none;
+            }
+            .control-btn {
+                padding: 6px 8px;
+            }
+            .time-display {
+                min-width: 70px;
+                font-size: 10px;
+            }
+        }
+
+        /* === CORNER BOX MEJORADO === */
         .corner-box {
             position: absolute;
-            bottom: 45px !important;
+            bottom: 50px !important;
             right: 8px !important;
-            width: 40px !important;
-            height: 20px !important;
+            width: 32px !important;
+            height: 18px !important;
             background: rgba(0,0,0,0.8);
-            border-radius: 4px;
+            border-radius: 3px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 12px !important;
+            font-size: 10px !important;
             z-index: 20;
             pointer-events: auto;
             cursor: default;
@@ -850,151 +1020,40 @@
             object-fit: contain;
             border-radius: 2px;
         }
-        
-        .corner-box.has-logo::after {
-            display: none;
-        }
 
         .corner-box::after {
             content: "🎓";
         }
 
-        /* === BOTÓN SALIR PANTALLA COMPLETA VISIBLE === */
+        /* === BOTÓN SALIR PANTALLA COMPLETA === */
         .exit-fullscreen {
             position: absolute;
             top: 8px;
             right: 8px;
-            width: 40px;
-            height: 40px;
+            width: 32px;
+            height: 32px;
             background: rgba(255,255,255,0.9);
-            border-radius: 6px;
+            border-radius: 4px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 20px;
+            font-size: 16px;
             z-index: 30;
             cursor: pointer;
             color: #000;
             font-weight: bold;
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .video-container:hover .exit-fullscreen,
+        .video-container.fullscreen-mode .exit-fullscreen {
+            opacity: 1;
         }
 
         .exit-fullscreen:hover {
             background: rgba(255,255,255,1);
-        }
-
-        /* === NUEVO DISEÑO DE CONTROLES DE VIDEO === */
-        .video-controls-panel {
-            background: rgba(30, 30, 30, 0.95);
-            border-radius: 0 0 8px 8px;
-            padding: 12px 15px;
-            margin-top: -5px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            width: 100%;
-        }
-
-        .progress-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            width: 100%;
-        }
-
-        .time-display {
-            color: white;
-            font-size: 12px;
-            font-weight: bold;
-            min-width: 100px;
-            text-align: center;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 4px 8px;
-            border-radius: 4px;
-        }
-
-        .progress-bar-container {
-            flex: 1;
-            height: 16px;
-            background: #444;
-            border-radius: 8px;
-            position: relative;
-            cursor: pointer;
-        }
-
-        .progress-bar {
-            height: 100%;
-            background: var(--azul);
-            border-radius: 8px;
-            width: 0%;
-            position: relative;
-        }
-
-        .progress-thumb {
-            position: absolute;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 16px;
-            height: 16px;
-            background: #fff;
-            border-radius: 50%;
-            cursor: pointer;
-            z-index: 25;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            left: 0px;
-        }
-
-        .control-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            width: 100%;
-        }
-
-        .control-btn {
-            background: var(--azul);
-            color: #fff;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            min-width: 120px;
-            justify-content: center;
-        }
-
-        .control-btn:hover {
-            background: var(--azul-oscuro);
-            transform: scale(1.05);
-        }
-
-        .control-btn.play-pause {
-            background: var(--success);
-        }
-
-        .control-btn.play-pause:hover {
-            background: #0daa6c;
-        }
-
-        .control-btn.restart {
-            background: var(--naranja);
-        }
-
-        .control-btn.restart:hover {
-            background: #e6a119;
-        }
-
-        .control-btn.fullscreen {
-            background: var(--azul-claro);
-        }
-
-        .control-btn.fullscreen:hover {
-            background: #0d95d1;
         }
 
         /* === MODAL UNIFICADO PARA MANUALES === */
@@ -1136,46 +1195,35 @@
             .corner-box {
                 bottom: 50px !important;
                 right: 8px !important;
-                width: 40px !important;
-                height: 20px !important;
-                font-size: 12px !important;
+                width: 32px !important;
+                height: 18px !important;
+                font-size: 10px !important;
             }
             
             .player-container {
-                padding: 8px;
+                padding: 0;
                 margin: 10px 0;
             }
             
             .exit-fullscreen {
                 top: 5px;
                 right: 5px;
-                width: 35px;
-                height: 35px;
-                font-size: 18px;
+                width: 30px;
+                height: 30px;
+                font-size: 14px;
             }
 
             .video-controls-panel {
-                padding: 10px;
+                padding: 8px 10px;
             }
 
             .control-buttons {
-                flex-direction: column;
-                gap: 8px;
+                flex-wrap: nowrap;
             }
 
             .control-btn {
-                width: 100%;
-                min-width: auto;
-            }
-
-            .progress-controls {
-                flex-direction: column;
-                gap: 8px;
-            }
-
-            .time-display {
-                width: 100%;
-                min-width: auto;
+                padding: 4px 6px;
+                font-size: 10px;
             }
         }
         
@@ -1602,6 +1650,11 @@
             const container = document.getElementById('modulesContainer');
             container.innerHTML = '<button class="back-to-courses-btn" onclick="volverACursos()">← Volver a Mis Cursos</button><div class="loading">Cargando módulos...</div>';
             
+            // Desplazar hacia el contenedor de módulos
+            setTimeout(() => {
+                container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 300);
+            
             const cacheKey = `modulos_${alumnoActual.ID_Alumno}_${cursoId}_${grupoId}`;
             const cached = sessionStorage.getItem(cacheKey);
             
@@ -1866,21 +1919,34 @@
                         expandedContent += "<div class='exit-fullscreen' id='exitFullscreenBtn-" + lessonId + "'>✖</div>";
                         expandedContent += "</div>";
                         
-                        // Panel de controles mejorado
+                        // Panel de controles estilo YouTube
                         expandedContent += "<div class='video-controls-panel'>";
                         expandedContent += "<div class='progress-controls'>";
-                        expandedContent += "<div class='time-display' id='timeDisplay-" + lessonId + "'>0:00 / 0:00</div>";
                         expandedContent += "<div class='progress-bar-container' id='progressBar-" + lessonId + "'>";
                         expandedContent += "<div class='progress-bar' id='progress-" + lessonId + "'>";
                         expandedContent += "<div class='progress-thumb' id='thumb-" + lessonId + "'></div>";
                         expandedContent += "</div>";
                         expandedContent += "</div>";
+                        expandedContent += "<div class='time-display' id='timeDisplay-" + lessonId + "'>0:00 / 0:00</div>";
                         expandedContent += "</div>";
                         
                         expandedContent += "<div class='control-buttons'>";
-                        expandedContent += "<button class='control-btn play-pause' id='playPauseBtn-" + lessonId + "'>▶ Play</button>";
-                        expandedContent += "<button class='control-btn restart' id='restartBtn-" + lessonId + "'>⏮ Reiniciar</button>";
-                        expandedContent += "<button class='control-btn fullscreen' id='fullscreenBtn-" + lessonId + "'>⛶ Pantalla completa</button>";
+                        expandedContent += "<div class='control-buttons-left'>";
+                        expandedContent += "<button class='control-btn play-pause' id='playPauseBtn-" + lessonId + "'>";
+                        expandedContent += "<span class='control-btn-icon'>▶</span>";
+                        expandedContent += "<span class='control-btn-text'>Play</span>";
+                        expandedContent += "</button>";
+                        expandedContent += "<button class='control-btn restart' id='restartBtn-" + lessonId + "'>";
+                        expandedContent += "<span class='control-btn-icon'>⏮</span>";
+                        expandedContent += "<span class='control-btn-text'>Reiniciar</span>";
+                        expandedContent += "</button>";
+                        expandedContent += "</div>";
+                        expandedContent += "<div class='control-buttons-right'>";
+                        expandedContent += "<button class='control-btn fullscreen' id='fullscreenBtn-" + lessonId + "'>";
+                        expandedContent += "<span class='control-btn-icon'>⛶</span>";
+                        expandedContent += "<span class='control-btn-text'>Pantalla completa</span>";
+                        expandedContent += "</button>";
+                        expandedContent += "</div>";
                         expandedContent += "</div>";
                         expandedContent += "</div>";
                         expandedContent += "</div>";
@@ -1942,6 +2008,11 @@
             
             document.getElementById('modulesContainer').appendChild(expandedContainer);
             
+            // Desplazar hacia el módulo expandido
+            setTimeout(() => {
+                expandedContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+            
             // Actualizar logos en los reproductores después de expandir el módulo
             setTimeout(updateVideoPlayersLogo, 100);
         }
@@ -1964,8 +2035,8 @@
             try {
                 console.log('💾 Guardando progreso:', { lessonId, completed, notes });
                 
-                const params = {
-                    action: 'saveProgress',
+                // Enviar datos en el formato correcto que espera el backend
+                const progressData = {
                     ID_Alumno: alumnoActual.ID_Alumno,
                     ID_Clase: lessonId,
                     Fecha_Guardado: new Date().toISOString().split('T')[0],
@@ -1973,9 +2044,10 @@
                     Notas_Alumno: notes || ''
                 };
                 
-                console.log('📤 Enviando datos:', params);
+                console.log('📤 Enviando datos de progreso:', progressData);
                 
-                const response = await callJSONP('progreso', params);
+                // Llamar a la acción 'progreso' con los datos correctos
+                const response = await callJSONP('progreso', progressData);
                 console.log('✅ Respuesta del servidor:', response);
                 
                 if (!response.success) {
@@ -2001,7 +2073,7 @@
             }
             
             try {
-                // Guardar progreso en la base de datos - USANDO PARÁMETROS CORRECTOS
+                // Guardar progreso en la base de datos
                 await saveProgressToDatabase(lessonId, completed, notes);
                 
                 // Actualizar estado local
@@ -2239,7 +2311,9 @@
         function onPlayerStateChange(lessonId, event) {
             var btn = document.getElementById("playPauseBtn-" + lessonId);
             if (btn) {
-                btn.textContent = event.data === YT.PlayerState.PLAYING ? "⏸ Pause" : "▶ Play";
+                btn.innerHTML = event.data === YT.PlayerState.PLAYING ? 
+                    '<span class="control-btn-icon">⏸</span><span class="control-btn-text">Pausa</span>' : 
+                    '<span class="control-btn-icon">▶</span><span class="control-btn-text">Play</span>';
             }
         }
 
@@ -2299,11 +2373,7 @@
             if (fullscreenBtn) fullscreenBtn.onclick = function() { goFullScreen(lessonId); };
             if (exitFullscreenBtn) exitFullscreenBtn.onclick = function() { exitFullScreen(lessonId); };
 
-            if (thumb) {
-                thumb.addEventListener("mousedown", function(e) { startDrag(e, lessonId); });
-                thumb.addEventListener("touchstart", function(e) { startDrag(e, lessonId); }, {passive: false});
-            }
-
+            // Sistema de arrastre para la barra de progreso
             if (progressBarContainer) {
                 progressBarContainer.addEventListener("click", function(e) {
                     if (!window.dragging) {
@@ -2314,20 +2384,44 @@
                         seekToPosition(lessonId, x / rect.width);
                     }
                 });
+
+                // Mostrar/ocultar thumb al hover
+                progressBarContainer.addEventListener("mouseenter", function() {
+                    if (thumb) thumb.style.opacity = "1";
+                });
+                progressBarContainer.addEventListener("mouseleave", function() {
+                    if (thumb && !window.dragging) thumb.style.opacity = "0";
+                });
             }
 
+            if (thumb) {
+                thumb.addEventListener("mousedown", function(e) { 
+                    e.preventDefault();
+                    startDrag(e, lessonId); 
+                });
+                thumb.addEventListener("touchstart", function(e) { 
+                    e.preventDefault();
+                    startDrag(e, lessonId); 
+                }, {passive: false});
+            }
+
+            // Eventos globales de arrastre
             document.addEventListener("mousemove", function(e) { 
                 dragMove(e, lessonId);
             });
             document.addEventListener("mouseup", function(e) { endDrag(e); });
-            document.addEventListener("touchmove", function(e) { dragMove(e, lessonId); }, {passive: false});
+            document.addEventListener("touchmove", function(e) { 
+                dragMove(e, lessonId); 
+            }, {passive: false});
             document.addEventListener("touchend", function(e) { endDrag(e); });
             document.addEventListener("touchcancel", function(e) { endDrag(e); });
 
+            // Eventos de pantalla completa
             document.addEventListener('fullscreenchange', function() { fullscreenChange(lessonId); });
             document.addEventListener('webkitfullscreenchange', function() { fullscreenChange(lessonId); });
             document.addEventListener('msfullscreenchange', function() { fullscreenChange(lessonId); });
             
+            // Redimensionamiento
             window.addEventListener('resize', function() {
                 if (currentPlayers[lessonId]) {
                     adjustPlayerSize(lessonId);
@@ -2340,6 +2434,8 @@
                     adjustPlayerSize(lessonId);
                 }, 300);
             });
+
+            updateVideoPlayersLogo();
         }
 
         function togglePlayPause(lessonId) {
