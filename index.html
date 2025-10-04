@@ -1141,7 +1141,7 @@
     <script>
         // === CONFIGURACIÓN GITHUB ===
         const CONFIG = {
-            API_BASE_URL: 'https://script.google.com/macros/s/AKfycbwUzcLUQQcUeVby1hKERjOLRBPxuo2OAJ3oYiwmq3BGcKMSuYox-pYY0YyGotdVrefTIA/exec'
+            API_BASE_URL: 'https://script.google.com/macros/s/AKfycbwhwgs7S1dbfd3X9Ib-SgXlKDXuyAV9dLgI2DsbRcqYc55Zz7M7gb-V0Jx_W8jQNvN4Ig/exec'
         };
 
         // === VARIABLES GLOBALES ===
@@ -1156,33 +1156,41 @@
         let escuelaData = null;
         let currentCourseData = null;
 
-        // === SISTEMA DE JSONP PARA CORS ===
+        // === SISTEMA DE JSONP MEJORADO ===
         function callJSONP(action, data = {}) {
             return new Promise((resolve, reject) => {
                 const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
-                const params = new URLSearchParams();
                 
-                // Agregar parámetros básicos
+                // Construir URL con parámetros
+                const params = new URLSearchParams();
                 params.append('action', action);
                 params.append('callback', callbackName);
                 
                 // Agregar datos específicos
                 Object.keys(data).forEach(key => {
                     if (data[key] !== undefined && data[key] !== null) {
-                        params.append(key, data[key].toString());
+                        params.append(key, String(data[key]));
                     }
                 });
                 
+                const url = CONFIG.API_BASE_URL + '?' + params.toString();
+                
+                console.log('🔍 Llamando a:', url);
+                
                 const script = document.createElement('script');
-                script.src = CONFIG.API_BASE_URL + '?' + params.toString();
+                script.src = url;
                 
                 // Configurar callback global
                 window[callbackName] = function(response) {
                     // Limpiar
                     delete window[callbackName];
-                    document.body.removeChild(script);
+                    if (script.parentNode) {
+                        script.parentNode.removeChild(script);
+                    }
                     
-                    if (response && response.success) {
+                    console.log('📨 Respuesta recibida:', response);
+                    
+                    if (response && response.success !== undefined) {
                         resolve(response);
                     } else {
                         reject(new Error(response ? response.error : 'Error desconocido'));
@@ -1192,18 +1200,29 @@
                 // Manejar errores
                 script.onerror = function() {
                     delete window[callbackName];
-                    document.body.removeChild(script);
+                    if (script.parentNode) {
+                        script.parentNode.removeChild(script);
+                    }
                     reject(new Error('Error de red al conectar con el servidor'));
                 };
                 
                 // Timeout después de 30 segundos
-                setTimeout(() => {
+                const timeoutId = setTimeout(() => {
                     if (window[callbackName]) {
                         delete window[callbackName];
-                        document.body.removeChild(script);
-                        reject(new Error('Timeout de la solicitud'));
+                        if (script.parentNode) {
+                            script.parentNode.removeChild(script);
+                        }
+                        reject(new Error('Timeout de la solicitud después de 30 segundos'));
                     }
                 }, 30000);
+                
+                // Limpiar timeout cuando se recibe respuesta
+                const originalCallback = window[callbackName];
+                window[callbackName] = function(response) {
+                    clearTimeout(timeoutId);
+                    originalCallback(response);
+                };
                 
                 document.body.appendChild(script);
             });
@@ -2523,6 +2542,22 @@
             
             showManualButton.innerHTML = '📄 Ver Manual';
         }
+
+        // === FUNCIÓN DE DEPURACIÓN ===
+        async function testConnection() {
+            try {
+                console.log('🧪 Probando conexión...');
+                const response = await callJSONP('escuela', {});
+                console.log('✅ Conexión exitosa:', response);
+                return response;
+            } catch (error) {
+                console.error('❌ Error de conexión:', error);
+                return {success: false, error: error.message};
+            }
+        }
+
+        // Hacer la función accesible desde la consola
+        window.testConnection = testConnection;
     </script>
 </body>
 </html>
