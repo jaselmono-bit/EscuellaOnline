@@ -813,12 +813,12 @@
 
         /* === CONTROLES DE VIDEO - YOUTUBE STYLE === */
         .video-controls-panel {
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.9);
             border-radius: 0 0 8px 8px;
-            padding: 10px 15px;
+            padding: 8px 12px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
             width: 100%;
             position: relative;
             z-index: 20;
@@ -832,14 +832,16 @@
             right: 0;
             border-radius: 0;
             background: rgba(0, 0, 0, 0.95);
-            padding: 12px 20px;
+            padding: 10px 15px;
         }
 
+        /* Barra de progreso siempre arriba */
         .progress-controls {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             width: 100%;
+            order: 1;
         }
 
         .progress-bar-container {
@@ -861,46 +863,50 @@
 
         .time-display {
             color: white;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 500;
-            min-width: 80px;
+            min-width: 70px;
             text-align: right;
             font-family: 'Roboto Mono', monospace;
+            flex-shrink: 0;
         }
 
+        /* Botones de control abajo en una sola fila */
         .control-buttons {
             display: flex;
             align-items: center;
             justify-content: space-between;
             width: 100%;
+            order: 2;
         }
 
         .control-buttons-left {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 8px;
         }
 
         .control-buttons-right {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .control-btn {
             background: transparent;
             color: #fff;
             border: none;
-            padding: 6px 10px;
+            padding: 5px 8px;
             border-radius: 4px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
             opacity: 0.9;
+            flex-shrink: 0;
         }
 
         .control-btn:hover {
@@ -909,16 +915,16 @@
         }
 
         .control-btn-icon {
-            font-size: 16px;
-            width: 18px;
-            height: 18px;
+            font-size: 14px;
+            width: 16px;
+            height: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .control-btn-text {
-            font-size: 12px;
+            font-size: 11px;
             white-space: nowrap;
         }
 
@@ -1134,17 +1140,17 @@
             }
 
             .video-controls-panel {
-                padding: 8px 12px;
-                gap: 6px;
+                padding: 6px 10px;
+                gap: 5px;
             }
             
             .video-container.fullscreen-mode .video-controls-panel {
-                padding: 10px 15px;
+                padding: 8px 12px;
             }
             
             .control-btn {
-                padding: 5px 8px;
-                font-size: 11px;
+                padding: 4px 6px;
+                font-size: 10px;
             }
             
             .control-btn-text {
@@ -1152,12 +1158,12 @@
             }
             
             .control-btn-icon {
-                font-size: 14px;
+                font-size: 12px;
             }
             
             .time-display {
-                min-width: 70px;
-                font-size: 11px;
+                min-width: 60px;
+                font-size: 10px;
             }
             
             .progress-bar-container {
@@ -1184,34 +1190,34 @@
             }
             
             .control-buttons-left {
-                gap: 8px;
+                gap: 6px;
             }
             
             .control-btn {
-                padding: 4px 6px;
-                font-size: 10px;
+                padding: 3px 5px;
+                font-size: 9px;
             }
             
             .time-display {
-                min-width: 60px;
-                font-size: 10px;
+                min-width: 50px;
+                font-size: 9px;
             }
         }
 
         /* MODO PAISAJE EN MÓVIL */
         @media (max-width: 768px) and (orientation: landscape) {
             .video-container.fullscreen-mode .video-controls-panel {
-                padding: 8px 12px;
+                padding: 6px 10px;
             }
             
             .control-btn {
-                padding: 4px 6px;
-                font-size: 10px;
+                padding: 3px 5px;
+                font-size: 9px;
             }
             
             .time-display {
-                min-width: 70px;
-                font-size: 10px;
+                min-width: 50px;
+                font-size: 9px;
             }
         }
     </style>
