@@ -372,9 +372,10 @@
             margin-bottom: 10px !important;
         }
 
+        /* === CURSOS EN TARJETAS === */
         .cursos-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
@@ -388,16 +389,21 @@
             border-left: 5px solid var(--azul);
             border-right: 5px solid var(--naranja);
             padding: 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
         
         .curso-card:hover {
-            transform: translateY(-3px);
+            transform: translateY(-5px);
             background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
         
         .curso-imagen {
             width: 100%;
-            height: 140px;
+            height: 160px;
             background: linear-gradient(135deg, var(--azul), var(--naranja));
             display: flex;
             align-items: center;
@@ -429,32 +435,48 @@
         }
         
         .curso-content {
-            padding: 15px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
         }
         
         .curso-titulo {
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 18px;
+            font-weight: 700;
             color: var(--azul-oscuro);
-            margin-bottom: 6px;
+            margin-bottom: 10px;
+            flex-grow: 1;
         }
         
         .curso-grupo {
             color: var(--gray);
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .curso-fecha {
+            color: var(--gray);
             font-size: 13px;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
         
         .btn-acceder {
             background: linear-gradient(to right, var(--naranja), var(--azul-claro));
             color: white;
             border: none;
-            padding: 7px 14px;
+            padding: 10px 16px;
             border-radius: 20px;
-            font-size: 13px;
+            font-size: 14px;
             cursor: pointer;
             width: 100%;
             font-weight: bold;
+            transition: all 0.3s;
+            margin-top: auto;
+        }
+
+        .btn-acceder:hover {
+            transform: scale(1.03);
         }
 
         .back-to-courses-btn {
@@ -492,11 +514,13 @@
             border-left: 5px solid var(--azul);
             border-right: 5px solid var(--naranja);
             cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .module-card:hover {
-            transform: translateY(-3px);
+            transform: translateY(-5px);
             background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
 
         .module-card h4 {
@@ -1581,7 +1605,7 @@
                     <div class="curso-content">
                         <h3 class="curso-titulo">${curso.Nombre_Curso}</h3>
                         <p class="curso-grupo">Grupo: ${curso.Nombre_Grupo}</p>
-                        <p class="curso-grupo">Inicio: ${formatFecha(curso.Fecha_Inicio)}</p>
+                        <p class="curso-fecha">Inicio: ${formatFecha(curso.Fecha_Inicio)}</p>
                         <button class="btn-acceder">Acceder al curso</button>
                     </div>
                 </div>
