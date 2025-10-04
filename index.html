@@ -45,8 +45,8 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 15px 20px 5px 20px !important; /* REDUCIR PADDING INFERIOR */
-            min-height: calc(100vh - 40px); /* AJUSTAR ALTURA */
+            padding: 15px 20px 5px 20px !important;
+            min-height: calc(100vh - 40px);
         }
 
         /* === CABECERA SIMPLIFICADA === */
@@ -371,7 +371,7 @@
 
         /* === DASHBOARD SIMPLIFICADO === */
         .dashboard {
-            max-height: calc(100vh - 100px) !important; /* AJUSTAR ALTURA MÁXIMA */
+            max-height: calc(100vh - 100px) !important;
             overflow-y: auto;
             margin-bottom: 10px !important;
         }
@@ -826,10 +826,10 @@
         /* === CORNER BOX MEJORADO Y MÁS PEQUEÑO === */
         .corner-box {
             position: absolute;
-            bottom: 45px !important; /* SUBIR MÁS PARA NO TAPAR CONTROLES */
+            bottom: 45px !important;
             right: 8px !important;
-            width: 40px !important; /* MÁS PEQUEÑO */
-            height: 20px !important; /* MÁS PEQUEÑO */
+            width: 40px !important;
+            height: 20px !important;
             background: rgba(0,0,0,0.8);
             border-radius: 4px;
             display: flex;
@@ -883,42 +883,54 @@
             background: rgba(255,255,255,1);
         }
 
-        /* === BARRA DE PROGRESO MEJORADA CON INDICADOR DE TIEMPO === */
-        .progress-container {
+        /* === NUEVO DISEÑO DE CONTROLES DE VIDEO === */
+        .video-controls-panel {
+            background: rgba(30, 30, 30, 0.95);
+            border-radius: 0 0 8px 8px;
+            padding: 12px 15px;
+            margin-top: -5px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
             width: 100%;
+        }
+
+        .progress-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .time-display {
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            min-width: 100px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .progress-bar-container {
+            flex: 1;
             height: 16px;
             background: #444;
             border-radius: 8px;
-            margin-top: 12px;
             position: relative;
             cursor: pointer;
-            display: block !important; /* FORZAR VISIBILIDAD */
-            z-index: 15;
         }
 
-        .progress-container.fullscreen {
-            position: absolute;
-            bottom: 15px;
-            left: 15px;
-            right: 15px;
-            width: calc(100% - 30px);
-            margin-top: 0;
-            z-index: 25;
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .progress {
+        .progress-bar {
             height: 100%;
             background: var(--azul);
             border-radius: 8px;
             width: 0%;
-            transform-origin: left center;
-            position: absolute;
-            left: 0;
-            top: 0;
+            position: relative;
         }
 
-        .thumb {
+        .progress-thumb {
             position: absolute;
             top: 50%;
             transform: translate(-50%, -50%);
@@ -932,61 +944,57 @@
             left: 0px;
         }
 
-        /* === CONTENEDOR DE TIEMPO MEJORADO === */
-        .progress-time-display {
-            position: absolute;
-            right: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: white;
-            font-size: 11px;
-            font-weight: bold;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 2px 6px;
-            border-radius: 4px;
-            z-index: 20;
-            pointer-events: none;
-        }
-
-        /* === INDICADOR DE TIEMPO EN BARRA DE PROGRESO === */
-        .time-indicator {
-            position: absolute;
-            top: -25px;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            white-space: nowrap;
-            transform: translateX(-50%);
-            display: none;
-            z-index: 30;
-        }
-
-        .video-controls {
-            margin-top: 10px;
+        .control-buttons {
             display: flex;
             justify-content: center;
-            gap: 12px;
-            flex-wrap: wrap;
-            z-index: 30;
-            position: relative;
+            gap: 15px;
+            width: 100%;
         }
 
-        .video-controls button {
+        .control-btn {
             background: var(--azul);
             color: #fff;
             border: none;
-            padding: 6px 12px;
+            padding: 8px 15px;
             border-radius: 20px;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            min-width: 120px;
+            justify-content: center;
         }
 
-        .video-controls button:hover {
+        .control-btn:hover {
             background: var(--azul-oscuro);
+            transform: scale(1.05);
+        }
+
+        .control-btn.play-pause {
+            background: var(--success);
+        }
+
+        .control-btn.play-pause:hover {
+            background: #0daa6c;
+        }
+
+        .control-btn.restart {
+            background: var(--naranja);
+        }
+
+        .control-btn.restart:hover {
+            background: #e6a119;
+        }
+
+        .control-btn.fullscreen {
+            background: var(--azul-claro);
+        }
+
+        .control-btn.fullscreen:hover {
+            background: #0d95d1;
         }
 
         /* === MODAL UNIFICADO PARA MANUALES === */
@@ -1145,6 +1153,30 @@
                 height: 35px;
                 font-size: 18px;
             }
+
+            .video-controls-panel {
+                padding: 10px;
+            }
+
+            .control-buttons {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .control-btn {
+                width: 100%;
+                min-width: auto;
+            }
+
+            .progress-controls {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .time-display {
+                width: 100%;
+                min-width: auto;
+            }
         }
         
         @media (max-width: 480px) {
@@ -1159,15 +1191,6 @@
                 width: 100%;
                 margin-right: 0;
                 justify-content: center;
-            }
-            
-            .video-controls {
-                gap: 8px;
-            }
-            
-            .video-controls button {
-                padding: 5px 10px;
-                font-size: 10px;
             }
         }
     </style>
@@ -1833,7 +1856,7 @@
                     
                     expandedContent += "</div>";
                     
-                    // Contenedores para video, manual y notas
+                    // === NUEVO REPRODUCTOR CON CONTROLES MEJORADOS ===
                     if (content['URL Video'] && content['URL Video'].trim() !== '') {
                         expandedContent += "<div id='player-container-" + lessonId + "' class='player-container' style='display: none;'>";
                         expandedContent += "<div class='video-container' id='videoContainer-" + lessonId + "'>";
@@ -1841,19 +1864,24 @@
                         expandedContent += "<div class='overlay' id='overlay-" + lessonId + "'></div>";
                         expandedContent += "<div class='corner-box'>🎓</div>";
                         expandedContent += "<div class='exit-fullscreen' id='exitFullscreenBtn-" + lessonId + "'>✖</div>";
-                        
-                        expandedContent += "<div class='progress-container' id='progressBar-" + lessonId + "'>";
-                        expandedContent += "<div class='progress' id='progress-" + lessonId + "'></div>";
-                        expandedContent += "<div class='thumb' id='thumb-" + lessonId + "'></div>";
-                        expandedContent += "<div class='time-indicator' id='timeIndicator-" + lessonId + "'></div>";
-                        expandedContent += "<div class='progress-time-display' id='progressTime-" + lessonId + "'>0:00 / 0:00</div>";
-                        expandedContent += "</div>";
                         expandedContent += "</div>";
                         
-                        expandedContent += "<div class='video-controls'>";
-                        expandedContent += "<button id='playPauseBtn-" + lessonId + "'>▶ Play</button>";
-                        expandedContent += "<button id='restartBtn-" + lessonId + "'>⏮ Reiniciar</button>";
-                        expandedContent += "<button id='fullscreenBtn-" + lessonId + "'>⛶ Pantalla completa</button>";
+                        // Panel de controles mejorado
+                        expandedContent += "<div class='video-controls-panel'>";
+                        expandedContent += "<div class='progress-controls'>";
+                        expandedContent += "<div class='time-display' id='timeDisplay-" + lessonId + "'>0:00 / 0:00</div>";
+                        expandedContent += "<div class='progress-bar-container' id='progressBar-" + lessonId + "'>";
+                        expandedContent += "<div class='progress-bar' id='progress-" + lessonId + "'>";
+                        expandedContent += "<div class='progress-thumb' id='thumb-" + lessonId + "'></div>";
+                        expandedContent += "</div>";
+                        expandedContent += "</div>";
+                        expandedContent += "</div>";
+                        
+                        expandedContent += "<div class='control-buttons'>";
+                        expandedContent += "<button class='control-btn play-pause' id='playPauseBtn-" + lessonId + "'>▶ Play</button>";
+                        expandedContent += "<button class='control-btn restart' id='restartBtn-" + lessonId + "'>⏮ Reiniciar</button>";
+                        expandedContent += "<button class='control-btn fullscreen' id='fullscreenBtn-" + lessonId + "'>⛶ Pantalla completa</button>";
+                        expandedContent += "</div>";
                         expandedContent += "</div>";
                         expandedContent += "</div>";
                     }
@@ -1940,7 +1968,7 @@
                     action: 'saveProgress',
                     ID_Alumno: alumnoActual.ID_Alumno,
                     ID_Clase: lessonId,
-                    Fecha_Guardado: new Date().toISOString().split('T')[0], // Formato YYYY-MM-DD
+                    Fecha_Guardado: new Date().toISOString().split('T')[0],
                     Completada: completed ? "TRUE" : "FALSE",
                     Notas_Alumno: notes || ''
                 };
@@ -2232,20 +2260,22 @@
             
             var progressElement = document.getElementById("progress-" + lessonId);
             var thumbElement = document.getElementById("thumb-" + lessonId);
-            var progressBarElement = document.getElementById("progressBar-" + lessonId);
-            var progressTimeElement = document.getElementById("progressTime-" + lessonId);
+            var timeDisplay = document.getElementById("timeDisplay-" + lessonId);
             
             if (progressElement) {
                 progressElement.style.width = percent + "%";
             }
             
-            if (thumbElement && progressBarElement) {
-                thumbElement.style.left = (percent / 100 * progressBarElement.offsetWidth) + "px";
+            if (thumbElement) {
+                var progressBarContainer = document.getElementById("progressBar-" + lessonId);
+                if (progressBarContainer) {
+                    thumbElement.style.left = (percent / 100 * progressBarContainer.offsetWidth) + "px";
+                }
             }
             
             // ACTUALIZAR DISPLAY DE TIEMPO
-            if (progressTimeElement && duration) {
-                progressTimeElement.textContent = formatTime(currentTime) + " / " + formatTime(duration);
+            if (timeDisplay && duration) {
+                timeDisplay.textContent = formatTime(currentTime) + " / " + formatTime(duration);
             }
         }
 
@@ -2255,12 +2285,11 @@
             var restartBtn = document.getElementById("restartBtn-" + lessonId);
             var fullscreenBtn = document.getElementById("fullscreenBtn-" + lessonId);
             var exitFullscreenBtn = document.getElementById("exitFullscreenBtn-" + lessonId);
-            var progressBar = document.getElementById("progressBar-" + lessonId);
+            var progressBarContainer = document.getElementById("progressBar-" + lessonId);
             var thumb = document.getElementById("thumb-" + lessonId);
-            var timeIndicator = document.getElementById("timeIndicator-" + lessonId);
 
             if (overlay) overlay.onclick = function(e) { 
-                if (!e.target.closest('.video-controls') && !e.target.closest('.exit-fullscreen')) {
+                if (!e.target.closest('.video-controls-panel')) {
                     togglePlayPause(lessonId); 
                 }
             };
@@ -2275,18 +2304,10 @@
                 thumb.addEventListener("touchstart", function(e) { startDrag(e, lessonId); }, {passive: false});
             }
 
-            if (progressBar) {
-                progressBar.addEventListener("mousemove", function(e) {
-                    showTimeIndicator(e, lessonId);
-                });
-                
-                progressBar.addEventListener("mouseleave", function() {
-                    if (timeIndicator) timeIndicator.style.display = 'none';
-                });
-                
-                progressBar.addEventListener("click", function(e) {
+            if (progressBarContainer) {
+                progressBarContainer.addEventListener("click", function(e) {
                     if (!window.dragging) {
-                        var rect = progressBar.getBoundingClientRect();
+                        var rect = progressBarContainer.getBoundingClientRect();
                         var x = e.clientX - rect.left;
                         if (x < 0) x = 0;
                         if (x > rect.width) x = rect.width;
@@ -2297,9 +2318,6 @@
 
             document.addEventListener("mousemove", function(e) { 
                 dragMove(e, lessonId);
-                if (window.dragging && window.currentDragLessonId === lessonId) {
-                    showTimeIndicator(e, lessonId);
-                }
             });
             document.addEventListener("mouseup", function(e) { endDrag(e); });
             document.addEventListener("touchmove", function(e) { dragMove(e, lessonId); }, {passive: false});
@@ -2322,34 +2340,6 @@
                     adjustPlayerSize(lessonId);
                 }, 300);
             });
-        }
-
-        // Función para mostrar el indicador de tiempo
-        function showTimeIndicator(e, lessonId) {
-            var progressBar = document.getElementById("progressBar-" + lessonId);
-            var timeIndicator = document.getElementById("timeIndicator-" + lessonId);
-            var player = currentPlayers[lessonId];
-            
-            if (!progressBar || !timeIndicator || !player) return;
-            
-            var rect = progressBar.getBoundingClientRect();
-            var x = e.clientX - rect.left;
-            if (x < 0) x = 0;
-            if (x > rect.width) x = rect.width;
-            
-            var percent = x / rect.width;
-            var duration = player.getDuration();
-            var time = duration * percent;
-            
-            // Formatear el tiempo
-            var minutes = Math.floor(time / 60);
-            var seconds = Math.floor(time % 60);
-            var timeString = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
-            
-            // Posicionar y mostrar el indicador
-            timeIndicator.textContent = timeString;
-            timeIndicator.style.left = x + "px";
-            timeIndicator.style.display = "block";
         }
 
         function togglePlayPause(lessonId) {
@@ -2381,10 +2371,10 @@
         function dragMove(e, lessonId) {
             if (window.dragging && window.currentDragLessonId === lessonId) {
                 e.preventDefault();
-                var progressBar = document.getElementById("progressBar-" + lessonId);
-                if (!progressBar) return;
+                var progressBarContainer = document.getElementById("progressBar-" + lessonId);
+                if (!progressBarContainer) return;
 
-                var rect = progressBar.getBoundingClientRect();
+                var rect = progressBarContainer.getBoundingClientRect();
                 var clientX = e.touches ? e.touches[0].clientX : e.clientX;
                 var x = clientX - rect.left;
                 
@@ -2396,9 +2386,6 @@
         }
 
         function endDrag(e) {
-            var timeIndicator = document.getElementById("timeIndicator-" + window.currentDragLessonId);
-            if (timeIndicator) timeIndicator.style.display = 'none';
-            
             window.dragging = false;
             window.currentDragLessonId = null;
         }
@@ -2413,14 +2400,14 @@
             
             var progressElement = document.getElementById("progress-" + lessonId);
             var thumbElement = document.getElementById("thumb-" + lessonId);
-            var progressBarElement = document.getElementById("progressBar-" + lessonId);
+            var progressBarContainer = document.getElementById("progressBar-" + lessonId);
             
             if (progressElement) {
                 progressElement.style.width = (percent * 100) + "%";
             }
             
-            if (thumbElement && progressBarElement) {
-                thumbElement.style.left = (percent * progressBarElement.offsetWidth) + "px";
+            if (thumbElement && progressBarContainer) {
+                thumbElement.style.left = (percent * progressBarContainer.offsetWidth) + "px";
             }
         }
 
@@ -2479,7 +2466,6 @@
 
         function fullscreenChange(lessonId) {
             var exitBtn = document.getElementById("exitFullscreenBtn-" + lessonId);
-            var progressBar = document.getElementById("progressBar-" + lessonId);
             
             var isFullscreen = document.fullscreenElement || 
                               document.webkitFullscreenElement || 
@@ -2487,14 +2473,6 @@
             
             if (exitBtn) {
                 exitBtn.style.display = isFullscreen ? "flex" : "none";
-            }
-            
-            if (progressBar) {
-                if (isFullscreen) {
-                    progressBar.classList.add("fullscreen");
-                } else {
-                    progressBar.classList.remove("fullscreen");
-                }
             }
             
             var player = currentPlayers[lessonId];
@@ -2730,7 +2708,7 @@
             // Limpiar todo
             for (var lessonId in currentPlayers) {
                 if (currentPlayers[lessonId]) {
-                    currentPlayers[lessonId].pauseVideo();
+                    currentPlayers[lessonId].destroy();
                 }
             }
             
