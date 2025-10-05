@@ -46,7 +46,7 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 15px 20px 5px 20px !important;
-            min-height: calc(100vh - 40px);
+            min-height: calc(100vh - 10px); /* CAMBIO: Reducido de 40px a 10px */
         }
 
         /* === CABECERA SIMPLIFICADA === */
@@ -371,9 +371,9 @@
 
         /* === DASHBOARD SIMPLIFICADO === */
         .dashboard {
-            max-height: calc(100vh - 100px) !important;
+            max-height: calc(100vh - 30px) !important; /* CAMBIO: Reducido de 100px a 30px */
             overflow-y: auto;
-            margin-bottom: 10px !important;
+            margin-bottom: 5px !important; /* CAMBIO: Ya estaba en 5px, confirmado */
         }
 
         /* === GRID DE CURSOS CON ESTILO DE TARJETA COMO MÓDULOS === */
@@ -586,7 +586,7 @@
         .expanded-module {
             width: 100%;
             padding: 0;
-            margin-bottom: 10px !important;
+            margin-bottom: 5px !important; /* CAMBIO: Reducido de 10px a 5px */
         }
 
         .module-header {
@@ -630,7 +630,7 @@
 
         .content-list-expanded {
             margin-top: 15px;
-            margin-bottom: 5px !important;
+            margin-bottom: 5px !important; /* CAMBIO: Ya estaba en 5px, confirmado */
         }
 
         /* === CLASES CON FONDO BLANCO === */
@@ -847,7 +847,7 @@
             cursor: pointer;
         }
 
-        /* === CONTROLES DE VIDEO MEJORADOS - ESTILO YOUTUBE CON SOPORTE FULLSCREEN === */
+        /* === CONTROLES DE VIDEO MEJORADOS - SIEMPRE VISIBLES EN FULLSCREEN === */
         .video-controls-panel {
             background: rgba(0, 0, 0, 0.8);
             border-radius: 0 0 8px 8px;
@@ -894,33 +894,6 @@
             pointer-events: auto;
         }
 
-        /* El overlay NO debe cubrir los controles */
-        .fullscreen-mode .overlay {
-            height: calc(100% - 80px);
-            bottom: 80px;
-        }
-
-        /* Barra de progreso más visible en fullscreen */
-        .fullscreen-mode .progress-bar-container {
-            height: 8px;
-            background: rgba(255, 255, 255, 0.4);
-        }
-
-        .fullscreen-mode .progress-bar-container:hover {
-            height: 10px;
-        }
-
-        .fullscreen-mode .progress-bar {
-            background: var(--naranja);
-        }
-
-        .fullscreen-mode .progress-thumb {
-            width: 18px;
-            height: 18px;
-            opacity: 1;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.6);
-        }
-
         .progress-controls {
             display: flex;
             align-items: center;
@@ -944,11 +917,12 @@
 
         /* Barra de progreso más grande en fullscreen */
         .fullscreen-mode .progress-bar-container {
-            height: 6px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.4);
         }
 
         .fullscreen-mode .progress-bar-container:hover {
-            height: 8px;
+            height: 10px;
         }
 
         .progress-bar {
@@ -963,6 +937,10 @@
 
         .progress-bar:hover {
             background: var(--azul);
+        }
+
+        .fullscreen-mode .progress-bar {
+            background: var(--naranja);
         }
 
         .progress-thumb {
@@ -993,8 +971,10 @@
 
         /* Thumb más grande en fullscreen */
         .fullscreen-mode .progress-thumb {
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
+            opacity: 1;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.6);
         }
 
         .time-display {
@@ -1215,9 +1195,11 @@
             cursor: pointer;
         }
 
-        /* El overlay no debe cubrir los controles en fullscreen */
+        /* El overlay NO debe cubrir los controles en fullscreen */
         .fullscreen-mode .overlay {
-            height: calc(100% - 70px);
+            height: calc(100% - 80px);
+            bottom: auto;
+            top: 0;
         }
 
         /* === MODAL UNIFICADO PARA MANUALES === */
@@ -1303,7 +1285,8 @@
         /* === RESPONSIVE MEJORADO === */
         @media (max-width: 768px) {
             .container {
-                padding: 10px;
+                padding: 10px 10px 5px 10px !important; /* CAMBIO: Reducido padding inferior */
+                min-height: calc(100vh - 10px);
             }
             
             .header-container {
@@ -1401,20 +1384,8 @@
             
             .fullscreen-mode .overlay {
                 height: calc(100% - 100px);
-                bottom: 100px;
-            }
-            
-            .fullscreen-mode .progress-bar-container {
-                height: 10px;
-            }
-            
-            .fullscreen-mode .progress-bar-container:active {
-                height: 12px;
-            }
-            
-            .fullscreen-mode .progress-thumb {
-                width: 22px;
-                height: 22px;
+                bottom: auto;
+                top: 0;
             }
             
             .fullscreen-mode .control-btn {
@@ -1441,33 +1412,17 @@
             }
             
             .fullscreen-mode .progress-bar-container {
-                height: 8px;
-            }
-            
-            .fullscreen-mode .progress-bar-container:hover {
                 height: 10px;
             }
             
+            .fullscreen-mode .progress-bar-container:active {
+                height: 12px;
+            }
+            
             .fullscreen-mode .progress-thumb {
-                width: 20px;
-                height: 20px;
+                width: 22px;
+                height: 22px;
                 opacity: 1;
-            }
-            
-            .fullscreen-mode .corner-box {
-                bottom: 100px !important;
-                right: 15px !important;
-                width: 48px !important;
-                height: 26px !important;
-                font-size: 14px !important;
-            }
-            
-            .fullscreen-mode .exit-fullscreen {
-                width: 52px;
-                height: 52px;
-                font-size: 24px;
-                top: 20px;
-                right: 20px;
             }
             
             /* Controles más accesibles en landscape móvil */
@@ -1486,18 +1441,17 @@
                     font-size: 18px;
                 }
                 
-                .fullscreen-mode .corner-box {
-                    bottom: 80px !important;
-                }
-                
                 .fullscreen-mode .overlay {
-                    height: calc(100% - 80px);
-                    bottom: 80px;
+                    height: calc(100% - 70px);
                 }
             }
         }
         
         @media (min-width: 769px) and (max-width: 1024px) {
+            .control-btn-text {
+                display: block;
+            }
+            
             .fullscreen-mode .control-btn {
                 padding: 12px 18px;
                 font-size: 15px;
@@ -1525,6 +1479,14 @@
                 display: block;
             }
             
+            .fullscreen-mode .video-controls-panel.controls-hidden {
+                opacity: 0.2;
+            }
+            
+            .fullscreen-mode .video-controls-panel.controls-hidden:hover {
+                opacity: 1;
+            }
+            
             .fullscreen-mode .control-btn {
                 padding: 12px 20px;
                 font-size: 16px;
@@ -1544,14 +1506,6 @@
             .fullscreen-mode .time-display {
                 font-size: 16px;
                 min-width: 130px;
-            }
-            
-            .fullscreen-mode .video-controls-panel.controls-hidden {
-                opacity: 0.2;
-            }
-            
-            .fullscreen-mode .video-controls-panel.controls-hidden:hover {
-                opacity: 1;
             }
         }
         
