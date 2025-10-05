@@ -433,6 +433,7 @@
         .video-container {
             position: relative;
             width: 100%;
+            max-width: 100%;
             background: #000;
             border-radius: 8px 8px 0 0;
             overflow: hidden;
@@ -440,32 +441,49 @@
             aspect-ratio: 16/9;
         }
 
+        .video-container div[id^="player-"] {
+            width: 100% !important;
+            height: 100% !important;
+            max-width: 100%;
+            border-radius: 8px 8px 0 0;
+        }
+
+        /* Video container en fullscreen con espacio para zócalo */
         .video-container.fullscreen-mode {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
-            height: 100vh;
+            height: calc(100vh - 80px); /* Espacio para el zócalo */
+            max-width: 100%;
             z-index: 9999;
             background: #000;
             border-radius: 0;
+            padding: 0;
             aspect-ratio: unset;
         }
 
+        .video-container.fullscreen-mode div[id^="player-"] {
+            width: 100% !important;
+            height: 100% !important;
+            border-radius: 0;
+        }
+
+        /* === CONTROLES DE VIDEO CON ZÓCALO FIJO === */
         .video-controls-panel {
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.9);
             border-radius: 0 0 8px 8px;
-            padding: 8px 12px;
+            padding: 10px 15px;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
             width: 100%;
             backdrop-filter: blur(5px);
             position: relative;
             z-index: 50;
-            transition: opacity 0.3s ease;
         }
 
+        /* Controles en modo fullscreen - ZÓCALO FIJO */
         .fullscreen-mode .video-controls-panel {
             position: fixed;
             bottom: 0;
@@ -473,45 +491,59 @@
             right: 0;
             width: 100vw;
             border-radius: 0;
-            padding: 12px 20px;
-            background: rgba(0, 0, 0, 0.85);
+            padding: 15px 25px;
+            background: rgba(0, 0, 0, 0.95);
             z-index: 9998;
+            box-shadow: 0 -3px 15px rgba(0, 0, 0, 0.5);
         }
 
         .progress-controls {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             width: 100%;
         }
 
-        .progress-bar-container.video {
+        .progress-bar-container {
             flex: 1;
-            height: 4px;
+            height: 5px;
             background: rgba(255, 255, 255, 0.3);
-            border-radius: 2px;
+            border-radius: 3px;
             position: relative;
             cursor: pointer;
             transition: height 0.2s;
         }
 
-        .progress-bar-container.video:hover {
-            height: 6px;
+        .progress-bar-container:hover {
+            height: 7px;
         }
 
-        .fullscreen-mode .progress-bar-container.video {
+        /* Barra de progreso en fullscreen */
+        .fullscreen-mode .progress-bar-container {
             height: 8px;
+            background: rgba(255, 255, 255, 0.4);
         }
 
-        .progress-bar.video {
+        .fullscreen-mode .progress-bar-container:hover,
+        .fullscreen-mode .progress-bar-container:active {
+            height: 10px;
+        }
+
+        .progress-bar {
             height: 100%;
             background: var(--azul-claro);
-            border-radius: 2px;
+            border-radius: 3px;
             width: 0%;
             position: relative;
+            transition: background 0.2s;
+            pointer-events: none;
         }
 
-        .fullscreen-mode .progress-bar.video {
+        .progress-bar:hover {
+            background: var(--azul);
+        }
+
+        .fullscreen-mode .progress-bar {
             background: var(--naranja);
         }
 
@@ -519,48 +551,56 @@
             position: absolute;
             top: 50%;
             transform: translate(-50%, -50%);
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             background: #fff;
             border-radius: 50%;
-            cursor: pointer;
+            cursor: grab;
             z-index: 60;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
             opacity: 0;
             transition: opacity 0.2s, transform 0.2s;
             left: 0px;
             pointer-events: auto;
         }
 
-        .progress-bar-container.video:hover .progress-thumb,
-        .fullscreen-mode .progress-thumb {
+        .progress-thumb:active {
+            cursor: grabbing;
+        }
+
+        .progress-bar-container:hover .progress-thumb {
             opacity: 1;
         }
 
         .progress-thumb:hover {
-            transform: translate(-50%, -50%) scale(1.3);
+            transform: translate(-50%, -50%) scale(1.2);
         }
 
+        /* Thumb siempre visible en fullscreen */
         .fullscreen-mode .progress-thumb {
             width: 18px;
             height: 18px;
             opacity: 1;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.6);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.7);
+        }
+
+        .fullscreen-mode .progress-thumb:hover {
+            transform: translate(-50%, -50%) scale(1.3);
         }
 
         .time-display {
             color: white;
-            font-size: 11px;
-            font-weight: 500;
-            min-width: 90px;
+            font-size: 12px;
+            font-weight: 600;
+            min-width: 95px;
             text-align: center;
             font-family: 'Roboto Mono', monospace;
-            opacity: 0.9;
+            user-select: none;
         }
 
         .fullscreen-mode .time-display {
-            font-size: 14px;
-            min-width: 110px;
+            font-size: 15px;
+            min-width: 120px;
         }
 
         .control-buttons {
@@ -568,112 +608,144 @@
             align-items: center;
             justify-content: space-between;
             width: 100%;
-            gap: 8px;
+            gap: 10px;
         }
 
         .control-buttons-left {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             flex: 1;
         }
 
         .control-buttons-right {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .control-btn {
-            background: transparent;
+            background: rgba(255, 255, 255, 0.1);
             color: #fff;
             border: none;
-            padding: 6px 8px;
-            border-radius: 4px;
-            font-size: 11px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
             align-items: center;
-            gap: 4px;
-            opacity: 0.9;
+            gap: 5px;
+            min-width: auto;
+            user-select: none;
         }
 
         .control-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            opacity: 1;
+            background: rgba(255, 255, 255, 0.2);
             transform: scale(1.05);
         }
 
-        .control-btn-icon {
+        .control-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Botones en fullscreen */
+        .fullscreen-mode .control-btn {
+            padding: 12px 16px;
             font-size: 14px;
-            width: 16px;
-            height: 16px;
+            border-radius: 8px;
+        }
+
+        .control-btn-icon {
+            font-size: 16px;
+            width: 18px;
+            height: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .fullscreen-mode .control-btn-icon {
-            font-size: 18px;
-            width: 20px;
-            height: 20px;
+            font-size: 20px;
+            width: 22px;
+            height: 22px;
         }
 
         .control-btn-text {
-            font-size: 11px;
+            font-size: 12px;
         }
 
         .fullscreen-mode .control-btn-text {
             font-size: 14px;
-            display: block;
         }
 
+        /* Overlay no cubre los controles */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            cursor: pointer;
+        }
+
+        .fullscreen-mode .overlay {
+            height: 100%;
+            pointer-events: auto;
+        }
+
+        /* Corner box ajustado */
         .corner-box {
             position: absolute;
-            bottom: 80px !important;
-            right: 8px !important;
-            width: 32px !important;
-            height: 18px !important;
+            bottom: 10px;
+            right: 10px;
+            width: 35px;
+            height: 20px;
             background: rgba(0,0,0,0.8);
-            border-radius: 3px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 10px !important;
-            z-index: 20;
-            pointer-events: auto;
-            cursor: default;
-            color: #fff;
-            backdrop-filter: blur(5px);
-            transition: all 0.3s ease;
-        }
-
-        .fullscreen-mode .corner-box {
-            bottom: 90px !important;
-            right: 20px !important;
-            width: 40px !important;
-            height: 22px !important;
-            font-size: 12px !important;
-        }
-
-        .exit-fullscreen {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 32px;
-            height: 32px;
-            background: rgba(255,255,255,0.9);
             border-radius: 4px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 16px;
+            z-index: 20;
+            pointer-events: none;
+            backdrop-filter: blur(5px);
+        }
+
+        .fullscreen-mode .corner-box {
+            bottom: 95px; /* Arriba del zócalo */
+            right: 15px;
+            width: 45px;
+            height: 25px;
+        }
+
+        .corner-box.has-logo .school-logo-mini {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain;
+            border-radius: 2px;
+        }
+
+        /* Exit fullscreen button */
+        .exit-fullscreen {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
             z-index: 9999;
             cursor: pointer;
             color: #000;
             font-weight: bold;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
             opacity: 0;
             transition: opacity 0.3s, transform 0.2s;
         }
@@ -688,29 +760,16 @@
             transform: scale(1.1);
         }
 
+        .exit-fullscreen:active {
+            transform: scale(0.95);
+        }
+
         .fullscreen-mode .exit-fullscreen {
             width: 44px;
             height: 44px;
-            font-size: 20px;
+            font-size: 22px;
             top: 15px;
             right: 15px;
-            opacity: 1;
-        }
-
-        .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 10;
-            cursor: pointer;
-        }
-
-        .fullscreen-mode .overlay {
-            height: calc(100% - 80px);
-            bottom: auto;
-            top: 0;
         }
 
         /* === SISTEMA DE LOGIN OPTIMIZADO === */
@@ -1003,140 +1062,99 @@
                 font-size: 10px;
             }
             
-            /* Controles en fullscreen móvil */
+            /* Fullscreen móvil */
+            .video-container.fullscreen-mode {
+                height: calc(100vh - 95px);
+            }
+            
             .fullscreen-mode .video-controls-panel {
-                padding: 15px;
-                background: rgba(0, 0, 0, 0.9);
-            }
-            
-            .fullscreen-mode .video-controls-panel.controls-hidden {
-                opacity: 0.4;
-            }
-            
-            .fullscreen-mode .overlay {
-                height: calc(100% - 100px);
-                bottom: auto;
-                top: 0;
+                padding: 12px 15px;
             }
             
             .fullscreen-mode .control-btn {
-                padding: 12px 16px;
-                font-size: 16px;
+                padding: 14px 14px;
                 min-width: 48px;
                 min-height: 48px;
                 justify-content: center;
             }
             
             .fullscreen-mode .control-btn-icon {
-                font-size: 22px;
-                width: 24px;
-                height: 24px;
-            }
-            
-            .fullscreen-mode .control-btn-text {
-                display: none;
+                font-size: 24px;
+                width: 26px;
+                height: 26px;
             }
             
             .fullscreen-mode .time-display {
-                font-size: 16px;
-                min-width: 100px;
+                font-size: 14px;
+                min-width: 90px;
             }
             
-            .fullscreen-mode .progress-bar-container.video {
+            .fullscreen-mode .progress-bar-container {
                 height: 10px;
-            }
-            
-            .fullscreen-mode .progress-bar-container.video:active {
-                height: 12px;
             }
             
             .fullscreen-mode .progress-thumb {
                 width: 22px;
                 height: 22px;
-                opacity: 1;
             }
             
-            /* Controles más accesibles en landscape móvil */
+            .fullscreen-mode .corner-box {
+                bottom: 110px;
+                width: 40px;
+                height: 22px;
+            }
+            
+            /* Landscape móvil */
             @media (orientation: landscape) {
+                .video-container.fullscreen-mode {
+                    height: calc(100vh - 75px);
+                }
+                
                 .fullscreen-mode .video-controls-panel {
-                    padding: 10px 15px;
+                    padding: 8px 15px;
                 }
                 
                 .fullscreen-mode .control-btn {
-                    padding: 8px 12px;
-                    min-width: 40px;
-                    min-height: 40px;
+                    padding: 10px 12px;
+                    min-width: 44px;
+                    min-height: 44px;
                 }
                 
                 .fullscreen-mode .control-btn-icon {
-                    font-size: 18px;
+                    font-size: 20px;
                 }
                 
-                .fullscreen-mode .overlay {
-                    height: calc(100% - 70px);
+                .fullscreen-mode .corner-box {
+                    bottom: 85px;
                 }
             }
         }
         
         @media (min-width: 769px) and (max-width: 1024px) {
             .control-btn-text {
-                display: block;
+                display: inline;
+            }
+            
+            .video-container.fullscreen-mode {
+                height: calc(100vh - 85px);
             }
             
             .fullscreen-mode .control-btn {
-                padding: 12px 18px;
-                font-size: 15px;
-            }
-            
-            .fullscreen-mode .control-btn-icon {
-                font-size: 20px;
-                width: 22px;
-                height: 22px;
+                padding: 12px 16px;
             }
             
             .fullscreen-mode .control-btn-text {
-                display: inline;
-                font-size: 15px;
-            }
-            
-            .fullscreen-mode .time-display {
-                font-size: 15px;
-                min-width: 120px;
+                font-size: 13px;
             }
         }
         
         @media (min-width: 1025px) {
             .control-btn-text {
-                display: block;
-            }
-            
-            .fullscreen-mode .video-controls-panel.controls-hidden {
-                opacity: 0.2;
-            }
-            
-            .fullscreen-mode .video-controls-panel.controls-hidden:hover {
-                opacity: 1;
-            }
-            
-            .fullscreen-mode .control-btn {
-                padding: 12px 20px;
-                font-size: 16px;
-            }
-            
-            .fullscreen-mode .control-btn-icon {
-                font-size: 20px;
-                width: 24px;
-                height: 24px;
-            }
-            
-            .fullscreen-mode .control-btn-text {
                 display: inline;
-                font-size: 16px;
             }
             
-            .fullscreen-mode .time-display {
-                font-size: 16px;
-                min-width: 130px;
+            .video-container.fullscreen-mode {
+                height: calc(100vh - 80px);
             }
         }
         
@@ -1182,7 +1200,7 @@
             outline-offset: 2px;
         }
 
-        .progress-bar-container.video:focus-within {
+        .progress-bar-container:focus-within {
             outline: 2px solid var(--azul-claro);
             outline-offset: 2px;
         }
@@ -1968,8 +1986,8 @@
                         // Panel de controles estilo YouTube
                         expandedContent += "<div class='video-controls-panel'>";
                         expandedContent += "<div class='progress-controls'>";
-                        expandedContent += "<div class='progress-bar-container video' id='progressBar-" + lessonId + "'>";
-                        expandedContent += "<div class='progress-bar video' id='progress-" + lessonId + "'>";
+                        expandedContent += "<div class='progress-bar-container' id='progressBar-" + lessonId + "'>";
+                        expandedContent += "<div class='progress-bar' id='progress-" + lessonId + "'>";
                         expandedContent += "<div class='progress-thumb' id='thumb-" + lessonId + "'></div>";
                         expandedContent += "</div>";
                         expandedContent += "</div>";
@@ -2397,6 +2415,7 @@
             }
         }
 
+        // === FUNCIÓN SETUP CUSTOM CONTROLS MEJORADA ===
         function setupCustomControls(lessonId) {
             var overlay = document.getElementById("overlay-" + lessonId);
             var playPauseBtn = document.getElementById("playPauseBtn-" + lessonId);
@@ -2405,92 +2424,19 @@
             var exitFullscreenBtn = document.getElementById("exitFullscreenBtn-" + lessonId);
             var progressBarContainer = document.getElementById("progressBar-" + lessonId);
             var thumb = document.getElementById("thumb-" + lessonId);
-            var controlsPanel = document.querySelector('#player-container-' + lessonId + ' .video-controls-panel');
 
-            // Control de visibilidad de controles en fullscreen
-            let controlsTimeout;
-            
-            function showControls() {
-                if (controlsPanel) {
-                    controlsPanel.classList.remove('controls-hidden');
-                    controlsPanel.classList.add('controls-active');
-                }
-            }
-            
-            function hideControlsWithDelay() {
-                if (controlsPanel) {
-                    clearTimeout(controlsTimeout);
-                    controlsTimeout = setTimeout(() => {
-                        var container = document.getElementById("videoContainer-" + lessonId);
-                        if (container && container.classList.contains('fullscreen-mode')) {
-                            controlsPanel.classList.add('controls-hidden');
-                            controlsPanel.classList.remove('controls-active');
-                        }
-                    }, 3000); // Ocultar después de 3 segundos de inactividad
-                }
-            }
-            
-            // Mostrar controles al mover el mouse o tocar
             if (overlay) {
                 overlay.onclick = function(e) { 
                     if (!e.target.closest('.video-controls-panel')) {
                         togglePlayPause(lessonId);
-                        showControls();
-                        hideControlsWithDelay();
                     }
                 };
-                
-                overlay.addEventListener('mousemove', function() {
-                    showControls();
-                    hideControlsWithDelay();
-                });
-                
-                overlay.addEventListener('touchstart', function() {
-                    showControls();
-                    hideControlsWithDelay();
-                });
             }
             
-            // Mostrar controles al interactuar con ellos
-            if (controlsPanel) {
-                controlsPanel.addEventListener('mouseenter', showControls);
-                controlsPanel.addEventListener('mousemove', showControls);
-                controlsPanel.addEventListener('touchstart', showControls);
-                controlsPanel.addEventListener('click', function() {
-                    showControls();
-                    hideControlsWithDelay();
-                });
-            }
-            
-            if (playPauseBtn) {
-                playPauseBtn.onclick = function() { 
-                    togglePlayPause(lessonId);
-                    showControls();
-                    hideControlsWithDelay();
-                };
-            }
-            
-            if (restartBtn) {
-                restartBtn.onclick = function() { 
-                    restartVideo(lessonId);
-                    showControls();
-                    hideControlsWithDelay();
-                };
-            }
-            
-            if (fullscreenBtn) {
-                fullscreenBtn.onclick = function() { 
-                    goFullScreen(lessonId);
-                    showControls();
-                    hideControlsWithDelay();
-                };
-            }
-            
-            if (exitFullscreenBtn) {
-                exitFullscreenBtn.onclick = function() { 
-                    exitFullScreen(lessonId);
-                };
-            }
+            if (playPauseBtn) playPauseBtn.onclick = function() { togglePlayPause(lessonId); };
+            if (restartBtn) restartBtn.onclick = function() { restartVideo(lessonId); };
+            if (fullscreenBtn) fullscreenBtn.onclick = function() { goFullScreen(lessonId); };
+            if (exitFullscreenBtn) exitFullscreenBtn.onclick = function() { exitFullScreen(lessonId); };
 
             // Sistema de arrastre para la barra de progreso
             if (progressBarContainer) {
@@ -2501,26 +2447,31 @@
                         if (x < 0) x = 0;
                         if (x > rect.width) x = rect.width;
                         seekToPosition(lessonId, x / rect.width);
-                        showControls();
-                        hideControlsWithDelay();
                     }
                 });
 
-                // Mostrar controles al interactuar con la barra
-                progressBarContainer.addEventListener("mouseenter", showControls);
-                progressBarContainer.addEventListener("touchstart", showControls);
+                progressBarContainer.addEventListener("mouseenter", function() {
+                    if (thumb) thumb.style.opacity = "1";
+                });
+                
+                progressBarContainer.addEventListener("mouseleave", function() {
+                    if (thumb && !window.dragging) thumb.style.opacity = "0";
+                });
+                
+                // Soporte táctil para móvil
+                progressBarContainer.addEventListener("touchstart", function(e) {
+                    if (thumb) thumb.style.opacity = "1";
+                });
             }
 
             if (thumb) {
                 thumb.addEventListener("mousedown", function(e) { 
                     e.preventDefault();
-                    startDrag(e, lessonId);
-                    showControls();
+                    startDrag(e, lessonId); 
                 });
                 thumb.addEventListener("touchstart", function(e) { 
                     e.preventDefault();
-                    startDrag(e, lessonId);
-                    showControls();
+                    startDrag(e, lessonId); 
                 }, {passive: false});
             }
 
@@ -2530,14 +2481,12 @@
             });
             document.addEventListener("mouseup", function(e) { 
                 endDrag(e);
-                hideControlsWithDelay();
             });
             document.addEventListener("touchmove", function(e) { 
                 dragMove(e, lessonId);
             }, {passive: false});
             document.addEventListener("touchend", function(e) { 
                 endDrag(e);
-                hideControlsWithDelay();
             });
             document.addEventListener("touchcancel", function(e) { 
                 endDrag(e);
@@ -2546,18 +2495,12 @@
             // Eventos de pantalla completa
             document.addEventListener('fullscreenchange', function() { 
                 fullscreenChange(lessonId);
-                showControls();
-                hideControlsWithDelay();
             });
             document.addEventListener('webkitfullscreenchange', function() { 
                 fullscreenChange(lessonId);
-                showControls();
-                hideControlsWithDelay();
             });
             document.addEventListener('msfullscreenchange', function() { 
                 fullscreenChange(lessonId);
-                showControls();
-                hideControlsWithDelay();
             });
             
             // Redimensionamiento
@@ -2571,8 +2514,6 @@
                 setTimeout(function() {
                     fullscreenChange(lessonId);
                     adjustPlayerSize(lessonId);
-                    showControls();
-                    hideControlsWithDelay();
                 }, 300);
             });
 
