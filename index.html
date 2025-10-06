@@ -737,29 +737,34 @@
 /* === CORRECCIÓN DEFINITIVA PARA LANDSCAPE - PROPORCIÓN MANTENIDA === */
 @media (max-width: 926px) and (orientation: landscape) {
     
-    /* 🔧 VIDEO: mantiene proporción sin recortes */
+    /* 🔧 VIDEO CONTAINER: más pequeño con bordes negros */
     :-webkit-full-screen .video-container,
     :-moz-full-screen .video-container,
     :fullscreen .video-container {
         width: 100% !important;
         height: auto !important;
         aspect-ratio: 16 / 9 !important;
-        max-height: 70vh !important;   /* deja espacio para los controles */
-        margin: 0 auto !important;
+        max-height: 60vh !important;   /* REDUCIDO de 70vh a 60vh */
+        margin: 20px auto !important;  /* Agregado margen para separación */
+        background: #000 !important;   /* Fondo negro para bordes */
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
     }
 
-    /* 🔧 CONTROLES: aseguran visibilidad completa */
+    /* 🔧 CONTROLES: más espacio ahora */
     :-webkit-full-screen .controls-panel,
     :-moz-full-screen .controls-panel,
     :fullscreen .controls-panel {
         display: flex !important;
         flex-direction: column !important;
         justify-content: flex-start;
-        padding: 10px 12px !important;
+        padding: 12px 15px !important;
         background: #000 !important;
         border-radius: 0 !important;
         flex-shrink: 0;
-        max-height: 30vh !important;   /* reserva el resto de la pantalla */
+        max-height: 40vh !important;   /* AUMENTADO de 30vh a 40vh */
+        min-height: 120px !important;  /* Altura mínima garantizada */
     }
 
     /* Ajuste de botones */
@@ -767,20 +772,22 @@
     :-moz-full-screen .video-controls button,
     :fullscreen .video-controls button {
         font-size: 12px !important;
-        padding: 6px 10px !important;
+        padding: 8px 12px !important;
         flex: 1;
         min-width: 80px;
+        margin: 4px !important;
     }
 
-    /* 🔧 ELEMENTO DEL REPRODUCTOR: mantener proporción */
+    /* 🔧 ELEMENTO DEL REPRODUCTOR: video más pequeño dentro del contenedor */
     :-webkit-full-screen .video-container div[id^="player-"],
     :-moz-full-screen .video-container div[id^="player-"],
     :fullscreen .video-container div[id^="player-"] {
         aspect-ratio: 16 / 9 !important;
-        width: 100% !important;
+        width: 90% !important;         /* REDUCIDO ancho al 90% */
         height: auto !important;
-        max-height: 70vh !important;
-        object-fit: contain;
+        max-height: 55vh !important;   /* REDUCIDO aún más */
+        object-fit: contain !important;
+        margin: 0 auto !important;
     }
 }
             
