@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Learning Path - Dashboard</title>
     <script src="https://www.youtube.com/iframe_api"></script>
- <style>
+<style>
     /* === SISTEMA DE DISEÑO UNIFICADO === */
     :root {
         --naranja: #fbbf24;
@@ -803,7 +803,6 @@
             background: #000 !important;
             box-shadow: 0 0 0 2px rgba(255,255,255,0.1);
             overflow: hidden !important;
-            position: relative !important;
         }
 
         /* 🔹 REPRODUCTOR Y SU IFRAME DENTRO DEL CONTENEDOR */
@@ -816,9 +815,6 @@
             max-height: 100% !important;
             object-fit: contain !important;
             aspect-ratio: 16 / 9 !important;
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
         }
 
         /* 🔹 CRÍTICO: Forzar el iframe de YouTube a respetar el contenedor */
@@ -830,9 +826,6 @@
             max-width: 100% !important;
             max-height: 100% !important;
             object-fit: contain !important;
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
         }
 
         /* 🔹 CONTROLES: altura fija en la parte inferior */
@@ -1417,1505 +1410,1617 @@
         </div>
     </div>
 
-    <script>
-        // === CONFIGURACIÓN GITHUB ===
-        const CONFIG = {
-            API_BASE_URL: 'https://escuuelaapi1.jorge-altagracia.workers.dev/'
-        };
+   <script>
+    // === CONFIGURACIÓN GITHUB ===
+    const CONFIG = {
+        API_BASE_URL: 'https://escuuelaapi1.jorge-altagracia.workers.dev/'
+    };
 
-        // === VARIABLES GLOBALES ===
-        let currentUser = null;
-        let userProgress = {};
-        let userModules = [];
-        let currentPlayers = {};
-        let alumnoActual = null;
-        let cursosCache = null;
-        let currentCourseId = null;
-        let currentGrupoId = null;
-        let escuelaData = null;
-        let currentCourseData = null;
-        let dragging = false;
+    // === VARIABLES GLOBALES ===
+    let currentUser = null;
+    let userProgress = {};
+    let userModules = [];
+    let currentPlayers = {};
+    let alumnoActual = null;
+    let cursosCache = null;
+    let currentCourseId = null;
+    let currentGrupoId = null;
+    let escuelaData = null;
+    let currentCourseData = null;
+    let dragging = false;
+    let iframeWatchers = {};
 
-        // === SISTEMA DE JSONP MEJORADO ===
-        function callJSONP(action, data = {}) {
-            return new Promise((resolve, reject) => {
-                const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
-                
-                // Construir URL con parámetros
-                const params = new URLSearchParams();
-                params.append('action', action);
-                params.append('callback', callbackName);
-                
-                // Agregar datos específicos
-                Object.keys(data).forEach(key => {
-                    if (data[key] !== undefined && data[key] !== null) {
-                        params.append(key, String(data[key]));
-                    }
-                });
-                
-                const url = CONFIG.API_BASE_URL + '?' + params.toString();
-                
-                console.log('🔍 Llamando a:', url);
-                
-                const script = document.createElement('script');
-                script.src = url;
-                
-                // Configurar callback global
-                window[callbackName] = function(response) {
-                    // Limpiar
-                    delete window[callbackName];
-                    if (script.parentNode) {
-                        script.parentNode.removeChild(script);
-                    }
-                    
-                    console.log('📨 Respuesta recibida:', response);
-                    
-                    if (response && response.success !== undefined) {
-                        resolve(response);
-                    } else {
-                        reject(new Error(response ? response.error : 'Error desconocido'));
-                    }
-                };
-                
-                // Manejar errores
-                script.onerror = function() {
-                    delete window[callbackName];
-                    if (script.parentNode) {
-                        script.parentNode.removeChild(script);
-                    }
-                    reject(new Error('Error de red al conectar con el servidor'));
-                };
-                
-                // Timeout después de 30 segundos
-                const timeoutId = setTimeout(() => {
-                    if (window[callbackName]) {
-                        delete window[callbackName];
-                        if (script.parentNode) {
-                            script.parentNode.removeChild(script);
-                        }
-                        reject(new Error('Timeout de la solicitud después de 30 segundos'));
-                    }
-                }, 30000);
-                
-                // Limpiar timeout cuando se recibe respuesta
-                const originalCallback = window[callbackName];
-                window[callbackName] = function(response) {
-                    clearTimeout(timeoutId);
-                    originalCallback(response);
-                };
-                
-                document.body.appendChild(script);
-            });
-        }
-
-        // === INICIALIZACIÓN ===
-        document.addEventListener('DOMContentLoaded', function() {
-            loadSchoolData().catch(error => {
-                console.log('No se pudieron cargar los datos de la escuela:', error.message);
-            });
-        });
-
-        // === FUNCIONES PARA DATOS DE LA ESCUELA ===
-        async function loadSchoolData() {
-            try {
-                const response = await callJSONP('escuela', {});
-                if (response.data && response.data.length > 0) {
-                    escuelaData = response.data[0];
-                    updateSchoolUI();
-                } else {
-                    setDefaultSchoolData();
+    // === SISTEMA DE JSONP MEJORADO ===
+    function callJSONP(action, data = {}) {
+        return new Promise((resolve, reject) => {
+            const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+            
+            // Construir URL con parámetros
+            const params = new URLSearchParams();
+            params.append('action', action);
+            params.append('callback', callbackName);
+            
+            // Agregar datos específicos
+            Object.keys(data).forEach(key => {
+                if (data[key] !== undefined && data[key] !== null) {
+                    params.append(key, String(data[key]));
                 }
-            } catch (error) {
-                console.error('Error cargando datos de la escuela:', error);
+            });
+            
+            const url = CONFIG.API_BASE_URL + '?' + params.toString();
+            
+            console.log('🔍 Llamando a:', url);
+            
+            const script = document.createElement('script');
+            script.src = url;
+            
+            // Configurar callback global
+            window[callbackName] = function(response) {
+                // Limpiar
+                delete window[callbackName];
+                if (script.parentNode) {
+                    script.parentNode.removeChild(script);
+                }
+                
+                console.log('📨 Respuesta recibida:', response);
+                
+                if (response && response.success !== undefined) {
+                    resolve(response);
+                } else {
+                    reject(new Error(response ? response.error : 'Error desconocido'));
+                }
+            };
+            
+            // Manejar errores
+            script.onerror = function() {
+                delete window[callbackName];
+                if (script.parentNode) {
+                    script.parentNode.removeChild(script);
+                }
+                reject(new Error('Error de red al conectar con el servidor'));
+            };
+            
+            // Timeout después de 30 segundos
+            const timeoutId = setTimeout(() => {
+                if (window[callbackName]) {
+                    delete window[callbackName];
+                    if (script.parentNode) {
+                        script.parentNode.removeChild(script);
+                    }
+                    reject(new Error('Timeout de la solicitud después de 30 segundos'));
+                }
+            }, 30000);
+            
+            // Limpiar timeout cuando se recibe respuesta
+            const originalCallback = window[callbackName];
+            window[callbackName] = function(response) {
+                clearTimeout(timeoutId);
+                originalCallback(response);
+            };
+            
+            document.body.appendChild(script);
+        });
+    }
+
+    // === INICIALIZACIÓN ===
+    document.addEventListener('DOMContentLoaded', function() {
+        loadSchoolData().catch(error => {
+            console.log('No se pudieron cargar los datos de la escuela:', error.message);
+        });
+    });
+
+    // === FUNCIONES PARA DATOS DE LA ESCUELA ===
+    async function loadSchoolData() {
+        try {
+            const response = await callJSONP('escuela', {});
+            if (response.data && response.data.length > 0) {
+                escuelaData = response.data[0];
+                updateSchoolUI();
+            } else {
                 setDefaultSchoolData();
             }
+        } catch (error) {
+            console.error('Error cargando datos de la escuela:', error);
+            setDefaultSchoolData();
+        }
+    }
+
+    function updateSchoolUI() {
+        if (!escuelaData) return;
+        
+        // Actualizar título en login
+        const loginTitle = document.getElementById('schoolTitle');
+        if (loginTitle && escuelaData['Nombre_Escuela ']) {
+            loginTitle.innerHTML = escuelaData['Nombre_Escuela '];
+        }
+        
+        // Actualizar nombre en cabecera del dashboard
+        const headerSchoolName = document.getElementById('headerSchoolName');
+        if (headerSchoolName && escuelaData['Nombre_Escuela ']) {
+            headerSchoolName.textContent = escuelaData['Nombre_Escuela '];
+        }
+        
+        // Actualizar logo si existe
+        if (escuelaData['Logo_Escuela']) {
+            const logoImg = document.getElementById('schoolLogo');
+            logoImg.src = escuelaData['Logo_Escuela'];
+            logoImg.alt = escuelaData['Nombre_Escuela '] || 'Escuela';
+            logoImg.style.display = 'block';
         }
 
-        function updateSchoolUI() {
-            if (!escuelaData) return;
-            
-            // Actualizar título en login
-            const loginTitle = document.getElementById('schoolTitle');
-            if (loginTitle && escuelaData['Nombre_Escuela ']) {
-                loginTitle.innerHTML = escuelaData['Nombre_Escuela '];
-            }
-            
-            // Actualizar nombre en cabecera del dashboard
-            const headerSchoolName = document.getElementById('headerSchoolName');
-            if (headerSchoolName && escuelaData['Nombre_Escuela ']) {
-                headerSchoolName.textContent = escuelaData['Nombre_Escuela '];
-            }
-            
-            // Actualizar logo si existe
-            if (escuelaData['Logo_Escuela']) {
-                const logoImg = document.getElementById('schoolLogo');
+        // Actualizar logo en login si existe
+        if (escuelaData['Logo_Escuela']) {
+            const loginHeader = document.querySelector('.school-header');
+            if (loginHeader) {
+                const defaultLogo = document.getElementById('defaultLogo');
+                defaultLogo.style.display = 'none';
+                
+                const logoImg = document.createElement('img');
                 logoImg.src = escuelaData['Logo_Escuela'];
                 logoImg.alt = escuelaData['Nombre_Escuela '] || 'Escuela';
-                logoImg.style.display = 'block';
-            }
-
-            // Actualizar logo en login si existe
-            if (escuelaData['Logo_Escuela']) {
-                const loginHeader = document.querySelector('.school-header');
-                if (loginHeader) {
-                    const defaultLogo = document.getElementById('defaultLogo');
-                    defaultLogo.style.display = 'none';
-                    
-                    const logoImg = document.createElement('img');
-                    logoImg.src = escuelaData['Logo_Escuela'];
-                    logoImg.alt = escuelaData['Nombre_Escuela '] || 'Escuela';
-                    logoImg.className = 'login-school-logo';
-                    logoImg.onerror = function() {
-                        this.style.display = 'none';
-                        defaultLogo.style.display = 'block';
-                    };
-                    
-                    loginHeader.insertBefore(logoImg, defaultLogo);
-                }
-            }
-        }
-
-        function setDefaultSchoolData() {
-            const loginTitle = document.getElementById('schoolTitle');
-            if (loginTitle) {
-                loginTitle.innerHTML = 'Plataforma Educativa';
-            }
-            
-            const headerSchoolName = document.getElementById('headerSchoolName');
-            if (headerSchoolName) {
-                headerSchoolName.textContent = 'Plataforma Educativa';
-            }
-        }
-
-        // === FUNCIONES DE LOGIN ===
-        async function LoginUser() {
-            const username = document.getElementById("username").value.trim();
-            const password = document.getElementById("password").value.trim();
-            
-            if (!username || !password) {
-                document.getElementById("errorMessage").innerHTML = "Complete todos los campos";
-                return;
-            }
-            
-            document.getElementById("errorMessage").innerHTML = "🔐 Verificando credenciales...";
-            
-            try {
-                const response = await callJSONP('login', { username, password });
+                logoImg.className = 'login-school-logo';
+                logoImg.onerror = function() {
+                    this.style.display = 'none';
+                    defaultLogo.style.display = 'block';
+                };
                 
-                if(response.success) {
-                    handleSuccessfulLogin(response);
-                } else {
-                    document.getElementById("errorMessage").innerHTML = "❌ " + response.error;
-                }
-            } catch (error) {
-                document.getElementById("errorMessage").innerHTML = "🔒 Error de conexión: " + error.message;
+                loginHeader.insertBefore(logoImg, defaultLogo);
             }
         }
+    }
 
-        function handleSuccessfulLogin(response) {
-            currentUser = response.alumno;
-            alumnoActual = response.alumno;
-            document.getElementById("displayusername").innerHTML = currentUser.Nombre + " " + currentUser.Apellido;
-            
-            // Mostrar dashboard
-            document.getElementById("page1_id1").style.display = "none";
-            document.getElementById("page4_id1").style.display = "block";
-            document.getElementById("errorMessage").innerHTML = "";
-            
-            // Cargar progreso del usuario
-            loadUserProgress(currentUser.ID_Alumno);
-            loadCursos();
+    function setDefaultSchoolData() {
+        const loginTitle = document.getElementById('schoolTitle');
+        if (loginTitle) {
+            loginTitle.innerHTML = 'Plataforma Educativa';
         }
-
-        // === FUNCIÓN PARA CARGAR PROGRESO CORREGIDA ===
-        async function loadUserProgress(alumnoId) {
-            try {
-                const result = await callJSONP('getUserProgress', { alumnoId: String(alumnoId) });
-                userProgress = {};
-                if (result.data && result.data.length > 0) {
-                    result.data.forEach(function(item) {
-                        userProgress[item.ID_Clase] = {
-                            completed: item.Completada === "Sí" || item.Completada === "TRUE" || item.Completada === "sí",
-                            notes: item.Notas_Alumno || '',
-                            lastUpdate: item.Fecha_Guardado || new Date()
-                        };
-                    });
-                }
-                console.log("Progreso cargado:", userProgress);
-            } catch (error) {
-                console.error("Error cargando progreso:", error);
-                userProgress = {};
-            }
+        
+        const headerSchoolName = document.getElementById('headerSchoolName');
+        if (headerSchoolName) {
+            headerSchoolName.textContent = 'Plataforma Educativa';
         }
+    }
 
-        // === FUNCIONES DE CURSOS CON CACHE FRONTEND ===
-        async function loadCursos() {
-            const container = document.getElementById('cursosContainer');
-            const cacheKey = `cursos_${alumnoActual.ID_Alumno}`;
-            
-            // Verificar cache local
-            const cached = sessionStorage.getItem(cacheKey);
-            if (cached) {
-                console.log('Cargando cursos desde cache frontend');
-                displayCursos(JSON.parse(cached));
-                return;
-            }
-            
-            container.innerHTML = '<div class="loading">Cargando cursos...</div>';
-            
-            try {
-                const result = await callJSONP('getCursosAlumno', { alumnoId: alumnoActual.ID_Alumno });
-                // Guardar en cache local
-                sessionStorage.setItem(cacheKey, JSON.stringify(result.data));
-                displayCursos(result.data);
-            } catch (error) {
-                showCursosError(error);
-            }
+    // === FUNCIONES DE LOGIN ===
+    async function LoginUser() {
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value.trim();
+        
+        if (!username || !password) {
+            document.getElementById("errorMessage").innerHTML = "Complete todos los campos";
+            return;
         }
-
-        function displayCursos(cursos) {
-            cursosCache = cursos;
-            const container = document.getElementById('cursosContainer');
+        
+        document.getElementById("errorMessage").innerHTML = "🔐 Verificando credenciales...";
+        
+        try {
+            const response = await callJSONP('login', { username, password });
             
-            if (!cursos || cursos.length === 0) {
-                container.innerHTML = `
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 30px;">
-                        <div style="font-size: 40px; margin-bottom: 12px;">🎓</div>
-                        <h3 style="color: var(--azul-oscuro); margin-bottom: 6px;">No estás inscrito en ningún curso visible</h3>
-                        <p style="color: var(--gray); margin-bottom: 12px;">
-                            Contacta al administrador para inscribirte en los cursos.
-                        </p>
-                    </div>
-                `;
-                return;
-            }
-            
-            container.innerHTML = cursos.map(curso => {
-                const hasImage = curso.Foto_Portada && curso.Foto_Portada.trim() !== '';
-                return `
-                <div class="curso-card card" onclick="accederAlCurso('${curso.ID_Curso}', '${curso.ID_Grupo}')">
-                    <div class="curso-imagen">
-                        ${hasImage ? 
-                            `<img src="${curso.Foto_Portada}" 
-                                  alt="${curso.Nombre_Curso}" 
-                                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-                                  onload="this.style.display='block'; this.nextElementSibling.style.display='none';">` : 
-                            ''
-                        }
-                        <div class="image-fallback" style="${hasImage ? 'display: none;' : ''}">🎓</div>
-                    </div>
-                    <div class="curso-content">
-                        <h3 class="curso-titulo">${curso.Nombre_Curso}</h3>
-                        <p class="curso-grupo">Grupo: ${curso.Nombre_Grupo}</p>
-                        <p class="curso-grupo">Inicio: ${formatFecha(curso.Fecha_Inicio)}</p>
-                        <button class="btn btn-primary btn-acceder">Acceder al curso</button>
-                    </div>
-                </div>
-                `;
-            }).join('');
-        }
-
-        function showCursosError(error) {
-            const container = document.getElementById('cursosContainer');
-            container.innerHTML = '<div class="error">Error al cargar los cursos: ' + error.message + '</div>';
-        }
-
-        async function accederAlCurso(cursoId, grupoId) {
-            currentCourseId = cursoId;
-            currentGrupoId = grupoId;
-            
-            // Encontrar los datos del curso actual
-            currentCourseData = cursosCache.find(curso => 
-                curso.ID_Curso === cursoId && curso.ID_Grupo === grupoId
-            );
-            
-            // Mostrar cabecera del curso
-            if (currentCourseData) {
-                document.getElementById('courseTitle').textContent = currentCourseData.Nombre_Curso;
-                document.getElementById('courseDescription').textContent = currentCourseData.Descripcion || 'No hay descripción disponible para este curso.';
-                
-                // Imagen de cabecera del curso
-                if (currentCourseData.Foto_Cabecera) {
-                    document.getElementById('courseHeaderImage').src = currentCourseData.Foto_Cabecera;
-                    document.getElementById('courseHeaderImage').style.display = 'block';
-                } else {
-                    document.getElementById('courseHeaderImage').style.display = 'none';
-                }
-                
-                // Actualizar botones del curso
-                updateCourseButtons();
-                
-                document.getElementById('courseHeader').style.display = 'block';
-            }
-            
-            // Ocultar cursos y mostrar módulos
-            document.getElementById('cursosContainer').style.display = 'none';
-            document.getElementById('mainTitle').textContent = 'Módulos del Curso';
-            
-            const container = document.getElementById('modulesContainer');
-            container.innerHTML = '<button class="btn btn-secondary back-btn" onclick="volverACursos()">← Volver a Mis Cursos</button><div class="loading">Cargando módulos...</div>';
-            
-            // Desplazar hacia el contenedor de módulos
-            setTimeout(() => {
-                container.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 300);
-            
-            const cacheKey = `modulos_${alumnoActual.ID_Alumno}_${cursoId}_${grupoId}`;
-            const cached = sessionStorage.getItem(cacheKey);
-            
-            if (cached) {
-                console.log('Cargando módulos desde cache frontend');
-                displayModulos(JSON.parse(cached), cursoId, grupoId);
+            if(response.success) {
+                handleSuccessfulLogin(response);
             } else {
-                try {
-                    const result = await callJSONP('getModulosCurso', {
-                        alumnoId: alumnoActual.ID_Alumno,
-                        cursoId: cursoId,
-                        grupoId: grupoId
-                    });
-                    sessionStorage.setItem(cacheKey, JSON.stringify(result.data));
-                    displayModulos(result.data, cursoId, grupoId);
-                } catch (error) {
-                    container.innerHTML = '<button class="btn btn-secondary back-btn" onclick="volverACursos()">← Volver a Mis Cursos</button><div class="error">Error al cargar módulos: ' + error.message + '</div>';
-                }
+                document.getElementById("errorMessage").innerHTML = "❌ " + response.error;
             }
+        } catch (error) {
+            document.getElementById("errorMessage").innerHTML = "🔒 Error de conexión: " + error.message;
         }
+    }
 
-        function updateCourseButtons() {
-            const buttonsContainer = document.getElementById('courseButtons');
-            buttonsContainer.innerHTML = '';
-            
-            // Botón manual del curso
-            if (currentCourseData.Manual_c) {
-                const manualBtn = document.createElement('button');
-                manualBtn.className = 'btn btn-primary';
-                manualBtn.innerHTML = '📘 Manual del Curso';
-                manualBtn.onclick = function() {
-                    showCourseManual(currentCourseData.Manual_c);
-                };
-                buttonsContainer.appendChild(manualBtn);
+    function handleSuccessfulLogin(response) {
+        currentUser = response.alumno;
+        alumnoActual = response.alumno;
+        document.getElementById("displayusername").innerHTML = currentUser.Nombre + " " + currentUser.Apellido;
+        
+        // Mostrar dashboard
+        document.getElementById("page1_id1").style.display = "none";
+        document.getElementById("page4_id1").style.display = "block";
+        document.getElementById("errorMessage").innerHTML = "";
+        
+        // Cargar progreso del usuario
+        loadUserProgress(currentUser.ID_Alumno);
+        loadCursos();
+    }
+
+    // === FUNCIÓN PARA CARGAR PROGRESO CORREGIDA ===
+    async function loadUserProgress(alumnoId) {
+        try {
+            const result = await callJSONP('getUserProgress', { alumnoId: String(alumnoId) });
+            userProgress = {};
+            if (result.data && result.data.length > 0) {
+                result.data.forEach(function(item) {
+                    userProgress[item.ID_Clase] = {
+                        completed: item.Completada === "Sí" || item.Completada === "TRUE" || item.Completada === "sí",
+                        notes: item.Notas_Alumno || '',
+                        lastUpdate: item.Fecha_Guardado || new Date()
+                    };
+                });
             }
-            
-            // Botón WhatsApp
-            if (currentCourseData.Whatsapp) {
-                const whatsappBtn = document.createElement('button');
-                whatsappBtn.className = 'btn btn-success';
-                whatsappBtn.innerHTML = '📱 WhatsApp del Grupo';
-                whatsappBtn.onclick = function() {
-                    window.open(currentCourseData.Whatsapp, '_blank');
-                };
-                buttonsContainer.appendChild(whatsappBtn);
-            }
-            
-            // Botón Calendario
-            if (currentCourseData.Calendario) {
-                const calendarBtn = document.createElement('button');
-                calendarBtn.className = 'btn btn-secondary';
-                calendarBtn.innerHTML = '📅 Calendario';
-                calendarBtn.onclick = function() {
-                    window.open(currentCourseData.Calendario, '_blank');
-                };
-                buttonsContainer.appendChild(calendarBtn);
-            }
-            
-            // Botón Mensaje
-            if (currentCourseData.Mensaje) {
-                const messageBtn = document.createElement('button');
-                messageBtn.className = 'btn btn-primary';
-                messageBtn.innerHTML = '📢 Mensaje Importante';
-                messageBtn.onclick = function() {
-                    alert(currentCourseData.Mensaje);
-                };
-                buttonsContainer.appendChild(messageBtn);
-            }
+            console.log("Progreso cargado:", userProgress);
+        } catch (error) {
+            console.error("Error cargando progreso:", error);
+            userProgress = {};
         }
+    }
 
-        function volverACursos() {
-            // Limpiar reproductores
-            for (var lessonId in currentPlayers) {
-                if (currentPlayers[lessonId]) {
-                    currentPlayers[lessonId].destroy();
-                }
-            }
-            currentPlayers = {};
-            
-            // Ocultar cabecera del curso
-            document.getElementById('courseHeader').style.display = 'none';
-            
-            // Mostrar cursos nuevamente
-            const container = document.getElementById('modulesContainer');
-            container.innerHTML = '';
-            document.getElementById('cursosContainer').style.display = 'grid';
-            document.getElementById('mainTitle').textContent = 'Mis Cursos';
+    // === FUNCIONES DE CURSOS CON CACHE FRONTEND ===
+    async function loadCursos() {
+        const container = document.getElementById('cursosContainer');
+        const cacheKey = `cursos_${alumnoActual.ID_Alumno}`;
+        
+        // Verificar cache local
+        const cached = sessionStorage.getItem(cacheKey);
+        if (cached) {
+            console.log('Cargando cursos desde cache frontend');
+            displayCursos(JSON.parse(cached));
+            return;
         }
-
-        // === SISTEMA DE MÓDULOS Y CLASES ===
-        function displayModulos(modules, cursoId, grupoId) {
-            const container = document.getElementById("modulesContainer");
-            container.innerHTML = '<button class="btn btn-secondary back-btn" onclick="volverACursos()">← Volver a Mis Cursos</button>';
-            
-            if (!modules || modules.length === 0) {
-                container.innerHTML += "<p class='no-content'>No tienes módulos disponibles en este momento.</p>";
-                return;
-            }
-            
-            userModules = modules;
-            
-            let modulesList = "<h3 style='color: var(--azul-oscuro); margin-bottom: 12px;'>Tus Módulos Disponibles:</h3><div class='grid grid-modulos'>";
-            
-            modules.forEach(module => {
-                const progressPercentage = module.Total_Clases > 0 ? 
-                    Math.round((module.Clases_Completadas / module.Total_Clases) * 100) : 0;
-                
-                modulesList += `
-                <div class='module-card card' onclick='expandModule("${module.ID_Módulo}")'>
-                    <h4 class="module-titulo">${module['Nombre del Módulo'] || module.Nombre_Modulo}</h4>
-                    <div class='progress-container'>
-                        <div class='progress-label'>Progreso del Módulo</div>
-                        <div class='progress-bar-container'>
-                            <div class='progress-bar' style='width: ${progressPercentage}%'></div>
-                        </div>
-                        <div class='progress-text'>${progressPercentage}% completado</div>
-                    </div>
-                </div>`;
-            });
-            
-            modulesList += "</div>";
-            container.innerHTML += modulesList;
+        
+        container.innerHTML = '<div class="loading">Cargando cursos...</div>';
+        
+        try {
+            const result = await callJSONP('getCursosAlumno', { alumnoId: alumnoActual.ID_Alumno });
+            // Guardar en cache local
+            sessionStorage.setItem(cacheKey, JSON.stringify(result.data));
+            displayCursos(result.data);
+        } catch (error) {
+            showCursosError(error);
         }
+    }
 
-        function expandModule(moduleId) {
-            document.querySelectorAll('.module-card').forEach(card => {
-                card.style.display = 'none';
-            });
-            
-            document.querySelector('#modulesContainer h3').style.display = 'none';
-            
-            var selectedModule = null;
-            for (var i = 0; i < userModules.length; i++) {
-                if (userModules[i].ID_Módulo === moduleId) {
-                    selectedModule = userModules[i];
-                    break;
-                }
-            }
-            
-            if (!selectedModule) return;
-            
-            var expandedContent = "<div class='expanded-module'>";
-            
-            // Cabecera del módulo
-            expandedContent += `
-            <div class='module-header-expanded card'>
-                <div class='module-title-section'>
-                    <h2>${selectedModule['Nombre del Módulo'] || selectedModule.Nombre_Modulo}</h2>
+    function displayCursos(cursos) {
+        cursosCache = cursos;
+        const container = document.getElementById('cursosContainer');
+        
+        if (!cursos || cursos.length === 0) {
+            container.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 30px;">
+                    <div style="font-size: 40px; margin-bottom: 12px;">🎓</div>
+                    <h3 style="color: var(--azul-oscuro); margin-bottom: 6px;">No estás inscrito en ningún curso visible</h3>
+                    <p style="color: var(--gray); margin-bottom: 12px;">
+                        Contacta al administrador para inscribirte en los cursos.
+                    </p>
                 </div>
-                <div class='module-content'>
-                    <div class='module-image-container'>
-                        ${selectedModule['imagen_m'] && selectedModule['imagen_m'].trim() !== '' ? 
-                            `<img src="${selectedModule['imagen_m']}" class='module-header-image' alt='Imagen del módulo' onerror='this.style.display=\"none\"; this.nextElementSibling.style.display=\"flex\";' onload='this.style.display=\"block\"; this.nextElementSibling.style.display=\"none\";'>` : 
-                            ''
-                        }
-                        <div style="width: 140px; height: 100px; background: linear-gradient(135deg, var(--azul), var(--naranja)); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; ${selectedModule['imagen_m'] && selectedModule['imagen_m'].trim() !== '' ? 'display: none;' : ''}">📚</div>
+            `;
+            return;
+        }
+        
+        container.innerHTML = cursos.map(curso => {
+            const hasImage = curso.Foto_Portada && curso.Foto_Portada.trim() !== '';
+            return `
+            <div class="curso-card card" onclick="accederAlCurso('${curso.ID_Curso}', '${curso.ID_Grupo}')">
+                <div class="curso-imagen">
+                    ${hasImage ? 
+                        `<img src="${curso.Foto_Portada}" 
+                              alt="${curso.Nombre_Curso}" 
+                              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                              onload="this.style.display='block'; this.nextElementSibling.style.display='none';">` : 
+                        ''
+                    }
+                    <div class="image-fallback" style="${hasImage ? 'display: none;' : ''}">🎓</div>
+                </div>
+                <div class="curso-content">
+                    <h3 class="curso-titulo">${curso.Nombre_Curso}</h3>
+                    <p class="curso-grupo">Grupo: ${curso.Nombre_Grupo}</p>
+                    <p class="curso-grupo">Inicio: ${formatFecha(curso.Fecha_Inicio)}</p>
+                    <button class="btn btn-primary btn-acceder">Acceder al curso</button>
+                </div>
+            </div>
+            `;
+        }).join('');
+    }
+
+    function showCursosError(error) {
+        const container = document.getElementById('cursosContainer');
+        container.innerHTML = '<div class="error">Error al cargar los cursos: ' + error.message + '</div>';
+    }
+
+    async function accederAlCurso(cursoId, grupoId) {
+        currentCourseId = cursoId;
+        currentGrupoId = grupoId;
+        
+        // Encontrar los datos del curso actual
+        currentCourseData = cursosCache.find(curso => 
+            curso.ID_Curso === cursoId && curso.ID_Grupo === grupoId
+        );
+        
+        // Mostrar cabecera del curso
+        if (currentCourseData) {
+            document.getElementById('courseTitle').textContent = currentCourseData.Nombre_Curso;
+            document.getElementById('courseDescription').textContent = currentCourseData.Descripcion || 'No hay descripción disponible para este curso.';
+            
+            // Imagen de cabecera del curso
+            if (currentCourseData.Foto_Cabecera) {
+                document.getElementById('courseHeaderImage').src = currentCourseData.Foto_Cabecera;
+                document.getElementById('courseHeaderImage').style.display = 'block';
+            } else {
+                document.getElementById('courseHeaderImage').style.display = 'none';
+            }
+            
+            // Actualizar botones del curso
+            updateCourseButtons();
+            
+            document.getElementById('courseHeader').style.display = 'block';
+        }
+        
+        // Ocultar cursos y mostrar módulos
+        document.getElementById('cursosContainer').style.display = 'none';
+        document.getElementById('mainTitle').textContent = 'Módulos del Curso';
+        
+        const container = document.getElementById('modulesContainer');
+        container.innerHTML = '<button class="btn btn-secondary back-btn" onclick="volverACursos()">← Volver a Mis Cursos</button><div class="loading">Cargando módulos...</div>';
+        
+        // Desplazar hacia el contenedor de módulos
+        setTimeout(() => {
+            container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+        
+        const cacheKey = `modulos_${alumnoActual.ID_Alumno}_${cursoId}_${grupoId}`;
+        const cached = sessionStorage.getItem(cacheKey);
+        
+        if (cached) {
+            console.log('Cargando módulos desde cache frontend');
+            displayModulos(JSON.parse(cached), cursoId, grupoId);
+        } else {
+            try {
+                const result = await callJSONP('getModulosCurso', {
+                    alumnoId: alumnoActual.ID_Alumno,
+                    cursoId: cursoId,
+                    grupoId: grupoId
+                });
+                sessionStorage.setItem(cacheKey, JSON.stringify(result.data));
+                displayModulos(result.data, cursoId, grupoId);
+            } catch (error) {
+                container.innerHTML = '<button class="btn btn-secondary back-btn" onclick="volverACursos()">← Volver a Mis Cursos</button><div class="error">Error al cargar módulos: ' + error.message + '</div>';
+            }
+        }
+    }
+
+    function updateCourseButtons() {
+        const buttonsContainer = document.getElementById('courseButtons');
+        buttonsContainer.innerHTML = '';
+        
+        // Botón manual del curso
+        if (currentCourseData.Manual_c) {
+            const manualBtn = document.createElement('button');
+            manualBtn.className = 'btn btn-primary';
+            manualBtn.innerHTML = '📘 Manual del Curso';
+            manualBtn.onclick = function() {
+                showCourseManual(currentCourseData.Manual_c);
+            };
+            buttonsContainer.appendChild(manualBtn);
+        }
+        
+        // Botón WhatsApp
+        if (currentCourseData.Whatsapp) {
+            const whatsappBtn = document.createElement('button');
+            whatsappBtn.className = 'btn btn-success';
+            whatsappBtn.innerHTML = '📱 WhatsApp del Grupo';
+            whatsappBtn.onclick = function() {
+                window.open(currentCourseData.Whatsapp, '_blank');
+            };
+            buttonsContainer.appendChild(whatsappBtn);
+        }
+        
+        // Botón Calendario
+        if (currentCourseData.Calendario) {
+            const calendarBtn = document.createElement('button');
+            calendarBtn.className = 'btn btn-secondary';
+            calendarBtn.innerHTML = '📅 Calendario';
+            calendarBtn.onclick = function() {
+                window.open(currentCourseData.Calendario, '_blank');
+            };
+            buttonsContainer.appendChild(calendarBtn);
+        }
+        
+        // Botón Mensaje
+        if (currentCourseData.Mensaje) {
+            const messageBtn = document.createElement('button');
+            messageBtn.className = 'btn btn-primary';
+            messageBtn.innerHTML = '📢 Mensaje Importante';
+            messageBtn.onclick = function() {
+                alert(currentCourseData.Mensaje);
+            };
+            buttonsContainer.appendChild(messageBtn);
+        }
+    }
+
+    function volverACursos() {
+        // Limpiar reproductores y observadores
+        for (var lessonId in currentPlayers) {
+            if (currentPlayers[lessonId]) {
+                currentPlayers[lessonId].destroy();
+            }
+            if (iframeWatchers[lessonId]) {
+                iframeWatchers[lessonId].disconnect();
+                delete iframeWatchers[lessonId];
+            }
+        }
+        currentPlayers = {};
+        
+        // Ocultar cabecera del curso
+        document.getElementById('courseHeader').style.display = 'none';
+        
+        // Mostrar cursos nuevamente
+        const container = document.getElementById('modulesContainer');
+        container.innerHTML = '';
+        document.getElementById('cursosContainer').style.display = 'grid';
+        document.getElementById('mainTitle').textContent = 'Mis Cursos';
+    }
+
+    // === SISTEMA DE MÓDULOS Y CLASES ===
+    function displayModulos(modules, cursoId, grupoId) {
+        const container = document.getElementById("modulesContainer");
+        container.innerHTML = '<button class="btn btn-secondary back-btn" onclick="volverACursos()">← Volver a Mis Cursos</button>';
+        
+        if (!modules || modules.length === 0) {
+            container.innerHTML += "<p class='no-content'>No tienes módulos disponibles en este momento.</p>";
+            return;
+        }
+        
+        userModules = modules;
+        
+        let modulesList = "<h3 style='color: var(--azul-oscuro); margin-bottom: 12px;'>Tus Módulos Disponibles:</h3><div class='grid grid-modulos'>";
+        
+        modules.forEach(module => {
+            const progressPercentage = module.Total_Clases > 0 ? 
+                Math.round((module.Clases_Completadas / module.Total_Clases) * 100) : 0;
+            
+            modulesList += `
+            <div class='module-card card' onclick='expandModule("${module.ID_Módulo}")'>
+                <h4 class="module-titulo">${module['Nombre del Módulo'] || module.Nombre_Modulo}</h4>
+                <div class='progress-container'>
+                    <div class='progress-label'>Progreso del Módulo</div>
+                    <div class='progress-bar-container'>
+                        <div class='progress-bar' style='width: ${progressPercentage}%'></div>
                     </div>
-                    <div class='module-info'>
-                        <p class='module-description'>${selectedModule['Descripción del Módulo'] || 'No hay descripción disponible para este módulo.'}</p>
-                        <div class='module-buttons'>
-                            ${selectedModule['Manual_m'] && selectedModule['Manual_m'].trim() !== '' ? 
-                                `<button class='btn btn-secondary' onclick='showModuleManual("${selectedModule['Manual_m']}")'>📘 Manual del Módulo</button>` : 
-                                ''
-                            }
-                        </div>
-                    </div>
+                    <div class='progress-text'>${progressPercentage}% completado</div>
                 </div>
             </div>`;
+        });
+        
+        modulesList += "</div>";
+        container.innerHTML += modulesList;
+    }
+
+    function expandModule(moduleId) {
+        document.querySelectorAll('.module-card').forEach(card => {
+            card.style.display = 'none';
+        });
+        
+        document.querySelector('#modulesContainer h3').style.display = 'none';
+        
+        var selectedModule = null;
+        for (var i = 0; i < userModules.length; i++) {
+            if (userModules[i].ID_Módulo === moduleId) {
+                selectedModule = userModules[i];
+                break;
+            }
+        }
+        
+        if (!selectedModule) return;
+        
+        var expandedContent = "<div class='expanded-module'>";
+        
+        // Cabecera del módulo
+        expandedContent += `
+        <div class='module-header-expanded card'>
+            <div class='module-title-section'>
+                <h2>${selectedModule['Nombre del Módulo'] || selectedModule.Nombre_Modulo}</h2>
+            </div>
+            <div class='module-content'>
+                <div class='module-image-container'>
+                    ${selectedModule['imagen_m'] && selectedModule['imagen_m'].trim() !== '' ? 
+                        `<img src="${selectedModule['imagen_m']}" class='module-header-image' alt='Imagen del módulo' onerror='this.style.display=\"none\"; this.nextElementSibling.style.display=\"flex\";' onload='this.style.display=\"block\"; this.nextElementSibling.style.display=\"none\";'>` : 
+                        ''
+                    }
+                    <div style="width: 140px; height: 100px; background: linear-gradient(135deg, var(--azul), var(--naranja)); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; ${selectedModule['imagen_m'] && selectedModule['imagen_m'].trim() !== '' ? 'display: none;' : ''}">📚</div>
+                </div>
+                <div class='module-info'>
+                    <p class='module-description'>${selectedModule['Descripción del Módulo'] || 'No hay descripción disponible para este módulo.'}</p>
+                    <div class='module-buttons'>
+                        ${selectedModule['Manual_m'] && selectedModule['Manual_m'].trim() !== '' ? 
+                            `<button class='btn btn-secondary' onclick='showModuleManual("${selectedModule['Manual_m']}")'>📘 Manual del Módulo</button>` : 
+                            ''
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>`;
+        
+        // Resto del contenido del módulo (clases)
+        expandedContent += "<div class='module-header'>";
+        expandedContent += "<button class='btn btn-secondary back-button' onclick='collapseModule()'>← Mis Módulos</button>";
+        expandedContent += "</div>";
+        
+        var completedCount = selectedModule.Clases_Completadas || 0;
+        var totalCount = selectedModule.Total_Clases || 0;
+        
+        var progressPercentage = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+        
+        expandedContent += "<div class='module-progress-expanded progress-container'>";
+        expandedContent += "<div class='progress-label'>Progreso del Módulo</div>";
+        expandedContent += "<div class='progress-bar-container'>";
+        expandedContent += "<div class='progress-bar' style='width: " + progressPercentage + "%'></div>";
+        expandedContent += "</div>";
+        expandedContent += "<div class='progress-text'>" + completedCount + "/" + totalCount + " lecciones (" + progressPercentage + "%)</div>";
+        expandedContent += "</div>";
+        
+        if (selectedModule.Clases && selectedModule.Clases.length > 0) {
+            expandedContent += "<div class='content-list-expanded'>";
             
-            // Resto del contenido del módulo (clases)
-            expandedContent += "<div class='module-header'>";
-            expandedContent += "<button class='btn btn-secondary back-button' onclick='collapseModule()'>← Mis Módulos</button>";
-            expandedContent += "</div>";
-            
-            var completedCount = selectedModule.Clases_Completadas || 0;
-            var totalCount = selectedModule.Total_Clases || 0;
-            
-            var progressPercentage = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
-            
-            expandedContent += "<div class='module-progress-expanded progress-container'>";
-            expandedContent += "<div class='progress-label'>Progreso del Módulo</div>";
-            expandedContent += "<div class='progress-bar-container'>";
-            expandedContent += "<div class='progress-bar' style='width: " + progressPercentage + "%'></div>";
-            expandedContent += "</div>";
-            expandedContent += "<div class='progress-text'>" + completedCount + "/" + totalCount + " lecciones (" + progressPercentage + "%)</div>";
-            expandedContent += "</div>";
-            
-            if (selectedModule.Clases && selectedModule.Clases.length > 0) {
-                expandedContent += "<div class='content-list-expanded'>";
+            for (var j = 0; j < selectedModule.Clases.length; j++) {
+                var content = selectedModule.Clases[j];
+                var lessonId = content.ID_Clase;
+                var isCompleted = userProgress[lessonId] && userProgress[lessonId].completed;
+                var hasNotes = userProgress[lessonId] && userProgress[lessonId].notes && userProgress[lessonId].notes.trim() !== '';
                 
-                for (var j = 0; j < selectedModule.Clases.length; j++) {
-                    var content = selectedModule.Clases[j];
-                    var lessonId = content.ID_Clase;
-                    var isCompleted = userProgress[lessonId] && userProgress[lessonId].completed;
-                    var hasNotes = userProgress[lessonId] && userProgress[lessonId].notes && userProgress[lessonId].notes.trim() !== '';
+                expandedContent += "<div class='content-item card" + (isCompleted ? " completed" : "") + "'>";
+                
+                expandedContent += "<div class='lesson-header'>";
+                expandedContent += "<input type='checkbox' id='check_" + lessonId + "' class='lesson-checkbox' ";
+                expandedContent += "onchange='markAsViewed(\"" + lessonId + "\", \"" + moduleId + "\", \"" + (selectedModule['Nombre del Módulo'] || selectedModule.Nombre_Modulo) + "\", \"" + (content['Nombre de la Clase'] || content.Nombre_Clase) + "\", this)' ";
+                if (isCompleted) {
+                    expandedContent += "checked ";
+                }
+                expandedContent += "/>";
+                expandedContent += "<label for='check_" + lessonId + "' class='lesson-title'>" + (content['Nombre de la Clase'] || content.Nombre_Clase) + "</label>";
+                expandedContent += "</div>";
+                
+                // === MINIATURA Y DESCRIPCIÓN ===
+                var videoUrl = content['URL Video'] || '';
+                var videoId = extractVideoId(videoUrl);
+                var description = content['Descripción'] || '';
+                
+                if (videoId || description) {
+                    expandedContent += "<div class='lesson-preview'>";
                     
-                    expandedContent += "<div class='content-item card" + (isCompleted ? " completed" : "") + "'>";
-                    
-                    expandedContent += "<div class='lesson-header'>";
-                    expandedContent += "<input type='checkbox' id='check_" + lessonId + "' class='lesson-checkbox' ";
-                    expandedContent += "onchange='markAsViewed(\"" + lessonId + "\", \"" + moduleId + "\", \"" + (selectedModule['Nombre del Módulo'] || selectedModule.Nombre_Modulo) + "\", \"" + (content['Nombre de la Clase'] || content.Nombre_Clase) + "\", this)' ";
-                    if (isCompleted) {
-                        expandedContent += "checked ";
-                    }
-                    expandedContent += "/>";
-                    expandedContent += "<label for='check_" + lessonId + "' class='lesson-title'>" + (content['Nombre de la Clase'] || content.Nombre_Clase) + "</label>";
-                    expandedContent += "</div>";
-                    
-                    // === MINIATURA Y DESCRIPCIÓN ===
-                    var videoUrl = content['URL Video'] || '';
-                    var videoId = extractVideoId(videoUrl);
-                    var description = content['Descripción'] || '';
-                    
-                    if (videoId || description) {
-                        expandedContent += "<div class='lesson-preview'>";
-                        
-                        // Miniatura del video (si existe)
-                        if (videoId) {
-                            var thumbnailUrl = 'https://img.youtube.com/vi/' + videoId + '/mqdefault.jpg';
-                            expandedContent += "<div class='lesson-thumbnail' onclick='showVideoPlayer(\"" + lessonId + "\", \"" + videoUrl + "\")'>";
-                            expandedContent += "<img src='" + thumbnailUrl + "' alt='Miniatura del video'>";
-                            expandedContent += "<div class='play-icon'>▶</div>";
-                            expandedContent += "</div>";
-                        }
-                        
-                        // Descripción de la clase
-                        if (description) {
-                            expandedContent += "<div class='lesson-description'>" + description + "</div>";
-                        }
-                        
+                    // Miniatura del video (si existe)
+                    if (videoId) {
+                        var thumbnailUrl = 'https://img.youtube.com/vi/' + videoId + '/mqdefault.jpg';
+                        expandedContent += "<div class='lesson-thumbnail' onclick='showVideoPlayer(\"" + lessonId + "\", \"" + videoUrl + "\")'>";
+                        expandedContent += "<img src='" + thumbnailUrl + "' alt='Miniatura del video'>";
+                        expandedContent += "<div class='play-icon'>▶</div>";
                         expandedContent += "</div>";
                     }
                     
-                    expandedContent += "<div class='content-links'>";
-                    
-                    if (content['URL Video'] && content['URL Video'].trim() !== '') {
-                        expandedContent += "<button id='show-player-" + lessonId + "' class='btn btn-secondary action-btn' onclick='showVideoPlayer(\"" + lessonId + "\", \"" + content['URL Video'] + "\")'>🎬 Ver Video</button>";
-                        expandedContent += "<button id='hide-player-" + lessonId + "' class='btn btn-secondary action-btn' onclick='hideVideoPlayer(\"" + lessonId + "\")' style='display: none;'>❌ Cerrar Video</button>";
-                    }
-                    
-                    if (content['URL Manual'] && content['URL Manual'].trim() !== '') {
-                        expandedContent += "<button id='show-manual-" + lessonId + "' class='btn btn-secondary action-btn' onclick='showManual(\"" + lessonId + "\", \"" + content['URL Manual'] + "\")'>📄 Ver Manual</button>";
-                        expandedContent += "<button id='hide-manual-" + lessonId + "' class='btn btn-secondary action-btn' onclick='hideManual(\"" + lessonId + "\")' style='display: none;'>❌ Cerrar Manual</button>";
-                    }
-                    
-                    expandedContent += "<button id='notes-btn-" + lessonId + "' class='btn btn-primary action-btn' onclick='toggleNotes(\"" + lessonId + "\")'>";
-                    expandedContent += hasNotes ? "📝 Ver notas (" + (userProgress[lessonId].notes.length > 0 ? "1" : "0") + ")" : "📝 Agregar notas";
-                    expandedContent += "</button>";
-                    
-                    // Botón Clase Siguiente (excepto para la última clase)
-                    if (j < selectedModule.Clases.length - 1) {
-                        expandedContent += "<button class='btn btn-secondary action-btn' onclick='nextClass(\"" + lessonId + "\", \"" + moduleId + "\")'>➡️ Clase Siguiente</button>";
+                    // Descripción de la clase
+                    if (description) {
+                        expandedContent += "<div class='lesson-description'>" + description + "</div>";
                     }
                     
                     expandedContent += "</div>";
-                    
-                    // === NUEVO REPRODUCTOR CORREGIDO CON CONTENEDOR INTERMEDIO ===
-                    if (content['URL Video'] && content['URL Video'].trim() !== '') {
-                        expandedContent += "<div id='player-container-" + lessonId + "' class='player-container' style='display: none;'>";
-                        expandedContent += "<div class='video-container' id='videoContainer-" + lessonId + "'>";
-                        expandedContent += "<div class='video-inner-container'>"; // 🔹 NUEVO CONTENEDOR INTERMEDIO
-                        expandedContent += "<div id='player-" + lessonId + "'></div>";
-                        expandedContent += "</div>"; // 🔹 CIERRE DEL NUEVO CONTENEDOR
-                        expandedContent += "<div class='overlay' id='overlay-" + lessonId + "'></div>";
-                        expandedContent += "<div class='corner-box'>";
-                        if (escuelaData && escuelaData.Logo_Escuela) {
-                            expandedContent += "<img src='" + escuelaData.Logo_Escuela + "' alt='Logo' class='school-logo-mini'>";
-                        } else {
-                            expandedContent += "🎓";
-                        }
-                        expandedContent += "</div>";
-                        expandedContent += "<div class='exit-fullscreen' id='exitFullscreenBtn-" + lessonId + "'>✖</div>";
-                        expandedContent += "</div>";
-                        
-                        expandedContent += "<div class='controls-panel'>";
-                        expandedContent += "<div class='progress-row'>";
-                        expandedContent += "<div class='progress-container-player' id='progressBar-" + lessonId + "'>";
-                        expandedContent += "<div class='progress-player' id='progress-" + lessonId + "'></div>";
-                        expandedContent += "<div class='thumb' id='thumb-" + lessonId + "'></div>";
-                        expandedContent += "</div>";
-                        expandedContent += "<div class='time-display' id='timeDisplay-" + lessonId + "'>0:00 / 0:00</div>";
-                        expandedContent += "</div>";
-                        
-                        expandedContent += "<div class='video-controls'>";
-                        expandedContent += "<button id='playPauseBtn-" + lessonId + "'>▶ Play</button>";
-                        expandedContent += "<button id='restartBtn-" + lessonId + "'>⏮ Reiniciar</button>";
-                        expandedContent += "<button id='fullscreenBtn-" + lessonId + "'>⛶ Pantalla completa</button>";
-                        expandedContent += "</div>";
-                        expandedContent += "</div>";
-                        expandedContent += "</div>";
-                    }
-                    
-                    // Contenedor para el manual PDF
-                    if (content['URL Manual'] && content['URL Manual'].trim() !== '') {
-                        expandedContent += "<div id='manual-container-" + lessonId + "' class='manual-container card' style='display: none;'>";
-                        expandedContent += "<div class='manual-header'>";
-                        expandedContent += "<h4>📚 Material de Estudio</h4>";
-                        expandedContent += "<p>Accede a tu contenido educativo</p>";
-                        expandedContent += "</div>";
-                        
-                        expandedContent += "<div class='content-links'>";
-                        expandedContent += "<button class='btn btn-secondary action-btn' onclick='downloadManual(\"" + lessonId + "\", \"" + content['URL Manual'] + "\")'>";
-                        expandedContent += "📥 Descargar";
-                        expandedContent += "</button>";
-                        
-                        expandedContent += "<button class='btn btn-secondary action-btn' onclick='printManual(\"" + lessonId + "\")'>";
-                        expandedContent += "🖨️ Imprimir";
-                        expandedContent += "</button>";
-                        expandedContent += "</div>";
-                        
-                        expandedContent += "<div id='welcome-message-" + lessonId + "' class='welcome-message'>";
-                        expandedContent += "<h5>¡Bienvenido!</h5>";
-                        expandedContent += "<p>Haz clic en \"Ver Manual\" para acceder al material de estudio.</p>";
-                        expandedContent += "<p>Una vez abierto, podrás descargarlo o imprimirlo según necesites.</p>";
-                        expandedContent += "</div>";
-                        
-                        expandedContent += "<iframe id='pdf-frame-" + lessonId + "' class='pdf-frame' style='display: none; width: 100%; height: 500px; border: none;'></iframe>";
-                        expandedContent += "</div>";
-                    }
-                    
-                    expandedContent += "<div id='notes-area-" + lessonId + "' class='notes-area card' style='display: none;'>";
-                    expandedContent += "<h4>Notas para esta lección:</h4>";
-                    expandedContent += "<textarea id='notes-text-" + lessonId + "' class='notes-textarea' placeholder='Escribe tus notas aquí...'>";
-                    if (hasNotes) {
-                        expandedContent += userProgress[lessonId].notes;
-                    }
-                    expandedContent += "</textarea>";
-                    expandedContent += "<button id='save-notes-btn-" + lessonId + "' class='btn btn-primary save-notes-btn' onclick='saveNotes(\"" + lessonId + "\", \"" + (selectedModule['Nombre del Módulo'] || selectedModule.Nombre_Modulo) + "\", \"" + (content['Nombre de la Clase'] || content.Nombre_Clase) + "\")'>Guardar notas</button>";
-                    expandedContent += "</div>";
-                    
-                    expandedContent += "</div>";
+                }
+                
+                expandedContent += "<div class='content-links'>";
+                
+                if (content['URL Video'] && content['URL Video'].trim() !== '') {
+                    expandedContent += "<button id='show-player-" + lessonId + "' class='btn btn-secondary action-btn' onclick='showVideoPlayer(\"" + lessonId + "\", \"" + content['URL Video'] + "\")'>🎬 Ver Video</button>";
+                    expandedContent += "<button id='hide-player-" + lessonId + "' class='btn btn-secondary action-btn' onclick='hideVideoPlayer(\"" + lessonId + "\")' style='display: none;'>❌ Cerrar Video</button>";
+                }
+                
+                if (content['URL Manual'] && content['URL Manual'].trim() !== '') {
+                    expandedContent += "<button id='show-manual-" + lessonId + "' class='btn btn-secondary action-btn' onclick='showManual(\"" + lessonId + "\", \"" + content['URL Manual'] + "\")'>📄 Ver Manual</button>";
+                    expandedContent += "<button id='hide-manual-" + lessonId + "' class='btn btn-secondary action-btn' onclick='hideManual(\"" + lessonId + "\")' style='display: none;'>❌ Cerrar Manual</button>";
+                }
+                
+                expandedContent += "<button id='notes-btn-" + lessonId + "' class='btn btn-primary action-btn' onclick='toggleNotes(\"" + lessonId + "\")'>";
+                expandedContent += hasNotes ? "📝 Ver notas (" + (userProgress[lessonId].notes.length > 0 ? "1" : "0") + ")" : "📝 Agregar notas";
+                expandedContent += "</button>";
+                
+                // Botón Clase Siguiente (excepto para la última clase)
+                if (j < selectedModule.Clases.length - 1) {
+                    expandedContent += "<button class='btn btn-secondary action-btn' onclick='nextClass(\"" + lessonId + "\", \"" + moduleId + "\")'>➡️ Clase Siguiente</button>";
                 }
                 
                 expandedContent += "</div>";
-            } else {
-                expandedContent += "<p class='no-content'>Contenido próximamente...</p>";
+                
+                // === NUEVO REPRODUCTOR CORREGIDO CON CONTENEDOR INTERMEDIO ===
+                if (content['URL Video'] && content['URL Video'].trim() !== '') {
+                    expandedContent += "<div id='player-container-" + lessonId + "' class='player-container' style='display: none;'>";
+                    expandedContent += "<div class='video-container' id='videoContainer-" + lessonId + "'>";
+                    expandedContent += "<div class='video-inner-container'>"; // 🔹 NUEVO CONTENEDOR INTERMEDIO
+                    expandedContent += "<div id='player-" + lessonId + "'></div>";
+                    expandedContent += "</div>"; // 🔹 CIERRE DEL NUEVO CONTENEDOR
+                    expandedContent += "<div class='overlay' id='overlay-" + lessonId + "'></div>";
+                    expandedContent += "<div class='corner-box'>";
+                    if (escuelaData && escuelaData.Logo_Escuela) {
+                        expandedContent += "<img src='" + escuelaData.Logo_Escuela + "' alt='Logo' class='school-logo-mini'>";
+                    } else {
+                        expandedContent += "🎓";
+                    }
+                    expandedContent += "</div>";
+                    expandedContent += "<div class='exit-fullscreen' id='exitFullscreenBtn-" + lessonId + "'>✖</div>";
+                    expandedContent += "</div>";
+                    
+                    expandedContent += "<div class='controls-panel'>";
+                    expandedContent += "<div class='progress-row'>";
+                    expandedContent += "<div class='progress-container-player' id='progressBar-" + lessonId + "'>";
+                    expandedContent += "<div class='progress-player' id='progress-" + lessonId + "'></div>";
+                    expandedContent += "<div class='thumb' id='thumb-" + lessonId + "'></div>";
+                    expandedContent += "</div>";
+                    expandedContent += "<div class='time-display' id='timeDisplay-" + lessonId + "'>0:00 / 0:00</div>";
+                    expandedContent += "</div>";
+                    
+                    expandedContent += "<div class='video-controls'>";
+                    expandedContent += "<button id='playPauseBtn-" + lessonId + "'>▶ Play</button>";
+                    expandedContent += "<button id='restartBtn-" + lessonId + "'>⏮ Reiniciar</button>";
+                    expandedContent += "<button id='fullscreenBtn-" + lessonId + "'>⛶ Pantalla completa</button>";
+                    expandedContent += "</div>";
+                    expandedContent += "</div>";
+                    expandedContent += "</div>";
+                }
+                
+                // Contenedor para el manual PDF
+                if (content['URL Manual'] && content['URL Manual'].trim() !== '') {
+                    expandedContent += "<div id='manual-container-" + lessonId + "' class='manual-container card' style='display: none;'>";
+                    expandedContent += "<div class='manual-header'>";
+                    expandedContent += "<h4>📚 Material de Estudio</h4>";
+                    expandedContent += "<p>Accede a tu contenido educativo</p>";
+                    expandedContent += "</div>";
+                    
+                    expandedContent += "<div class='content-links'>";
+                    expandedContent += "<button class='btn btn-secondary action-btn' onclick='downloadManual(\"" + lessonId + "\", \"" + content['URL Manual'] + "\")'>";
+                    expandedContent += "📥 Descargar";
+                    expandedContent += "</button>";
+                    
+                    expandedContent += "<button class='btn btn-secondary action-btn' onclick='printManual(\"" + lessonId + "\")'>";
+                    expandedContent += "🖨️ Imprimir";
+                    expandedContent += "</button>";
+                    expandedContent += "</div>";
+                    
+                    expandedContent += "<div id='welcome-message-" + lessonId + "' class='welcome-message'>";
+                    expandedContent += "<h5>¡Bienvenido!</h5>";
+                    expandedContent += "<p>Haz clic en \"Ver Manual\" para acceder al material de estudio.</p>";
+                    expandedContent += "<p>Una vez abierto, podrás descargarlo o imprimirlo según necesites.</p>";
+                    expandedContent += "</div>";
+                    
+                    expandedContent += "<iframe id='pdf-frame-" + lessonId + "' class='pdf-frame' style='display: none; width: 100%; height: 500px; border: none;'></iframe>";
+                    expandedContent += "</div>";
+                }
+                
+                expandedContent += "<div id='notes-area-" + lessonId + "' class='notes-area card' style='display: none;'>";
+                expandedContent += "<h4>Notas para esta lección:</h4>";
+                expandedContent += "<textarea id='notes-text-" + lessonId + "' class='notes-textarea' placeholder='Escribe tus notas aquí...'>";
+                if (hasNotes) {
+                    expandedContent += userProgress[lessonId].notes;
+                }
+                expandedContent += "</textarea>";
+                expandedContent += "<button id='save-notes-btn-" + lessonId + "' class='btn btn-primary save-notes-btn' onclick='saveNotes(\"" + lessonId + "\", \"" + (selectedModule['Nombre del Módulo'] || selectedModule.Nombre_Modulo) + "\", \"" + (content['Nombre de la Clase'] || content.Nombre_Clase) + "\")'>Guardar notas</button>";
+                expandedContent += "</div>";
+                
+                expandedContent += "</div>";
             }
             
             expandedContent += "</div>";
-            
-            var expandedContainer = document.createElement('div');
-            expandedContainer.id = 'expanded-module-container';
-            expandedContainer.innerHTML = expandedContent;
-            
-            document.getElementById('modulesContainer').appendChild(expandedContainer);
-            
-            // Desplazar hacia el módulo expandido
-            setTimeout(() => {
-                expandedContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 100);
+        } else {
+            expandedContent += "<p class='no-content'>Contenido próximamente...</p>";
         }
+        
+        expandedContent += "</div>";
+        
+        var expandedContainer = document.createElement('div');
+        expandedContainer.id = 'expanded-module-container';
+        expandedContainer.innerHTML = expandedContent;
+        
+        document.getElementById('modulesContainer').appendChild(expandedContainer);
+        
+        // Desplazar hacia el módulo expandido
+        setTimeout(() => {
+            expandedContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+    }
 
-        function collapseModule() {
-            var expandedContainer = document.getElementById('expanded-module-container');
-            if (expandedContainer) {
-                expandedContainer.remove();
+    function collapseModule() {
+        var expandedContainer = document.getElementById('expanded-module-container');
+        if (expandedContainer) {
+            expandedContainer.remove();
+        }
+        
+        document.querySelectorAll('.module-card').forEach(card => {
+            card.style.display = 'block';
+        });
+        
+        document.querySelector('#modulesContainer h3').style.display = 'block';
+    }
+
+    // === FUNCIÓN CORREGIDA PARA GUARDAR PROGRESO ===
+    async function saveProgressToDatabase(lessonId, completed, notes) {
+        try {
+            console.log('💾 Guardando progreso:', { lessonId, completed, notes });
+            
+            // Enviar datos en el formato correcto que espera el backend
+            const progressData = {
+                ID_Alumno: String(alumnoActual.ID_Alumno),
+                ID_Clase: String(lessonId),
+                Fecha_Guardado: new Date().toISOString().split('T')[0],
+                Completada: completed ? "Sí" : "No",
+                Notas_Alumno: notes || ''
+            };
+            
+            console.log('📤 Enviando datos de progreso:', progressData);
+            
+            // Llamar a la acción 'progreso' con los datos correctos
+            const response = await callJSONP('progreso', progressData);
+            console.log('✅ Respuesta del servidor:', response);
+            
+            if (!response.success) {
+                throw new Error(response.error || 'Error al guardar el progreso');
             }
-            
-            document.querySelectorAll('.module-card').forEach(card => {
-                card.style.display = 'block';
-            });
-            
-            document.querySelector('#modulesContainer h3').style.display = 'block';
+            return response;
+        } catch (error) {
+            console.error('❌ Error guardando progreso:', error);
+            throw error;
         }
+    }
 
-        // === FUNCIÓN CORREGIDA PARA GUARDAR PROGRESO ===
-        async function saveProgressToDatabase(lessonId, completed, notes) {
-            try {
-                console.log('💾 Guardando progreso:', { lessonId, completed, notes });
-                
-                // Enviar datos en el formato correcto que espera el backend
-                const progressData = {
-                    ID_Alumno: String(alumnoActual.ID_Alumno),
-                    ID_Clase: String(lessonId),
-                    Fecha_Guardado: new Date().toISOString().split('T')[0],
-                    Completada: completed ? "Sí" : "No",
-                    Notas_Alumno: notes || ''
-                };
-                
-                console.log('📤 Enviando datos de progreso:', progressData);
-                
-                // Llamar a la acción 'progreso' con los datos correctos
-                const response = await callJSONP('progreso', progressData);
-                console.log('✅ Respuesta del servidor:', response);
-                
-                if (!response.success) {
-                    throw new Error(response.error || 'Error al guardar el progreso');
-                }
-                return response;
-            } catch (error) {
-                console.error('❌ Error guardando progreso:', error);
-                throw error;
+    // === SISTEMA DE PROGRESO MEJORADO Y CORREGIDO ===
+    async function markAsViewed(lessonId, moduleId, moduleName, lessonName, checkbox) {
+        const completed = checkbox.checked;
+        const notes = userProgress[lessonId] ? userProgress[lessonId].notes : '';
+        
+        const contentItem = checkbox.closest('.content-item');
+        if (completed) {
+            contentItem.classList.add('completed');
+        } else {
+            contentItem.classList.remove('completed');
+        }
+        
+        try {
+            // Guardar progreso en la base de datos
+            await saveProgressToDatabase(lessonId, completed, notes);
+            
+            // Actualizar estado local
+            if (!userProgress[lessonId]) {
+                userProgress[lessonId] = {};
             }
-        }
-
-        // === SISTEMA DE PROGRESO MEJORADO Y CORREGIDO ===
-        async function markAsViewed(lessonId, moduleId, moduleName, lessonName, checkbox) {
-            const completed = checkbox.checked;
-            const notes = userProgress[lessonId] ? userProgress[lessonId].notes : '';
+            userProgress[lessonId].completed = completed;
+            userProgress[lessonId].notes = notes;
+            userProgress[lessonId].lastUpdate = new Date();
             
-            const contentItem = checkbox.closest('.content-item');
+            // Actualizar cache local
+            updateLocalCache();
+            showNotification(completed ? '✅ Lección completada' : '📝 Progreso actualizado');
+            
+            // Actualizar progreso del módulo
+            updateModuleProgress(moduleId);
+            
+        } catch (error) {
+            console.error('Error en markAsViewed:', error);
+            showNotification('❌ Error de conexión: ' + error.message, 'error');
+            checkbox.checked = !completed; // Revertir cambio
             if (completed) {
-                contentItem.classList.add('completed');
-            } else {
                 contentItem.classList.remove('completed');
-            }
-            
-            try {
-                // Guardar progreso en la base de datos
-                await saveProgressToDatabase(lessonId, completed, notes);
-                
-                // Actualizar estado local
-                if (!userProgress[lessonId]) {
-                    userProgress[lessonId] = {};
-                }
-                userProgress[lessonId].completed = completed;
-                userProgress[lessonId].notes = notes;
-                userProgress[lessonId].lastUpdate = new Date();
-                
-                // Actualizar cache local
-                updateLocalCache();
-                showNotification(completed ? '✅ Lección completada' : '📝 Progreso actualizado');
-                
-                // Actualizar progreso del módulo
-                updateModuleProgress(moduleId);
-                
-            } catch (error) {
-                console.error('Error en markAsViewed:', error);
-                showNotification('❌ Error de conexión: ' + error.message, 'error');
-                checkbox.checked = !completed; // Revertir cambio
-                if (completed) {
-                    contentItem.classList.remove('completed');
-                } else {
-                    contentItem.classList.add('completed');
-                }
+            } else {
+                contentItem.classList.add('completed');
             }
         }
+    }
 
-        // Función para actualizar el progreso del módulo
-        function updateModuleProgress(moduleId) {
-            const selectedModule = userModules.find(m => m.ID_Módulo === moduleId);
-            if (!selectedModule) return;
+    // Función para actualizar el progreso del módulo
+    function updateModuleProgress(moduleId) {
+        const selectedModule = userModules.find(m => m.ID_Módulo === moduleId);
+        if (!selectedModule) return;
+        
+        let completedCount = 0;
+        selectedModule.Clases.forEach(content => {
+            if (userProgress[content.ID_Clase] && userProgress[content.ID_Clase].completed) {
+                completedCount++;
+            }
+        });
+        
+        const totalCount = selectedModule.Clases.length;
+        const progressPercentage = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+        
+        // Actualizar la barra de progreso en la vista expandida
+        const progressBar = document.querySelector('.module-progress-expanded .progress-bar');
+        const progressText = document.querySelector('.module-progress-expanded .progress-text');
+        
+        if (progressBar) {
+            progressBar.style.width = progressPercentage + '%';
+        }
+        
+        if (progressText) {
+            progressText.textContent = completedCount + "/" + totalCount + " lecciones (" + progressPercentage + "%)";
+        }
+        
+        // Actualizar la tarjeta del módulo
+        const moduleCard = document.querySelector(`[onclick="expandModule('${moduleId}')"]`);
+        if (moduleCard) {
+            const cardProgressBar = moduleCard.querySelector('.progress-bar');
+            const cardProgressText = moduleCard.querySelector('.progress-text');
             
-            let completedCount = 0;
-            selectedModule.Clases.forEach(content => {
-                if (userProgress[content.ID_Clase] && userProgress[content.ID_Clase].completed) {
-                    completedCount++;
-                }
-            });
-            
-            const totalCount = selectedModule.Clases.length;
-            const progressPercentage = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
-            
-            // Actualizar la barra de progreso en la vista expandida
-            const progressBar = document.querySelector('.module-progress-expanded .progress-bar');
-            const progressText = document.querySelector('.module-progress-expanded .progress-text');
-            
-            if (progressBar) {
-                progressBar.style.width = progressPercentage + '%';
+            if (cardProgressBar) {
+                cardProgressBar.style.width = progressPercentage + '%';
             }
             
-            if (progressText) {
-                progressText.textContent = completedCount + "/" + totalCount + " lecciones (" + progressPercentage + "%)";
-            }
-            
-            // Actualizar la tarjeta del módulo
-            const moduleCard = document.querySelector(`[onclick="expandModule('${moduleId}')"]`);
-            if (moduleCard) {
-                const cardProgressBar = moduleCard.querySelector('.progress-bar');
-                const cardProgressText = moduleCard.querySelector('.progress-text');
-                
-                if (cardProgressBar) {
-                    cardProgressBar.style.width = progressPercentage + '%';
-                }
-                
-                if (cardProgressText) {
-                    cardProgressText.textContent = progressPercentage + '% completado';
-                }
+            if (cardProgressText) {
+                cardProgressText.textContent = progressPercentage + '% completado';
             }
         }
+    }
 
-        async function saveNotes(lessonId, moduleName, lessonName) {
-            const notesText = document.getElementById('notes-text-' + lessonId).value;
-            const saveButton = document.getElementById('save-notes-btn-' + lessonId);
+    async function saveNotes(lessonId, moduleName, lessonName) {
+        const notesText = document.getElementById('notes-text-' + lessonId).value;
+        const saveButton = document.getElementById('save-notes-btn-' + lessonId);
+        
+        saveButton.textContent = 'Guardando...';
+        saveButton.disabled = true;
+        
+        try {
+            // Guardar notas en la base de datos
+            await saveProgressToDatabase(lessonId, 
+                userProgress[lessonId] ? userProgress[lessonId].completed : false, 
+                notesText
+            );
             
-            saveButton.textContent = 'Guardando...';
-            saveButton.disabled = true;
+            if (!userProgress[lessonId]) {
+                userProgress[lessonId] = {};
+            }
+            userProgress[lessonId].notes = notesText;
             
-            try {
-                // Guardar notas en la base de datos
-                await saveProgressToDatabase(lessonId, 
-                    userProgress[lessonId] ? userProgress[lessonId].completed : false, 
-                    notesText
-                );
-                
-                if (!userProgress[lessonId]) {
-                    userProgress[lessonId] = {};
-                }
-                userProgress[lessonId].notes = notesText;
-                
-                // Actualizar cache local
-                updateLocalCache();
-                
-                showNotification('✅ Notas guardadas correctamente');
-                saveButton.textContent = 'Guardado ✓';
-                
-                const notesButton = document.getElementById('notes-btn-' + lessonId);
-                notesButton.textContent = '📝 Ver notas (' + (notesText.length > 0 ? "1" : "0") + ')';
-                
-                setTimeout(() => {
-                    saveButton.textContent = 'Guardar notas';
-                    saveButton.disabled = false;
-                }, 2000);
-                
-            } catch (error) {
-                showNotification('❌ Error: ' + error.message, 'error');
+            // Actualizar cache local
+            updateLocalCache();
+            
+            showNotification('✅ Notas guardadas correctamente');
+            saveButton.textContent = 'Guardado ✓';
+            
+            const notesButton = document.getElementById('notes-btn-' + lessonId);
+            notesButton.textContent = '📝 Ver notas (' + (notesText.length > 0 ? "1" : "0") + ')';
+            
+            setTimeout(() => {
                 saveButton.textContent = 'Guardar notas';
                 saveButton.disabled = false;
-            }
+            }, 2000);
+            
+        } catch (error) {
+            showNotification('❌ Error: ' + error.message, 'error');
+            saveButton.textContent = 'Guardar notas';
+            saveButton.disabled = false;
+        }
+    }
+
+    // === SISTEMA DE VIDEO MEJORADO Y CORREGIDO ===
+    function showVideoPlayer(lessonId, videoUrl) {
+        var videoId = extractVideoId(videoUrl);
+        if (!videoId) {
+            showNotification("URL de video inválida", "error");
+            return;
         }
 
-        // === SISTEMA DE VIDEO MEJORADO Y CORREGIDO ===
-        function showVideoPlayer(lessonId, videoUrl) {
-            var videoId = extractVideoId(videoUrl);
-            if (!videoId) {
-                showNotification("URL de video inválida", "error");
-                return;
+        pauseAllVideos();
+        
+        var playerContainer = document.getElementById('player-container-' + lessonId);
+        var showButton = document.getElementById('show-player-' + lessonId);
+        var hideButton = document.getElementById('hide-player-' + lessonId);
+        
+        document.querySelectorAll('.player-container').forEach(container => {
+            if (container.id !== 'player-container-' + lessonId) {
+                container.style.display = 'none';
             }
-
-            pauseAllVideos();
-            
-            var playerContainer = document.getElementById('player-container-' + lessonId);
-            var showButton = document.getElementById('show-player-' + lessonId);
-            var hideButton = document.getElementById('hide-player-' + lessonId);
-            
-            document.querySelectorAll('.player-container').forEach(container => {
-                if (container.id !== 'player-container-' + lessonId) {
-                    container.style.display = 'none';
-                }
-            });
-            
-            document.querySelectorAll('[id^="hide-player-"]').forEach(button => {
-                if (button.id !== 'hide-player-' + lessonId) {
-                    button.style.display = 'none';
-                }
-            });
-            
-            document.querySelectorAll('[id^="show-player-"]').forEach(button => {
-                if (button.id !== 'show-player-' + lessonId && !button.closest('.player-container')) {
-                    button.style.display = 'inline-flex';
-                }
-            });
-            
-            playerContainer.style.display = 'block';
-            showButton.style.display = 'none';
-            hideButton.style.display = 'inline-flex';
-            
-            // Desplazar la página para mostrar el reproductor
-            playerContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            
-            if (!currentPlayers[lessonId] || currentPlayers[lessonId].getVideoData === undefined) {
-                createPlayer(lessonId, videoId);
-            } else {
-                currentPlayers[lessonId].cueVideoById(videoId);
-                setTimeout(function() {
-                    adjustPlayerSize(lessonId);
-                }, 100);
+        });
+        
+        document.querySelectorAll('[id^="hide-player-"]').forEach(button => {
+            if (button.id !== 'hide-player-' + lessonId) {
+                button.style.display = 'none';
             }
+        });
+        
+        document.querySelectorAll('[id^="show-player-"]').forEach(button => {
+            if (button.id !== 'show-player-' + lessonId && !button.closest('.player-container')) {
+                button.style.display = 'inline-flex';
+            }
+        });
+        
+        playerContainer.style.display = 'block';
+        showButton.style.display = 'none';
+        hideButton.style.display = 'inline-flex';
+        
+        // Desplazar la página para mostrar el reproductor
+        playerContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        if (!currentPlayers[lessonId] || currentPlayers[lessonId].getVideoData === undefined) {
+            createPlayer(lessonId, videoId);
+        } else {
+            currentPlayers[lessonId].cueVideoById(videoId);
+            setTimeout(function() {
+                adjustPlayerSize(lessonId);
+            }, 100);
         }
+    }
 
-        function hideVideoPlayer(lessonId) {
-            var playerContainer = document.getElementById('player-container-' + lessonId);
-            var showButton = document.getElementById('show-player-' + lessonId);
-            var hideButton = document.getElementById('hide-player-' + lessonId);
-            
-            playerContainer.style.display = 'none';
-            showButton.style.display = 'inline-flex';
-            hideButton.style.display = 'none';
-            
-            if (currentPlayers[lessonId]) {
+    function hideVideoPlayer(lessonId) {
+        var playerContainer = document.getElementById('player-container-' + lessonId);
+        var showButton = document.getElementById('show-player-' + lessonId);
+        var hideButton = document.getElementById('hide-player-' + lessonId);
+        
+        playerContainer.style.display = 'none';
+        showButton.style.display = 'inline-flex';
+        hideButton.style.display = 'none';
+        
+        if (currentPlayers[lessonId]) {
+            currentPlayers[lessonId].pauseVideo();
+        }
+        
+        // Detener el observador si existe
+        if (iframeWatchers[lessonId]) {
+            iframeWatchers[lessonId].disconnect();
+            delete iframeWatchers[lessonId];
+        }
+    }
+
+    function pauseAllVideos() {
+        for (var lessonId in currentPlayers) {
+            if (currentPlayers[lessonId] && typeof currentPlayers[lessonId].pauseVideo === 'function') {
                 currentPlayers[lessonId].pauseVideo();
             }
         }
+    }
 
-        function pauseAllVideos() {
-            for (var lessonId in currentPlayers) {
-                if (currentPlayers[lessonId] && typeof currentPlayers[lessonId].pauseVideo === 'function') {
-                    currentPlayers[lessonId].pauseVideo();
-                }
+    function extractVideoId(url) {
+        var regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+        var match = url.match(regex);
+        return match ? match[1] : null;
+    }
+
+    function adjustPlayerSize(lessonId) {
+        var player = currentPlayers[lessonId];
+        if (!player) return;
+        
+        var container = document.getElementById('videoContainer-' + lessonId);
+        if (!container) return;
+        
+        var containerWidth = container.clientWidth;
+        var containerHeight = containerWidth * 9 / 16;
+        
+        player.setSize(containerWidth, containerHeight);
+    }
+
+    function createPlayer(lessonId, videoId) {
+        var playerId = 'player-' + lessonId;
+        
+        currentPlayers[lessonId] = new YT.Player(playerId, {
+            videoId: videoId,
+            playerVars: { 
+                controls: 0, 
+                modestbranding: 1, 
+                rel: 0, 
+                iv_load_policy: 3,
+                playsinline: 1
+            },
+            events: {
+                onReady: function() { onPlayerReady(lessonId); },
+                onStateChange: function(event) { onPlayerStateChange(lessonId, event); }
             }
-        }
+        });
+    }
 
-        function extractVideoId(url) {
-            var regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
-            var match = url.match(regex);
-            return match ? match[1] : null;
-        }
+    // === NUEVAS FUNCIONES PARA CONTROL DE IFRAME EN LANDSCAPE ===
+    function onPlayerReady(lessonId) {
+        var player = currentPlayers[lessonId];
+        
+        adjustPlayerSize(lessonId);
+        
+        setupCustomControls(lessonId);
+        
+        setInterval(function() {
+            updateProgress(lessonId);
+        }, 500);
+        
+        // Iniciar vigilancia del iframe
+        startIframeWatcher(lessonId);
+        
+        // Forzar redimensionamiento en landscape
+        window.addEventListener('orientationchange', function() {
+            setTimeout(function() {
+                adjustPlayerSize(lessonId);
+                forceIframeSize(lessonId);
+            }, 300);
+        });
+    }
 
-        function adjustPlayerSize(lessonId) {
-            var player = currentPlayers[lessonId];
-            if (!player) return;
-            
-            var container = document.getElementById('videoContainer-' + lessonId);
-            if (!container) return;
-            
-            var containerWidth = container.clientWidth;
-            var containerHeight = containerWidth * 9 / 16;
-            
-            player.setSize(containerWidth, containerHeight);
-        }
-
-        function createPlayer(lessonId, videoId) {
-            var playerId = 'player-' + lessonId;
-            
-            currentPlayers[lessonId] = new YT.Player(playerId, {
-                videoId: videoId,
-                playerVars: { 
-                    controls: 0, 
-                    modestbranding: 1, 
-                    rel: 0, 
-                    iv_load_policy: 3,
-                    playsinline: 1
-                },
-                events: {
-                    onReady: function() { onPlayerReady(lessonId); },
-                    onStateChange: function(event) { onPlayerStateChange(lessonId, event); }
-                }
-            });
-        }
-
-        function onPlayerReady(lessonId) {
-            var player = currentPlayers[lessonId];
-            
-            adjustPlayerSize(lessonId);
-            
-            setupCustomControls(lessonId);
-            
-            setInterval(function() {
-                updateProgress(lessonId);
-            }, 500);
-        }
-
-        function onPlayerStateChange(lessonId, event) {
-            var btn = document.getElementById("playPauseBtn-" + lessonId);
-            if (btn) {
-                btn.textContent = event.data === YT.PlayerState.PLAYING ? "⏸ Pause" : "▶ Play";
-            }
-        }
-
-        // === FUNCIÓN PARA ACTUALIZAR TIEMPO EN BARRA DE PROGRESO ===
-        function formatTime(seconds) {
-            if (!seconds || isNaN(seconds)) return "0:00";
-            
-            var mins = Math.floor(seconds / 60);
-            var secs = Math.floor(seconds % 60);
-            return mins + ":" + (secs < 10 ? "0" : "") + secs;
-        }
-
-        function updateProgress(lessonId) {
-            var player = currentPlayers[lessonId];
-            if (!player || !player.getCurrentTime || dragging) return;
-
-            var currentTime = player.getCurrentTime();
-            var duration = player.getDuration();
-            var percent = (currentTime / duration) * 100;
-            
-            var progressElement = document.getElementById("progress-" + lessonId);
-            var thumbElement = document.getElementById("thumb-" + lessonId);
-            var progressBarElement = document.getElementById("progressBar-" + lessonId);
-            var timeDisplay = document.getElementById("timeDisplay-" + lessonId);
-            
-            if (progressElement) {
-                progressElement.style.width = percent + "%";
-            }
-            
-            if (thumbElement && progressBarElement) {
-                thumbElement.style.left = (percent / 100 * progressBarElement.offsetWidth) + "px";
-            }
-            
-            // ACTUALIZAR DISPLAY DE TIEMPO
-            if (timeDisplay && duration) {
-                timeDisplay.textContent = formatTime(currentTime) + " / " + formatTime(duration);
-            }
-        }
-
-        // === FUNCIÓN SETUP CUSTOM CONTROLS MEJORADA Y CORREGIDA ===
-        function setupCustomControls(lessonId) {
-            var overlay = document.getElementById("overlay-" + lessonId);
-            var playPauseBtn = document.getElementById("playPauseBtn-" + lessonId);
-            var restartBtn = document.getElementById("restartBtn-" + lessonId);
-            var fullscreenBtn = document.getElementById("fullscreenBtn-" + lessonId);
-            var exitFullscreenBtn = document.getElementById("exitFullscreenBtn-" + lessonId);
-            var progressBar = document.getElementById("progressBar-" + lessonId);
-            var thumb = document.getElementById("thumb-" + lessonId);
-
-            if (overlay) {
-                overlay.onclick = function(e) { 
-                    if (!e.target.closest('.video-controls') && !e.target.closest('.exit-fullscreen')) {
-                        togglePlayPause(lessonId); 
-                    }
-                };
-            }
-            
-            if (playPauseBtn) playPauseBtn.onclick = function() { togglePlayPause(lessonId); };
-            if (restartBtn) restartBtn.onclick = function() { restartVideo(lessonId); };
-            if (fullscreenBtn) fullscreenBtn.onclick = function() { goFullScreen(lessonId); };
-            if (exitFullscreenBtn) exitFullscreenBtn.onclick = function() { exitFullScreen(lessonId); };
-
-            // Sistema de arrastre para la barra de progreso
-            if (thumb) {
-                thumb.addEventListener("mousedown", function(e) { 
-                    e.preventDefault();
-                    startDrag(e, lessonId); 
-                });
-                thumb.addEventListener("touchstart", function(e) { 
-                    e.preventDefault();
-                    startDrag(e, lessonId); 
-                }, {passive: false});
-            }
-
-            if (progressBar) {
-                progressBar.addEventListener("click", function(e) {
-                    if (!dragging) {
-                        var rect = progressBar.getBoundingClientRect();
-                        var x = e.clientX - rect.left;
-                        if (x < 0) x = 0;
-                        if (x > rect.width) x = rect.width;
-                        seekToPosition(lessonId, x / rect.width);
-                    }
-                });
-            }
-
-            // Eventos globales de arrastre
-            document.addEventListener("mousemove", function(e) { 
-                dragMove(e, lessonId);
-            });
-            document.addEventListener("mouseup", function(e) { 
-                endDrag(e);
-            });
-            document.addEventListener("touchmove", function(e) { 
-                dragMove(e, lessonId);
-            }, {passive: false});
-            document.addEventListener("touchend", function(e) { 
-                endDrag(e);
-            });
-            document.addEventListener("touchcancel", function(e) { 
-                endDrag(e);
-            });
-
-            // Eventos de pantalla completa
-            document.addEventListener('fullscreenchange', function() { 
-                fullscreenChange(lessonId);
-            });
-            document.addEventListener('webkitfullscreenchange', function() { 
-                fullscreenChange(lessonId);
-            });
-            document.addEventListener('msfullscreenchange', function() { 
-                fullscreenChange(lessonId);
-            });
-            
-            // Redimensionamiento
-            window.addEventListener('resize', function() {
-                if (currentPlayers[lessonId]) {
-                    adjustPlayerSize(lessonId);
-                }
-            });
-            
-            window.addEventListener('orientationchange', function() {
-                setTimeout(function() {
-                    fullscreenChange(lessonId);
-                    adjustPlayerSize(lessonId);
-                }, 300);
-            });
-        }
-
-        function togglePlayPause(lessonId) {
-            var player = currentPlayers[lessonId];
-            if (!player) return;
-
-            var state = player.getPlayerState();
-            if (state === YT.PlayerState.PLAYING) {
-                player.pauseVideo();
-            } else {
-                player.playVideo();
-            }
-        }
-
-        function restartVideo(lessonId) {
-            var player = currentPlayers[lessonId];
-            if (!player) return;
-
-            player.seekTo(0, true);
-            player.playVideo();
-        }
-
-        function startDrag(e, lessonId) {
-            e.preventDefault();
-            dragging = true;
-            window.currentDragLessonId = lessonId;
-        }
-
-        function dragMove(e, lessonId) {
-            if (dragging && window.currentDragLessonId === lessonId) {
-                e.preventDefault();
-                var progressBar = document.getElementById("progressBar-" + lessonId);
-                if (!progressBar) return;
-
-                var rect = progressBar.getBoundingClientRect();
-                var clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                var x = clientX - rect.left;
-                
-                if (x < 0) x = 0;
-                if (x > rect.width) x = rect.width;
-                
-                seekToPosition(lessonId, x / rect.width);
-            }
-        }
-
-        function endDrag(e) {
-            dragging = false;
-            window.currentDragLessonId = null;
-        }
-
-        function seekToPosition(lessonId, percent) {
-            var player = currentPlayers[lessonId];
-            if (!player) return;
-
-            var duration = player.getDuration();
-            var newTime = duration * percent;
-            player.seekTo(newTime, true);
-            
-            var progressElement = document.getElementById("progress-" + lessonId);
-            var thumbElement = document.getElementById("thumb-" + lessonId);
-            var progressBarElement = document.getElementById("progressBar-" + lessonId);
-            
-            if (progressElement) {
-                progressElement.style.width = (percent * 100) + "%";
-            }
-            
-            if (thumbElement && progressBarElement) {
-                thumbElement.style.left = (percent * progressBarElement.offsetWidth) + "px";
-            }
-        }
-
-        function goFullScreen(lessonId) {
-            var container = document.getElementById("player-container-" + lessonId);
-            if (!container) return;
-
-            if (container.requestFullscreen) {
-                container.requestFullscreen();
-            } else if (container.webkitRequestFullscreen) {
-                container.webkitRequestFullscreen();
-            } else if (container.msRequestFullscreen) {
-                container.msRequestFullscreen();
-            }
-        }
-
-        function exitFullScreen(lessonId) {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen();
-            } else if (document.msExitFullscreen) {
-                document.msExitFullscreen();
-            }
-        }
-
-        function fullscreenChange(lessonId) {
-            var exitBtn = document.getElementById("exitFullscreenBtn-" + lessonId);
-            
+    // Nueva función para vigilar y forzar el tamaño del iframe constantemente
+    function startIframeWatcher(lessonId) {
+        var playerElement = document.getElementById('player-' + lessonId);
+        if (!playerElement) return;
+        
+        // Observador de mutaciones para detectar cambios en el DOM
+        var observer = new MutationObserver(function(mutations) {
+            forceIframeSize(lessonId);
+        });
+        
+        // Configurar el observador
+        observer.observe(playerElement, {
+            attributes: true,
+            childList: true,
+            subtree: true,
+            attributeFilter: ['style', 'width', 'height']
+        });
+        
+        // Guardar referencia al observador
+        iframeWatchers[lessonId] = observer;
+        
+        // Forzar tamaño cada 100ms cuando está en fullscreen
+        var forceInterval = setInterval(function() {
             var isFullscreen = document.fullscreenElement || 
                               document.webkitFullscreenElement || 
                               document.msFullscreenElement;
+            if (isFullscreen) {
+                forceIframeSize(lessonId);
+            }
+        }, 100);
+        
+        // Guardar referencia al intervalo para limpiarlo después
+        iframeWatchers[lessonId + '_interval'] = forceInterval;
+    }
+
+    // Función para forzar el tamaño del iframe con estilos inline
+    function forceIframeSize(lessonId) {
+        var playerElement = document.getElementById('player-' + lessonId);
+        if (!playerElement) return;
+        
+        var iframe = playerElement.querySelector('iframe');
+        if (!iframe) return;
+        
+        var isFullscreen = document.fullscreenElement || 
+                          document.webkitFullscreenElement || 
+                          document.msFullscreenElement;
+        
+        var isLandscape = window.innerWidth > window.innerHeight;
+        var isMobile = window.innerWidth <= 926;
+        
+        if (isFullscreen && isLandscape && isMobile) {
+            // Calcular el 60% del ancho de la pantalla
+            var targetWidth = Math.floor(window.innerWidth * 0.6);
+            var targetHeight = Math.floor(targetWidth * 9 / 16);
             
-            if (exitBtn) {
-                exitBtn.style.display = isFullscreen ? "flex" : "none";
-            }
-        }
-
-        // === SISTEMA UNIFICADO DE MANUALES ===
-        function showCourseManual(manualUrl) {
-            if (manualUrl) {
-                openManualViewer(manualUrl, 'Manual del Curso');
-            }
-        }
-
-        function showModuleManual(manualUrl) {
-            if (manualUrl) {
-                openManualViewer(manualUrl, 'Manual del Módulo');
-            }
-        }
-
-        function openManualViewer(manualUrl, title) {
-            const modal = document.getElementById('universalManualModal');
-            const frame = document.getElementById('manualModalFrame');
-            const modalTitle = document.getElementById('manualModalTitle');
-            
-            if (modal && frame) {
-                modalTitle.textContent = title;
-                const viewerUrl = convertToGoogleDriveViewer(manualUrl);
-                frame.src = viewerUrl;
-                modal.style.display = 'flex';
-            }
-        }
-
-        function closeManualViewer() {
-            const modal = document.getElementById('universalManualModal');
-            const frame = document.getElementById('manualModalFrame');
-            if (modal && frame) {
-                modal.style.display = 'none';
-                frame.src = '';
-            }
-        }
-
-        // Cerrar modal con ESC
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeManualViewer();
-            }
-        });
-
-        function convertToGoogleDriveViewer(url) {
-            var fileId = extractGoogleDriveFileId(url);
-            if (fileId) {
-                return 'https://drive.google.com/file/d/' + fileId + '/preview';
-            }
-            return url;
-        }
-
-        function extractGoogleDriveFileId(url) {
-            var match = url.match(/[-\w]{25,}/);
-            return match ? match[0] : null;
-        }
-
-        function downloadManual(lessonId, manualUrl) {
-            var fileId = extractGoogleDriveFileId(manualUrl);
-            if (fileId) {
-                var downloadUrl = 'https://drive.google.com/uc?export=download&id=' + fileId;
-                window.open(downloadUrl, '_blank');
-            } else {
-                window.open(manualUrl, '_blank');
-            }
-        }
-
-        function printManual(lessonId) {
-            var pdfFrame = document.getElementById('pdf-frame-' + lessonId);
-            if (pdfFrame && pdfFrame.contentWindow) {
-                try {
-                    pdfFrame.contentWindow.print();
-                } catch (e) {
-                    var manualUrl = pdfFrame.src;
-                    window.open(manualUrl, '_blank');
-                    showNotification('Se abrió el manual en una nueva ventana para imprimir', 'info');
-                }
-            }
-        }
-
-        // === SISTEMA DE NOTAS ===
-        function toggleNotes(lessonId) {
-            var notesArea = document.getElementById('notes-area-' + lessonId);
-            var notesButton = document.getElementById('notes-btn-' + lessonId);
-            
-            if (notesArea.style.display === 'none' || !notesArea.style.display) {
-                notesArea.style.display = 'block';
-                notesButton.textContent = 'Ocultar notas';
-                
-                var notesTextarea = document.getElementById('notes-text-' + lessonId);
-                if (notesTextarea.value === '' && userProgress[lessonId] && userProgress[lessonId].notes) {
-                    notesTextarea.value = userProgress[lessonId].notes;
-                }
-            } else {
-                notesArea.style.display = 'none';
-                notesButton.textContent = 'Ver/Editar notas';
-            }
-        }
-
-        // === FUNCIÓN CLASE SIGUIENTE ===
-        function nextClass(lessonId, moduleId) {
-            var currentModule = null;
-            for (var i = 0; i < userModules.length; i++) {
-                if (userModules[i].ID_Módulo === moduleId) {
-                    currentModule = userModules[i];
-                    break;
-                }
+            // Límite de altura al 70%
+            var maxHeight = Math.floor(window.innerHeight * 0.7);
+            if (targetHeight > maxHeight) {
+                targetHeight = maxHeight;
+                targetWidth = Math.floor(targetHeight * 16 / 9);
             }
             
-            if (!currentModule || !currentModule.Clases) return;
+            // FORZAR estilos inline en el iframe
+            iframe.style.cssText = 'width: ' + targetWidth + 'px !important; ' +
+                                   'height: ' + targetHeight + 'px !important; ' +
+                                   'max-width: ' + targetWidth + 'px !important; ' +
+                                   'max-height: ' + targetHeight + 'px !important; ' +
+                                   'position: absolute !important; ' +
+                                   'top: 0 !important; ' +
+                                   'left: 0 !important;';
             
-            var currentIndex = -1;
-            for (var j = 0; j < currentModule.Clases.length; j++) {
-                if (currentModule.Clases[j].ID_Clase === lessonId) {
-                    currentIndex = j;
-                    break;
-                }
-            }
-            
-            if (currentIndex === -1 || currentIndex >= currentModule.Clases.length - 1) {
-                showNotification("No hay más clases en este módulo", "info");
-                return;
-            }
-            
-            var nextLesson = currentModule.Clases[currentIndex + 1];
-            
-            hideVideoPlayer(lessonId);
-            hideManual(lessonId);
-            
-            var currentCheckbox = document.getElementById('check_' + lessonId);
-            if (currentCheckbox && !currentCheckbox.checked) {
-                currentCheckbox.checked = true;
-                markAsViewed(lessonId, moduleId, currentModule['Nombre del Módulo'], currentModule.Clases[currentIndex]['Nombre de la Clase'], currentCheckbox);
-            }
-            
-            if (nextLesson['URL Video'] && nextLesson['URL Video'].trim() !== '') {
-                setTimeout(function() {
-                    showVideoPlayer(nextLesson.ID_Clase, nextLesson['URL Video']);
-                }, 300);
-            }
-            
-            var nextLessonElement = document.getElementById('check_' + nextLesson.ID_Clase);
-            if (nextLessonElement) {
-                nextLessonElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-            
-            showNotification("Avanzando a la siguiente clase: " + nextLesson['Nombre de la Clase'], "success");
+            // También forzar en el contenedor del player
+            playerElement.style.cssText = 'width: ' + targetWidth + 'px !important; ' +
+                                          'height: ' + targetHeight + 'px !important; ' +
+                                          'max-width: ' + targetWidth + 'px !important; ' +
+                                          'max-height: ' + targetHeight + 'px !important; ' +
+                                          'position: relative !important;';
         }
+    }
 
-        // === FUNCIONES UTILITARIAS ===
-        function updateLocalCache() {
-            // Invalidar cache local cuando hay cambios
-            if (alumnoActual) {
-                sessionStorage.removeItem(`cursos_${alumnoActual.ID_Alumno}`);
-                if (currentCourseId && currentGrupoId) {
-                    sessionStorage.removeItem(`modulos_${alumnoActual.ID_Alumno}_${currentCourseId}_${currentGrupoId}`);
-                }
-            }
+    function onPlayerStateChange(lessonId, event) {
+        var btn = document.getElementById("playPauseBtn-" + lessonId);
+        if (btn) {
+            btn.textContent = event.data === YT.PlayerState.PLAYING ? "⏸ Pause" : "▶ Play";
         }
+    }
 
-        function showNotification(message, type = 'success') {
-            const notification = document.createElement('div');
-            notification.className = 'notification ' + type;
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => notification.classList.add('show'), 10);
-            setTimeout(() => {
-                notification.classList.remove('show');
-                setTimeout(() => document.body.removeChild(notification), 300);
-            }, 3000);
-        }
+    // === FUNCIÓN PARA ACTUALIZAR TIEMPO EN BARRA DE PROGRESO ===
+    function formatTime(seconds) {
+        if (!seconds || isNaN(seconds)) return "0:00";
+        
+        var mins = Math.floor(seconds / 60);
+        var secs = Math.floor(seconds % 60);
+        return mins + ":" + (secs < 10 ? "0" : "") + secs;
+    }
 
-        function formatFecha(fechaString) {
-            if (!fechaString) return 'No especificada';
-            try {
-                const fecha = new Date(fechaString);
-                return fecha.toLocaleDateString('es-ES');
-            } catch (e) {
-                return fechaString;
-            }
-        }
+    function updateProgress(lessonId) {
+        var player = currentPlayers[lessonId];
+        if (!player || !player.getCurrentTime || dragging) return;
 
-        function clearErrors() {
-            document.getElementById("errorMessage").innerHTML = "";
+        var currentTime = player.getCurrentTime();
+        var duration = player.getDuration();
+        var percent = (currentTime / duration) * 100;
+        
+        var progressElement = document.getElementById("progress-" + lessonId);
+        var thumbElement = document.getElementById("thumb-" + lessonId);
+        var progressBarElement = document.getElementById("progressBar-" + lessonId);
+        var timeDisplay = document.getElementById("timeDisplay-" + lessonId);
+        
+        if (progressElement) {
+            progressElement.style.width = percent + "%";
         }
         
-        function clearForms() {
-            document.getElementById("username").value = "";
-            document.getElementById("password").value = "";
+        if (thumbElement && progressBarElement) {
+            thumbElement.style.left = (percent / 100 * progressBarElement.offsetWidth) + "px";
         }
+        
+        // ACTUALIZAR DISPLAY DE TIEMPO
+        if (timeDisplay && duration) {
+            timeDisplay.textContent = formatTime(currentTime) + " / " + formatTime(duration);
+        }
+    }
 
-        function logout() {
-            // Limpiar todo
-            for (var lessonId in currentPlayers) {
-                if (currentPlayers[lessonId]) {
-                    currentPlayers[lessonId].destroy();
+    // === FUNCIÓN SETUP CUSTOM CONTROLS MEJORADA Y CORREGIDA ===
+    function setupCustomControls(lessonId) {
+        var overlay = document.getElementById("overlay-" + lessonId);
+        var playPauseBtn = document.getElementById("playPauseBtn-" + lessonId);
+        var restartBtn = document.getElementById("restartBtn-" + lessonId);
+        var fullscreenBtn = document.getElementById("fullscreenBtn-" + lessonId);
+        var exitFullscreenBtn = document.getElementById("exitFullscreenBtn-" + lessonId);
+        var progressBar = document.getElementById("progressBar-" + lessonId);
+        var thumb = document.getElementById("thumb-" + lessonId);
+
+        if (overlay) {
+            overlay.onclick = function(e) { 
+                if (!e.target.closest('.video-controls') && !e.target.closest('.exit-fullscreen')) {
+                    togglePlayPause(lessonId); 
                 }
-            }
-            
-            currentPlayers = {};
-            currentUser = null;
-            userProgress = {};
-            userModules = [];
-            alumnoActual = null;
-            currentCourseData = null;
-            
-            sessionStorage.clear();
-            
-            document.getElementById('courseHeader').style.display = 'none';
-            document.getElementById("page4_id1").style.display = "none";
-            document.getElementById("page1_id1").style.display = "flex";
-            clearErrors();
-            clearForms();
+            };
+        }
+        
+        if (playPauseBtn) playPauseBtn.onclick = function() { togglePlayPause(lessonId); };
+        if (restartBtn) restartBtn.onclick = function() { restartVideo(lessonId); };
+        if (fullscreenBtn) fullscreenBtn.onclick = function() { goFullScreen(lessonId); };
+        if (exitFullscreenBtn) exitFullscreenBtn.onclick = function() { exitFullScreen(lessonId); };
+
+        // Sistema de arrastre para la barra de progreso
+        if (thumb) {
+            thumb.addEventListener("mousedown", function(e) { 
+                e.preventDefault();
+                startDrag(e, lessonId); 
+            });
+            thumb.addEventListener("touchstart", function(e) { 
+                e.preventDefault();
+                startDrag(e, lessonId); 
+            }, {passive: false});
         }
 
-        // Funciones auxiliares para manuales
-        function showManual(lessonId, manualUrl) {
-            var manualContainer = document.getElementById('manual-container-' + lessonId);
-            var showManualButton = document.getElementById('show-manual-' + lessonId);
-            var hideManualButton = document.getElementById('hide-manual-' + lessonId);
-            
-            if (manualContainer.style.display === 'none' || !manualContainer.style.display) {
-                manualContainer.style.display = 'block';
-                showManualButton.style.display = 'none';
-                hideManualButton.style.display = 'inline-flex';
-                
-                var welcomeMessage = document.getElementById('welcome-message-' + lessonId);
-                var pdfFrame = document.getElementById('pdf-frame-' + lessonId);
-                
-                if (welcomeMessage) welcomeMessage.style.display = 'none';
-                if (pdfFrame) {
-                    pdfFrame.style.display = 'block';
-                    var viewerUrl = convertToGoogleDriveViewer(manualUrl);
-                    pdfFrame.src = viewerUrl;
+        if (progressBar) {
+            progressBar.addEventListener("click", function(e) {
+                if (!dragging) {
+                    var rect = progressBar.getBoundingClientRect();
+                    var x = e.clientX - rect.left;
+                    if (x < 0) x = 0;
+                    if (x > rect.width) x = rect.width;
+                    seekToPosition(lessonId, x / rect.width);
                 }
-                
-                showManualButton.innerHTML = '📄 Ocultar Manual';
-            } else {
-                hideManual(lessonId);
-            }
+            });
         }
 
-        function hideManual(lessonId) {
-            var manualContainer = document.getElementById('manual-container-' + lessonId);
-            var showManualButton = document.getElementById('show-manual-' + lessonId);
-            var hideManualButton = document.getElementById('hide-manual-' + lessonId);
+        // Eventos globales de arrastre
+        document.addEventListener("mousemove", function(e) { 
+            dragMove(e, lessonId);
+        });
+        document.addEventListener("mouseup", function(e) { 
+            endDrag(e);
+        });
+        document.addEventListener("touchmove", function(e) { 
+            dragMove(e, lessonId);
+        }, {passive: false});
+        document.addEventListener("touchend", function(e) { 
+            endDrag(e);
+        });
+        document.addEventListener("touchcancel", function(e) { 
+            endDrag(e);
+        });
+
+        // Eventos de pantalla completa
+        document.addEventListener('fullscreenchange', function() { 
+            fullscreenChange(lessonId);
+        });
+        document.addEventListener('webkitfullscreenchange', function() { 
+            fullscreenChange(lessonId);
+        });
+        document.addEventListener('msfullscreenchange', function() { 
+            fullscreenChange(lessonId);
+        });
+        
+        // Redimensionamiento
+        window.addEventListener('resize', function() {
+            if (currentPlayers[lessonId]) {
+                adjustPlayerSize(lessonId);
+            }
+        });
+        
+        window.addEventListener('orientationchange', function() {
+            setTimeout(function() {
+                fullscreenChange(lessonId);
+                adjustPlayerSize(lessonId);
+            }, 300);
+        });
+    }
+
+    function togglePlayPause(lessonId) {
+        var player = currentPlayers[lessonId];
+        if (!player) return;
+
+        var state = player.getPlayerState();
+        if (state === YT.PlayerState.PLAYING) {
+            player.pauseVideo();
+        } else {
+            player.playVideo();
+        }
+    }
+
+    function restartVideo(lessonId) {
+        var player = currentPlayers[lessonId];
+        if (!player) return;
+
+        player.seekTo(0, true);
+        player.playVideo();
+    }
+
+    function startDrag(e, lessonId) {
+        e.preventDefault();
+        dragging = true;
+        window.currentDragLessonId = lessonId;
+    }
+
+    function dragMove(e, lessonId) {
+        if (dragging && window.currentDragLessonId === lessonId) {
+            e.preventDefault();
+            var progressBar = document.getElementById("progressBar-" + lessonId);
+            if (!progressBar) return;
+
+            var rect = progressBar.getBoundingClientRect();
+            var clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            var x = clientX - rect.left;
             
-            manualContainer.style.display = 'none';
-            showManualButton.style.display = 'inline-flex';
-            hideManualButton.style.display = 'none';
+            if (x < 0) x = 0;
+            if (x > rect.width) x = rect.width;
+            
+            seekToPosition(lessonId, x / rect.width);
+        }
+    }
+
+    function endDrag(e) {
+        dragging = false;
+        window.currentDragLessonId = null;
+    }
+
+    function seekToPosition(lessonId, percent) {
+        var player = currentPlayers[lessonId];
+        if (!player) return;
+
+        var duration = player.getDuration();
+        var newTime = duration * percent;
+        player.seekTo(newTime, true);
+        
+        var progressElement = document.getElementById("progress-" + lessonId);
+        var thumbElement = document.getElementById("thumb-" + lessonId);
+        var progressBarElement = document.getElementById("progressBar-" + lessonId);
+        
+        if (progressElement) {
+            progressElement.style.width = (percent * 100) + "%";
+        }
+        
+        if (thumbElement && progressBarElement) {
+            thumbElement.style.left = (percent * progressBarElement.offsetWidth) + "px";
+        }
+    }
+
+    function goFullScreen(lessonId) {
+        var container = document.getElementById("player-container-" + lessonId);
+        if (!container) return;
+
+        if (container.requestFullscreen) {
+            container.requestFullscreen();
+        } else if (container.webkitRequestFullscreen) {
+            container.webkitRequestFullscreen();
+        } else if (container.msRequestFullscreen) {
+            container.msRequestFullscreen();
+        }
+    }
+
+    function exitFullScreen(lessonId) {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
+    }
+
+    function fullscreenChange(lessonId) {
+        var exitBtn = document.getElementById("exitFullscreenBtn-" + lessonId);
+        
+        var isFullscreen = document.fullscreenElement || 
+                          document.webkitFullscreenElement || 
+                          document.msFullscreenElement;
+        
+        if (exitBtn) {
+            exitBtn.style.display = isFullscreen ? "flex" : "none";
+        }
+    }
+
+    // === SISTEMA UNIFICADO DE MANUALES ===
+    function showCourseManual(manualUrl) {
+        if (manualUrl) {
+            openManualViewer(manualUrl, 'Manual del Curso');
+        }
+    }
+
+    function showModuleManual(manualUrl) {
+        if (manualUrl) {
+            openManualViewer(manualUrl, 'Manual del Módulo');
+        }
+    }
+
+    function openManualViewer(manualUrl, title) {
+        const modal = document.getElementById('universalManualModal');
+        const frame = document.getElementById('manualModalFrame');
+        const modalTitle = document.getElementById('manualModalTitle');
+        
+        if (modal && frame) {
+            modalTitle.textContent = title;
+            const viewerUrl = convertToGoogleDriveViewer(manualUrl);
+            frame.src = viewerUrl;
+            modal.style.display = 'flex';
+        }
+    }
+
+    function closeManualViewer() {
+        const modal = document.getElementById('universalManualModal');
+        const frame = document.getElementById('manualModalFrame');
+        if (modal && frame) {
+            modal.style.display = 'none';
+            frame.src = '';
+        }
+    }
+
+    // Cerrar modal con ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeManualViewer();
+        }
+    });
+
+    function convertToGoogleDriveViewer(url) {
+        var fileId = extractGoogleDriveFileId(url);
+        if (fileId) {
+            return 'https://drive.google.com/file/d/' + fileId + '/preview';
+        }
+        return url;
+    }
+
+    function extractGoogleDriveFileId(url) {
+        var match = url.match(/[-\w]{25,}/);
+        return match ? match[0] : null;
+    }
+
+    function downloadManual(lessonId, manualUrl) {
+        var fileId = extractGoogleDriveFileId(manualUrl);
+        if (fileId) {
+            var downloadUrl = 'https://drive.google.com/uc?export=download&id=' + fileId;
+            window.open(downloadUrl, '_blank');
+        } else {
+            window.open(manualUrl, '_blank');
+        }
+    }
+
+    function printManual(lessonId) {
+        var pdfFrame = document.getElementById('pdf-frame-' + lessonId);
+        if (pdfFrame && pdfFrame.contentWindow) {
+            try {
+                pdfFrame.contentWindow.print();
+            } catch (e) {
+                var manualUrl = pdfFrame.src;
+                window.open(manualUrl, '_blank');
+                showNotification('Se abrió el manual en una nueva ventana para imprimir', 'info');
+            }
+        }
+    }
+
+    // === SISTEMA DE NOTAS ===
+    function toggleNotes(lessonId) {
+        var notesArea = document.getElementById('notes-area-' + lessonId);
+        var notesButton = document.getElementById('notes-btn-' + lessonId);
+        
+        if (notesArea.style.display === 'none' || !notesArea.style.display) {
+            notesArea.style.display = 'block';
+            notesButton.textContent = 'Ocultar notas';
+            
+            var notesTextarea = document.getElementById('notes-text-' + lessonId);
+            if (notesTextarea.value === '' && userProgress[lessonId] && userProgress[lessonId].notes) {
+                notesTextarea.value = userProgress[lessonId].notes;
+            }
+        } else {
+            notesArea.style.display = 'none';
+            notesButton.textContent = 'Ver/Editar notas';
+        }
+    }
+
+    // === FUNCIÓN CLASE SIGUIENTE ===
+    function nextClass(lessonId, moduleId) {
+        var currentModule = null;
+        for (var i = 0; i < userModules.length; i++) {
+            if (userModules[i].ID_Módulo === moduleId) {
+                currentModule = userModules[i];
+                break;
+            }
+        }
+        
+        if (!currentModule || !currentModule.Clases) return;
+        
+        var currentIndex = -1;
+        for (var j = 0; j < currentModule.Clases.length; j++) {
+            if (currentModule.Clases[j].ID_Clase === lessonId) {
+                currentIndex = j;
+                break;
+            }
+        }
+        
+        if (currentIndex === -1 || currentIndex >= currentModule.Clases.length - 1) {
+            showNotification("No hay más clases en este módulo", "info");
+            return;
+        }
+        
+        var nextLesson = currentModule.Clases[currentIndex + 1];
+        
+        hideVideoPlayer(lessonId);
+        hideManual(lessonId);
+        
+        var currentCheckbox = document.getElementById('check_' + lessonId);
+        if (currentCheckbox && !currentCheckbox.checked) {
+            currentCheckbox.checked = true;
+            markAsViewed(lessonId, moduleId, currentModule['Nombre del Módulo'], currentModule.Clases[currentIndex]['Nombre de la Clase'], currentCheckbox);
+        }
+        
+        if (nextLesson['URL Video'] && nextLesson['URL Video'].trim() !== '') {
+            setTimeout(function() {
+                showVideoPlayer(nextLesson.ID_Clase, nextLesson['URL Video']);
+            }, 300);
+        }
+        
+        var nextLessonElement = document.getElementById('check_' + nextLesson.ID_Clase);
+        if (nextLessonElement) {
+            nextLessonElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        
+        showNotification("Avanzando a la siguiente clase: " + nextLesson['Nombre de la Clase'], "success");
+    }
+
+    // === FUNCIONES UTILITARIAS ===
+    function updateLocalCache() {
+        // Invalidar cache local cuando hay cambios
+        if (alumnoActual) {
+            sessionStorage.removeItem(`cursos_${alumnoActual.ID_Alumno}`);
+            if (currentCourseId && currentGrupoId) {
+                sessionStorage.removeItem(`modulos_${alumnoActual.ID_Alumno}_${currentCourseId}_${currentGrupoId}`);
+            }
+        }
+    }
+
+    function showNotification(message, type = 'success') {
+        const notification = document.createElement('div');
+        notification.className = 'notification ' + type;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => notification.classList.add('show'), 10);
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => document.body.removeChild(notification), 300);
+        }, 3000);
+    }
+
+    function formatFecha(fechaString) {
+        if (!fechaString) return 'No especificada';
+        try {
+            const fecha = new Date(fechaString);
+            return fecha.toLocaleDateString('es-ES');
+        } catch (e) {
+            return fechaString;
+        }
+    }
+
+    function clearErrors() {
+        document.getElementById("errorMessage").innerHTML = "";
+    }
+    
+    function clearForms() {
+        document.getElementById("username").value = "";
+        document.getElementById("password").value = "";
+    }
+
+    function logout() {
+        // Limpiar todo
+        for (var lessonId in currentPlayers) {
+            if (currentPlayers[lessonId]) {
+                currentPlayers[lessonId].destroy();
+            }
+            if (iframeWatchers[lessonId]) {
+                iframeWatchers[lessonId].disconnect();
+                delete iframeWatchers[lessonId];
+            }
+            if (iframeWatchers[lessonId + '_interval']) {
+                clearInterval(iframeWatchers[lessonId + '_interval']);
+                delete iframeWatchers[lessonId + '_interval'];
+            }
+        }
+        
+        currentPlayers = {};
+        iframeWatchers = {};
+        currentUser = null;
+        userProgress = {};
+        userModules = [];
+        alumnoActual = null;
+        currentCourseData = null;
+        
+        sessionStorage.clear();
+        
+        document.getElementById('courseHeader').style.display = 'none';
+        document.getElementById("page4_id1").style.display = "none";
+        document.getElementById("page1_id1").style.display = "flex";
+        clearErrors();
+        clearForms();
+    }
+
+    // Funciones auxiliares para manuales
+    function showManual(lessonId, manualUrl) {
+        var manualContainer = document.getElementById('manual-container-' + lessonId);
+        var showManualButton = document.getElementById('show-manual-' + lessonId);
+        var hideManualButton = document.getElementById('hide-manual-' + lessonId);
+        
+        if (manualContainer.style.display === 'none' || !manualContainer.style.display) {
+            manualContainer.style.display = 'block';
+            showManualButton.style.display = 'none';
+            hideManualButton.style.display = 'inline-flex';
             
             var welcomeMessage = document.getElementById('welcome-message-' + lessonId);
             var pdfFrame = document.getElementById('pdf-frame-' + lessonId);
             
-            if (welcomeMessage) welcomeMessage.style.display = 'block';
+            if (welcomeMessage) welcomeMessage.style.display = 'none';
             if (pdfFrame) {
-                pdfFrame.style.display = 'none';
-                pdfFrame.src = '';
+                pdfFrame.style.display = 'block';
+                var viewerUrl = convertToGoogleDriveViewer(manualUrl);
+                pdfFrame.src = viewerUrl;
             }
             
-            showManualButton.innerHTML = '📄 Ver Manual';
+            showManualButton.innerHTML = '📄 Ocultar Manual';
+        } else {
+            hideManual(lessonId);
         }
+    }
 
-        // === FUNCIÓN DE DEPURACIÓN ===
-        async function testConnection() {
-            try {
-                console.log('🧪 Probando conexión...');
-                const response = await callJSONP('escuela', {});
-                console.log('✅ Conexión exitosa:', response);
-                return response;
-            } catch (error) {
-                console.error('❌ Error de conexión:', error);
-                return {success: false, error: error.message};
-            }
+    function hideManual(lessonId) {
+        var manualContainer = document.getElementById('manual-container-' + lessonId);
+        var showManualButton = document.getElementById('show-manual-' + lessonId);
+        var hideManualButton = document.getElementById('hide-manual-' + lessonId);
+        
+        manualContainer.style.display = 'none';
+        showManualButton.style.display = 'inline-flex';
+        hideManualButton.style.display = 'none';
+        
+        var welcomeMessage = document.getElementById('welcome-message-' + lessonId);
+        var pdfFrame = document.getElementById('pdf-frame-' + lessonId);
+        
+        if (welcomeMessage) welcomeMessage.style.display = 'block';
+        if (pdfFrame) {
+            pdfFrame.style.display = 'none';
+            pdfFrame.src = '';
         }
+        
+        showManualButton.innerHTML = '📄 Ver Manual';
+    }
 
-        // Hacer la función accesible desde la consola
-        window.testConnection = testConnection;
-    </script>
+    // === FUNCIÓN DE DEPURACIÓN ===
+    async function testConnection() {
+        try {
+            console.log('🧪 Probando conexión...');
+            const response = await callJSONP('escuela', {});
+            console.log('✅ Conexión exitosa:', response);
+            return response;
+        } catch (error) {
+            console.error('❌ Error de conexión:', error);
+            return {success: false, error: error.message};
+        }
+    }
+
+    // Hacer la función accesible desde la consola
+    window.testConnection = testConnection;
+</script>
 </body>
 </html>
