@@ -438,11 +438,16 @@
             background: #000;
             border-radius: 10px 10px 0 0;
             overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .video-container div[id^="player-"] {
             width: 100% !important;
-            height: 450px !important;
+            aspect-ratio: 16 / 9;
+            height: auto !important;
+            max-height: 450px;
         }
 
         .overlay {
@@ -650,22 +655,25 @@
         
         :-webkit-full-screen .video-container div[id^="player-"] {
             width: 100% !important;
-            height: 100% !important;
-            max-height: calc(100vh - 120px);
+            aspect-ratio: 16 / 9;
+            height: auto !important;
+            max-height: 100%;
             object-fit: contain;
         }
         
         :-moz-full-screen .video-container div[id^="player-"] {
             width: 100% !important;
-            height: 100% !important;
-            max-height: calc(100vh - 120px);
+            aspect-ratio: 16 / 9;
+            height: auto !important;
+            max-height: 100%;
             object-fit: contain;
         }
         
         :fullscreen .video-container div[id^="player-"] {
             width: 100% !important;
-            height: 100% !important;
-            max-height: calc(100vh - 120px);
+            aspect-ratio: 16 / 9;
+            height: auto !important;
+            max-height: 100%;
             object-fit: contain;
         }
         
@@ -726,126 +734,7 @@
             margin: 0;
         }
 
-        /* Responsive en pantalla completa */
-        @media (max-width: 768px) {
-            :-webkit-full-screen .controls-panel {
-                padding: 12px 15px !important;
-            }
-            
-            :-moz-full-screen .controls-panel {
-                padding: 12px 15px !important;
-            }
-            
-            :fullscreen .controls-panel {
-                padding: 12px 15px !important;
-            }
-            
-            :-webkit-full-screen .video-container div[id^="player-"] {
-                max-height: calc(100vh - 100px) !important;
-            }
-            
-            :-moz-full-screen .video-container div[id^="player-"] {
-                max-height: calc(100vh - 100px) !important;
-            }
-            
-            :fullscreen .video-container div[id^="player-"] {
-                max-height: calc(100vh - 100px) !important;
-            }
-            
-            :-webkit-full-screen .corner-box {
-                bottom: 8px !important;
-                right: 8px !important;
-            }
-            
-            :-moz-full-screen .corner-box {
-                bottom: 8px !important;
-                right: 8px !important;
-            }
-            
-            :fullscreen .corner-box {
-                bottom: 8px !important;
-                right: 8px !important;
-            }
-            
-            :-webkit-full-screen .exit-fullscreen {
-                width: 45px !important;
-                height: 45px !important;
-                font-size: 20px !important;
-            }
-            
-            :-moz-full-screen .exit-fullscreen {
-                width: 45px !important;
-                height: 45px !important;
-                font-size: 20px !important;
-            }
-            
-            :fullscreen .exit-fullscreen {
-                width: 45px !important;
-                height: 45px !important;
-                font-size: 20px !important;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            :-webkit-full-screen .controls-panel {
-                padding: 10px 12px !important;
-            }
-            
-            :-moz-full-screen .controls-panel {
-                padding: 10px 12px !important;
-            }
-            
-            :fullscreen .controls-panel {
-                padding: 10px 12px !important;
-            }
-            
-            :-webkit-full-screen .video-container div[id^="player-"] {
-                max-height: calc(100vh - 90px) !important;
-            }
-            
-            :-moz-full-screen .video-container div[id^="player-"] {
-                max-height: calc(100vh - 90px) !important;
-            }
-            
-            :fullscreen .video-container div[id^="player-"] {
-                max-height: calc(100vh - 90px) !important;
-            }
-            
-            :-webkit-full-screen .corner-box {
-                bottom: 6px !important;
-                right: 6px !important;
-            }
-            
-            :-moz-full-screen .corner-box {
-                bottom: 6px !important;
-                right: 6px !important;
-            }
-            
-            :fullscreen .corner-box {
-                bottom: 6px !important;
-                right: 6px !important;
-            }
-            
-            :-webkit-full-screen .exit-fullscreen {
-                width: 40px !important;
-                height: 40px !important;
-                font-size: 18px !important;
-            }
-            
-            :-moz-full-screen .exit-fullscreen {
-                width: 40px !important;
-                height: 40px !important;
-                font-size: 18px !important;
-            }
-            
-            :fullscreen .exit-fullscreen {
-                width: 40px !important;
-                height: 40px !important;
-                font-size: 18px !important;
-            }
-        }
-        
-        /* === CORRECCIÓN DEFINITIVA PARA LANDSCAPE - VALORES MÁS BAJOS === */
+        /* === CORRECCIÓN DEFINITIVA PARA LANDSCAPE - PROPORCIÓN MANTENIDA === */
         @media (max-width: 926px) and (orientation: landscape) {
             :-webkit-full-screen .controls-panel {
                 padding: 8px 12px !important;
@@ -859,40 +748,47 @@
                 padding: 8px 12px !important;
             }
             
-            /* REDUCIDO A 45vh PARA EVITAR CORTES */
+            /* MANTENER PROPORCIÓN 16:9 CON ALTURA LIMITADA */
             :-webkit-full-screen .video-container {
-                max-height: 45vh !important;
+                max-height: 50vh !important;
+                height: auto !important;
             }
             
             :-moz-full-screen .video-container {
-                max-height: 45vh !important;
+                max-height: 50vh !important;
+                height: auto !important;
             }
             
             :fullscreen .video-container {
-                max-height: 45vh !important;
+                max-height: 50vh !important;
+                height: auto !important;
             }
             
             :-webkit-full-screen .video-container div[id^="player-"] {
-                max-height: 45vh !important;
-                height: 45vh !important;
+                aspect-ratio: 16 / 9 !important;
                 width: 100% !important;
+                height: auto !important;
+                max-height: 50vh !important;
                 object-fit: contain;
             }
             
             :-moz-full-screen .video-container div[id^="player-"] {
-                max-height: 45vh !important;
-                height: 45vh !important;
+                aspect-ratio: 16 / 9 !important;
                 width: 100% !important;
+                height: auto !important;
+                max-height: 50vh !important;
                 object-fit: contain;
             }
             
             :fullscreen .video-container div[id^="player-"] {
-                max-height: 45vh !important;
-                height: 45vh !important;
+                aspect-ratio: 16 / 9 !important;
                 width: 100% !important;
+                height: auto !important;
+                max-height: 50vh !important;
                 object-fit: contain;
             }
             
+            /* Ajustes para controles en landscape */
             :-webkit-full-screen .progress-row {
                 margin-bottom: 8px !important;
             }
@@ -950,7 +846,7 @@
         
         /* Ajuste adicional para pantallas landscape muy pequeñas */
         @media (max-width: 926px) and (orientation: landscape) and (max-height: 450px) {
-            /* REDUCIDO A 40vh PARA PANTALLAS MUY PEQUEÑAS */
+            /* MÁXIMO 40vh PARA PANTALLAS MUY PEQUEÑAS */
             :-webkit-full-screen .video-container {
                 max-height: 40vh !important;
             }
@@ -965,17 +861,14 @@
             
             :-webkit-full-screen .video-container div[id^="player-"] {
                 max-height: 40vh !important;
-                height: 40vh !important;
             }
             
             :-moz-full-screen .video-container div[id^="player-"] {
                 max-height: 40vh !important;
-                height: 40vh !important;
             }
             
             :fullscreen .video-container div[id^="player-"] {
                 max-height: 40vh !important;
-                height: 40vh !important;
             }
             
             :-webkit-full-screen .controls-panel {
@@ -1008,39 +901,36 @@
         
         /* Nueva media query para pantallas landscape de altura media */
         @media (max-width: 926px) and (orientation: landscape) and (min-height: 451px) and (max-height: 600px) {
-            /* 42vh PARA PANTALLAS CON ALTURA MEDIA */
+            /* 45vh PARA PANTALLAS CON ALTURA MEDIA */
             :-webkit-full-screen .video-container {
-                max-height: 42vh !important;
+                max-height: 45vh !important;
             }
             
             :-moz-full-screen .video-container {
-                max-height: 42vh !important;
+                max-height: 45vh !important;
             }
             
             :fullscreen .video-container {
-                max-height: 42vh !important;
+                max-height: 45vh !important;
             }
             
             :-webkit-full-screen .video-container div[id^="player-"] {
-                max-height: 42vh !important;
-                height: 42vh !important;
+                max-height: 45vh !important;
             }
             
             :-moz-full-screen .video-container div[id^="player-"] {
-                max-height: 42vh !important;
-                height: 42vh !important;
+                max-height: 45vh !important;
             }
             
             :fullscreen .video-container div[id^="player-"] {
-                max-height: 42vh !important;
-                height: 42vh !important;
+                max-height: 45vh !important;
             }
         }
 
         /* Responsive para el reproductor normal */
         @media (max-width: 768px) {
             .video-container div[id^="player-"] {
-                height: 300px !important;
+                max-height: 300px;
             }
             
             .video-controls button {
@@ -1075,7 +965,7 @@
         
         @media (max-width: 480px) {
             .video-container div[id^="player-"] {
-                height: 250px !important;
+                max-height: 250px;
             }
             
             .player-container {
