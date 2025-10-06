@@ -510,6 +510,7 @@
             padding: 15px;
             border-radius: 0 0 10px 10px;
             margin-top: 0;
+            transition: opacity 0.3s ease;
         }
 
         .progress-row {
@@ -589,6 +590,7 @@
             background: #cc0000;
         }
 
+        /* === MODIFICACIONES PARA LANDSCAPE EN PANTALLA COMPLETA === */
         /* Pantalla completa CORREGIDA - Video centrado y completo */
         .player-container:-webkit-full-screen {
             width: 100vw !important;
@@ -677,49 +679,89 @@
             object-fit: contain;
         }
         
+        /* Ocultar controles por defecto en pantalla completa */
         :-webkit-full-screen .controls-panel {
             border-radius: 0 !important;
             padding: 15px 20px !important;
             flex-shrink: 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
         
         :-moz-full-screen .controls-panel {
             border-radius: 0 !important;
             padding: 15px 20px !important;
             flex-shrink: 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
         
         :fullscreen .controls-panel {
             border-radius: 0 !important;
             padding: 15px 20px !important;
             flex-shrink: 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
         
+        /* Mostrar controles cuando tienen la clase 'show-controls' */
+        :-webkit-full-screen .controls-panel.show-controls {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        
+        :-moz-full-screen .controls-panel.show-controls {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        
+        :fullscreen .controls-panel.show-controls {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        
+        /* Botón de salir de pantalla completa siempre visible */
         :-webkit-full-screen .exit-fullscreen {
             display: flex !important;
+            opacity: 1 !important;
+            visibility: visible !important;
         }
         
         :-moz-full-screen .exit-fullscreen {
             display: flex !important;
+            opacity: 1 !important;
+            visibility: visible !important;
         }
         
         :fullscreen .exit-fullscreen {
             display: flex !important;
+            opacity: 1 !important;
+            visibility: visible !important;
         }
         
+        /* Corner box siempre visible */
         :-webkit-full-screen .corner-box {
             bottom: 10px !important;
             right: 10px !important;
+            opacity: 1 !important;
+            visibility: visible !important;
         }
         
         :-moz-full-screen .corner-box {
             bottom: 10px !important;
             right: 10px !important;
+            opacity: 1 !important;
+            visibility: visible !important;
         }
         
         :fullscreen .corner-box {
             bottom: 10px !important;
             right: 10px !important;
+            opacity: 1 !important;
+            visibility: visible !important;
         }
 
         /* === CORRECCIÓN DEFINITIVA PARA LANDSCAPE - PROPORCIÓN MANTENIDA === */
@@ -781,6 +823,17 @@
                 display: flex !important;
                 align-items: center !important;
                 justify-content: space-around !important;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease, visibility 0.3s ease;
+            }
+
+            /* Mostrar controles cuando tienen la clase 'show-controls' */
+            :-webkit-full-screen .controls-panel.show-controls,
+            :-moz-full-screen .controls-panel.show-controls,
+            :fullscreen .controls-panel.show-controls {
+                opacity: 1 !important;
+                visibility: visible !important;
             }
 
             /* Ajuste de botones */
@@ -1332,6 +1385,10 @@
         let escuelaData = null;
         let currentCourseData = null;
         let dragging = false;
+        
+        // === NUEVAS VARIABLES PARA CONTROL DE CONTROLES ===
+        let hideControlsTimers = {};
+        let isFullscreen = false;
 
         // === SISTEMA DE JSONP MEJORADO ===
         function callJSONP(action, data = {}) {
@@ -2340,6 +2397,40 @@
             }
         }
 
+        // === NUEVAS FUNCIONES PARA CONTROL DE CONTROLES EN PANTALLA COMPLETA ===
+        function showControls(lessonId) {
+            const controlsPanel = document.querySelector(`#player-container-${lessonId} .controls-panel`);
+            if (controlsPanel) {
+                controlsPanel.classList.add('show-controls');
+            }
+            
+            // Cancelar temporizador anterior
+            if (hideControlsTimers[lessonId]) {
+                clearTimeout(hideControlsTimers[lessonId]);
+            }
+            
+            // Establecer nuevo temporizador para ocultar controles después de 3 segundos
+            hideControlsTimers[lessonId] = setTimeout(() => {
+                hideControls(lessonId);
+            }, 3000);
+        }
+        
+        function hideControls(lessonId) {
+            const controlsPanel = document.querySelector(`#player-container-${lessonId} .controls-panel`);
+            if (controlsPanel) {
+                controlsPanel.classList.remove('show-controls');
+            }
+        }
+        
+        function toggleControls(lessonId) {
+            const controlsPanel = document.querySelector(`#player-container-${lessonId} .controls-panel`);
+            if (controlsPanel && controlsPanel.classList.contains('show-controls')) {
+                hideControls(lessonId);
+            } else {
+                showControls(lessonId);
+            }
+        }
+
         // === FUNCIÓN SETUP CUSTOM CONTROLS MEJORADA Y CORREGIDA ===
         function setupCustomControls(lessonId) {
             var overlay = document.getElementById("overlay-" + lessonId);
@@ -2350,9 +2441,13 @@
             var progressBar = document.getElementById("progressBar-" + lessonId);
             var thumb = document.getElementById("thumb-" + lessonId);
 
+            // Configurar overlay para mostrar controles al tocar
             if (overlay) {
                 overlay.onclick = function(e) { 
                     if (!e.target.closest('.video-controls') && !e.target.closest('.exit-fullscreen')) {
+                        if (isFullscreen) {
+                            toggleControls(lessonId);
+                        }
                         togglePlayPause(lessonId); 
                     }
                 };
@@ -2525,12 +2620,20 @@
         function fullscreenChange(lessonId) {
             var exitBtn = document.getElementById("exitFullscreenBtn-" + lessonId);
             
-            var isFullscreen = document.fullscreenElement || 
-                              document.webkitFullscreenElement || 
-                              document.msFullscreenElement;
+            isFullscreen = document.fullscreenElement || 
+                          document.webkitFullscreenElement || 
+                          document.msFullscreenElement;
             
             if (exitBtn) {
                 exitBtn.style.display = isFullscreen ? "flex" : "none";
+            }
+            
+            // En pantalla completa, ocultar controles inicialmente
+            if (isFullscreen) {
+                hideControls(lessonId);
+            } else {
+                // Al salir de pantalla completa, mostrar controles
+                showControls(lessonId);
             }
         }
 
