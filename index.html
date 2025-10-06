@@ -780,20 +780,20 @@
         margin: 5px !important;
     }
 
-    /* 🔧 ELEMENTO DEL REPRODUCTOR: video reducido y centrado */
-    :-webkit-full-screen .video-container div[id^="player-"],
-    :-moz-full-screen .video-container div[id^="player-"],
-    :fullscreen .video-container div[id^="player-"] {
-        aspect-ratio: 16 / 9 !important;
-        width: 80% !important;         /* REDUCIDO al 80% del contenedor */
-        height: auto !important;
-        max-height: 90% !important;    /* REDUCIDO al 90% de la altura del contenedor */
-        object-fit: contain !important;
-        margin: 0 auto !important;
-        display: block !important;
-        position: relative !important;
-    }
+  /* 🔧 ELEMENTO DEL REPRODUCTOR: video reducido y centrado */
+:-webkit-full-screen .video-container div[id^="player-"],
+:-moz-full-screen .video-container div[id^="player-"],
+:fullscreen .video-container div[id^="player-"] {
+    aspect-ratio: 16 / 9 !important;
+    width: 93.3% !important;         /* Reducido un 25% respecto al ancho anterior */
+    height: auto !important;
+    max-height: 52.5% !important;    /* Reducido un 25% respecto al alto anterior */
+    object-fit: contain !important;
+    margin: 0 auto !important;
+    display: block !important;
+    position: relative !important;
 }
+
             
             /* Ajustes para controles en landscape */
             :-webkit-full-screen .progress-row {
