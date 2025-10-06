@@ -736,13 +736,13 @@
 
 /* === CORRECCIÓN DEFINITIVA PARA LANDSCAPE - PROPORCIÓN MANTENIDA === */
 @media (max-width: 926px) and (orientation: landscape) {
-    
+
     /* 🔧 CONTENEDOR PRINCIPAL: ocupa 70% de altura pero contenido centrado */
     :-webkit-full-screen .video-container,
     :-moz-full-screen .video-container,
     :fullscreen .video-container {
         width: 100% !important;
-        height: 70vh !important;       /* 70% de altura */
+        height: 70vh !important;       /* 70% de altura del viewport */
         max-height: 70vh !important;
         background: #000 !important;   /* Fondo negro para bordes */
         display: flex !important;
@@ -759,12 +759,12 @@
     :fullscreen .controls-panel {
         display: flex !important;
         flex-direction: column !important;
-        justify-content: flex-start;
+        justify-content: flex-start !important;
         padding: 15px 20px !important;
         background: #000 !important;
         border-radius: 0 !important;
-        flex-shrink: 0;
-        height: 30vh !important;       /* 30% fijo de altura */
+        flex-shrink: 0 !important;
+        height: 30vh !important;       /* 30% fijo de altura del viewport */
         min-height: 100px !important;
         box-sizing: border-box !important;
     }
@@ -775,23 +775,24 @@
     :fullscreen .video-controls button {
         font-size: 14px !important;
         padding: 10px 15px !important;
-        flex: 1;
-        min-width: 90px;
+        flex: 1 !important;
+        min-width: 90px !important;
         margin: 5px !important;
     }
 
-  /* 🔧 ELEMENTO DEL REPRODUCTOR: video reducido y centrado */
-:-webkit-full-screen .video-container div[id^="player-"],
-:-moz-full-screen .video-container div[id^="player-"],
-:fullscreen .video-container div[id^="player-"] {
-    aspect-ratio: 16 / 9 !important;
-    width: 93.3% !important;         /* Reducido un 25% respecto al ancho anterior */
-    height: auto !important;
-    max-height: 52.5% !important;    /* Reducido un 25% respecto al alto anterior */
-    object-fit: contain !important;
-    margin: 0 auto !important;
-    display: block !important;
-    position: relative !important;
+    /* 🔧 ELEMENTO DEL REPRODUCTOR: video reducido y centrado */
+    :-webkit-full-screen .video-container div[id^="player-"],
+    :-moz-full-screen .video-container div[id^="player-"],
+    :fullscreen .video-container div[id^="player-"] {
+        aspect-ratio: 16 / 9 !important;
+        height: 52.5% !important;       /* 25% más pequeño que antes */
+        width: auto !important;          /* Ancho automático según aspect-ratio */
+        max-height: 100% !important;     /* Nunca excede el contenedor */
+        object-fit: contain !important;
+        margin: 0 auto !important;
+        display: block !important;
+        position: relative !important;
+    }
 }
 
             
