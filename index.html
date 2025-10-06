@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Learning Path - Dashboard</title>
     <script src="https://www.youtube.com/iframe_api"></script>
-    <style>
+   <style>
     /* === SISTEMA DE DISEÑO UNIFICADO === */
     :root {
         --naranja: #fbbf24;
@@ -443,7 +443,17 @@
         align-items: center;
     }
 
-    .video-container div[id^="player-"] {
+    /* 🔹 NUEVO CONTENEDOR INTERMEDIO - CONTROL DE TAMAÑO */
+    .video-inner-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+
+    .video-inner-container div[id^="player-"] {
         width: 100% !important;
         aspect-ratio: 16 / 9;
         height: auto !important;
@@ -652,8 +662,33 @@
         justify-content: center;
         min-height: 0;
     }
+
+    /* 🔹 NUEVO CONTENEDOR INTERNO EN PANTALLA COMPLETA */
+    :-webkit-full-screen .video-inner-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
     
-    :-webkit-full-screen .video-container div[id^="player-"] {
+    :-moz-full-screen .video-inner-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    :fullscreen .video-inner-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    :-webkit-full-screen .video-inner-container div[id^="player-"] {
         width: 100% !important;
         aspect-ratio: 16 / 9;
         height: auto !important;
@@ -661,7 +696,7 @@
         object-fit: contain;
     }
     
-    :-moz-full-screen .video-container div[id^="player-"] {
+    :-moz-full-screen .video-inner-container div[id^="player-"] {
         width: 100% !important;
         aspect-ratio: 16 / 9;
         height: auto !important;
@@ -669,7 +704,7 @@
         object-fit: contain;
     }
     
-    :fullscreen .video-container div[id^="player-"] {
+    :fullscreen .video-inner-container div[id^="player-"] {
         width: 100% !important;
         aspect-ratio: 16 / 9;
         height: auto !important;
@@ -722,7 +757,7 @@
         right: 10px !important;
     }
 
-    /* === CORRECCIÓN DEFINITIVA PARA LANDSCAPE - VIDEO AL 60% === */
+    /* === CORRECCIÓN DEFINITIVA PARA LANDSCAPE - NUEVO CONTENEDOR AL 60% === */
     @media (max-width: 926px) and (orientation: landscape) {
         
         /* 🔹 PLAYER-CONTAINER: estructura principal en landscape */
@@ -737,11 +772,11 @@
             justify-content: space-between !important;
         }
 
-        /* 🔹 CONTENEDOR DE VIDEO: ocupa espacio disponible pero centrado al 60% */
+        /* 🔹 CONTENEDOR DE VIDEO: ocupa espacio disponible */
         :-webkit-full-screen .video-container,
         :-moz-full-screen .video-container,
         :fullscreen .video-container {
-            flex: 1 !important; /* Ocupa todo el espacio disponible */
+            flex: 1 !important;
             display: flex !important;
             justify-content: center !important;
             align-items: center !important;
@@ -755,19 +790,30 @@
             overflow: hidden !important;
         }
 
-        /* 🔹 NUEVO CONTENEDOR INTERNO PARA EL VIDEO - CORRECCIÓN DEL 60% */
-        :-webkit-full-screen .video-container div[id^="player-"],
-        :-moz-full-screen .video-container div[id^="player-"],
-        :fullscreen .video-container div[id^="player-"] {
-            width: 60% !important; /* 🔹 NUEVO: Video al 60% del ancho */
+        /* 🔹 NUEVO CONTENEDOR INTERNO - LIMITADO AL 60% */
+        :-webkit-full-screen .video-inner-container,
+        :-moz-full-screen .video-inner-container,
+        :fullscreen .video-inner-container {
+            width: 60% !important; /* 🔹 NUEVO: Contenedor interno al 60% */
             height: auto !important;
-            max-width: 60% !important; /* 🔹 NUEVO: Máximo 60% del ancho */
+            max-width: 60% !important;
+            max-height: 100% !important;
+            aspect-ratio: 16 / 9 !important;
+            flex-shrink: 0;
+            background: #000 !important;
+            box-shadow: 0 0 0 2px rgba(255,255,255,0.1);
+        }
+
+        /* 🔹 REPRODUCTOR DENTRO DEL NUEVO CONTENEDOR */
+        :-webkit-full-screen .video-inner-container div[id^="player-"],
+        :-moz-full-screen .video-inner-container div[id^="player-"],
+        :fullscreen .video-inner-container div[id^="player-"] {
+            width: 100% !important;
+            height: 100% !important;
+            max-width: 100% !important;
             max-height: 100% !important;
             object-fit: contain !important;
             aspect-ratio: 16 / 9 !important;
-            flex-shrink: 0;
-            background: #000 !important; /* 🔹 NUEVO: Fondo negro para el video */
-            box-shadow: 0 0 0 2px rgba(255,255,255,0.1); /* 🔹 NUEVO: Delineado sutil */
         }
 
         /* 🔹 CONTROLES: altura fija en la parte inferior */
@@ -775,7 +821,7 @@
         :-moz-full-screen .controls-panel,
         :fullscreen .controls-panel {
             flex-shrink: 0 !important;
-            height: 80px !important; /* Altura fija para controles */
+            height: 80px !important;
             min-height: 80px !important;
             max-height: 80px !important;
             padding: 10px 15px !important;
@@ -821,7 +867,7 @@
 
     /* Responsive para el reproductor normal */
     @media (max-width: 768px) {
-        .video-container div[id^="player-"] {
+        .video-inner-container div[id^="player-"] {
             max-height: 300px;
         }
         
@@ -856,7 +902,7 @@
     }
     
     @media (max-width: 480px) {
-        .video-container div[id^="player-"] {
+        .video-inner-container div[id^="player-"] {
             max-height: 250px;
         }
         
@@ -1926,11 +1972,13 @@
                     
                     expandedContent += "</div>";
                     
-                    // === NUEVO REPRODUCTOR CORREGIDO ===
+                    // === NUEVO REPRODUCTOR CORREGIDO CON CONTENEDOR INTERMEDIO ===
                     if (content['URL Video'] && content['URL Video'].trim() !== '') {
                         expandedContent += "<div id='player-container-" + lessonId + "' class='player-container' style='display: none;'>";
                         expandedContent += "<div class='video-container' id='videoContainer-" + lessonId + "'>";
+                        expandedContent += "<div class='video-inner-container'>"; // 🔹 NUEVO CONTENEDOR INTERMEDIO
                         expandedContent += "<div id='player-" + lessonId + "'></div>";
+                        expandedContent += "</div>"; // 🔹 CIERRE DEL NUEVO CONTENEDOR
                         expandedContent += "<div class='overlay' id='overlay-" + lessonId + "'></div>";
                         expandedContent += "<div class='corner-box'>";
                         if (escuelaData && escuelaData.Logo_Escuela) {
