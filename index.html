@@ -419,268 +419,32 @@
             color: white !important;
         }
 
-        /* === REPRODUCTOR DE VIDEO AVANZADO === */
+        /* === NUEVO REPRODUCTOR DE VIDEO PERSONALIZADO === */
         .player-container {
-            background: #000;
-            border-radius: 10px;
-            padding: 0;
-            margin: 12px 0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             width: 100%;
+            max-width: 800px;
+            background: #000;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            position: relative;
+            margin: 12px 0;
             display: none;
         }
 
         .video-container {
             position: relative;
             width: 100%;
-            max-width: 100%;
             background: #000;
-            border-radius: 8px 8px 0 0;
+            border-radius: 10px 10px 0 0;
             overflow: hidden;
-            margin: 0 auto;
-            aspect-ratio: 16/9;
         }
 
         .video-container div[id^="player-"] {
             width: 100% !important;
-            height: 100% !important;
-            max-width: 100%;
-            border-radius: 8px 8px 0 0;
+            height: 450px !important;
         }
 
-        /* Video container en fullscreen con espacio para zócalo */
-        .video-container.fullscreen-mode {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: calc(100vh - 80px); /* Espacio para el zócalo */
-            max-width: 100%;
-            z-index: 9999;
-            background: #000;
-            border-radius: 0;
-            padding: 0;
-            aspect-ratio: unset;
-        }
-
-        .video-container.fullscreen-mode div[id^="player-"] {
-            width: 100% !important;
-            height: 100% !important;
-            border-radius: 0;
-        }
-
-        /* === CONTROLES DE VIDEO CON ZÓCALO FIJO === */
-        .video-controls-panel {
-            background: rgba(0, 0, 0, 0.9);
-            border-radius: 0 0 8px 8px;
-            padding: 10px 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            width: 100%;
-            backdrop-filter: blur(5px);
-            position: relative;
-            z-index: 50;
-        }
-
-        /* Controles en modo fullscreen - ZÓCALO FIJO */
-        .fullscreen-mode .video-controls-panel {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            width: 100vw;
-            border-radius: 0;
-            padding: 15px 25px;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 9998;
-            box-shadow: 0 -3px 15px rgba(0, 0, 0, 0.5);
-        }
-
-        .progress-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            width: 100%;
-        }
-
-        .progress-bar-container {
-            flex: 1;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 3px;
-            position: relative;
-            cursor: pointer;
-            transition: height 0.2s;
-        }
-
-        .progress-bar-container:hover {
-            height: 7px;
-        }
-
-        /* Barra de progreso en fullscreen */
-        .fullscreen-mode .progress-bar-container {
-            height: 8px;
-            background: rgba(255, 255, 255, 0.4);
-        }
-
-        .fullscreen-mode .progress-bar-container:hover,
-        .fullscreen-mode .progress-bar-container:active {
-            height: 10px;
-        }
-
-        .progress-bar {
-            height: 100%;
-            background: var(--azul-claro);
-            border-radius: 3px;
-            width: 0%;
-            position: relative;
-            transition: background 0.2s;
-            pointer-events: none;
-        }
-
-        .progress-bar:hover {
-            background: var(--azul);
-        }
-
-        .fullscreen-mode .progress-bar {
-            background: var(--naranja);
-        }
-
-        .progress-thumb {
-            position: absolute;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 14px;
-            height: 14px;
-            background: #fff;
-            border-radius: 50%;
-            cursor: grab;
-            z-index: 60;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-            opacity: 0;
-            transition: opacity 0.2s, transform 0.2s;
-            left: 0px;
-            pointer-events: auto;
-        }
-
-        .progress-thumb:active {
-            cursor: grabbing;
-        }
-
-        .progress-bar-container:hover .progress-thumb {
-            opacity: 1;
-        }
-
-        .progress-thumb:hover {
-            transform: translate(-50%, -50%) scale(1.2);
-        }
-
-        /* Thumb siempre visible en fullscreen */
-        .fullscreen-mode .progress-thumb {
-            width: 18px;
-            height: 18px;
-            opacity: 1;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.7);
-        }
-
-        .fullscreen-mode .progress-thumb:hover {
-            transform: translate(-50%, -50%) scale(1.3);
-        }
-
-        .time-display {
-            color: white;
-            font-size: 12px;
-            font-weight: 600;
-            min-width: 95px;
-            text-align: center;
-            font-family: 'Roboto Mono', monospace;
-            user-select: none;
-        }
-
-        .fullscreen-mode .time-display {
-            font-size: 15px;
-            min-width: 120px;
-        }
-
-        .control-buttons {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            gap: 10px;
-        }
-
-        .control-buttons-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex: 1;
-        }
-
-        .control-buttons-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .control-btn {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            min-width: auto;
-            user-select: none;
-        }
-
-        .control-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
-        }
-
-        .control-btn:active {
-            transform: scale(0.98);
-        }
-
-        /* Botones en fullscreen */
-        .fullscreen-mode .control-btn {
-            padding: 12px 16px;
-            font-size: 14px;
-            border-radius: 8px;
-        }
-
-        .control-btn-icon {
-            font-size: 16px;
-            width: 18px;
-            height: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .fullscreen-mode .control-btn-icon {
-            font-size: 20px;
-            width: 22px;
-            height: 22px;
-        }
-
-        .control-btn-text {
-            font-size: 12px;
-        }
-
-        .fullscreen-mode .control-btn-text {
-            font-size: 14px;
-        }
-
-        /* Overlay no cubre los controles */
         .overlay {
             position: absolute;
             top: 0;
@@ -691,85 +455,245 @@
             cursor: pointer;
         }
 
-        .fullscreen-mode .overlay {
-            height: 100%;
-            pointer-events: auto;
-        }
-
-        /* Corner box ajustado */
         .corner-box {
             position: absolute;
             bottom: 10px;
             right: 10px;
-            width: 35px;
-            height: 20px;
-            background: rgba(0,0,0,0.8);
-            border-radius: 4px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 20;
-            pointer-events: none;
-            backdrop-filter: blur(5px);
-        }
-
-        .fullscreen-mode .corner-box {
-            bottom: 95px; /* Arriba del zócalo */
-            right: 15px;
-            width: 45px;
-            height: 25px;
-        }
-
-        .corner-box.has-logo .school-logo-mini {
-            display: block;
-            width: 100% !important;
-            height: 100% !important;
-            object-fit: contain;
-            border-radius: 2px;
-        }
-
-        /* Exit fullscreen button */
-        .exit-fullscreen {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 36px;
-            height: 36px;
-            background: rgba(255,255,255,0.9);
+            width: 100px;
+            height: 40px;
+            background: rgba(0,0,0,0.95);
             border-radius: 6px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 18px;
-            z-index: 9999;
+            font-size: 24px;
+            z-index: 20;
+            pointer-events: none;
+            cursor: default;
+            color: #fff;
+            backdrop-filter: blur(5px);
+            padding: 5px;
+        }
+
+        .corner-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .exit-fullscreen {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            z-index: 30;
             cursor: pointer;
+            display: none;
             color: #000;
             font-weight: bold;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-            opacity: 0;
-            transition: opacity 0.3s, transform 0.2s;
         }
 
-        .video-container:hover .exit-fullscreen,
-        .video-container.fullscreen-mode .exit-fullscreen {
-            opacity: 1;
+        .controls-panel {
+            background: #000;
+            padding: 15px;
+            border-radius: 0 0 10px 10px;
+            margin-top: 0;
         }
 
-        .exit-fullscreen:hover {
-            background: rgba(255,255,255,1);
-            transform: scale(1.1);
+        .progress-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
         }
 
-        .exit-fullscreen:active {
-            transform: scale(0.95);
+        .progress-container-player {
+            flex: 1;
+            height: 20px;
+            background: #444;
+            border-radius: 10px;
+            position: relative;
+            cursor: pointer;
+            z-index: 15;
         }
 
-        .fullscreen-mode .exit-fullscreen {
-            width: 44px;
-            height: 44px;
-            font-size: 22px;
-            top: 15px;
-            right: 15px;
+        .progress-player {
+            height: 100%;
+            background: #ff0000;
+            border-radius: 10px;
+            width: 0%;
+            transform-origin: left center;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .thumb {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 25;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            left: 0px;
+        }
+
+        .time-display {
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            min-width: 100px;
+            text-align: center;
+            font-family: monospace;
+        }
+
+        .video-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            z-index: 30;
+            position: relative;
+        }
+
+        .video-controls button {
+            background: #ff0000;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            flex: 1;
+            max-width: 200px;
+        }
+
+        .video-controls button:hover {
+            background: #cc0000;
+        }
+
+        /* Pantalla completa */
+        .player-container:-webkit-full-screen {
+            width: 100vw !important;
+            height: 100vh !important;
+            max-width: 100vw !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            border-radius: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            background: #000 !important;
+        }
+
+        .player-container:-moz-full-screen {
+            width: 100vw !important;
+            height: 100vh !important;
+            max-width: 100vw !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            border-radius: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            background: #000 !important;
+        }
+
+        .player-container:fullscreen {
+            width: 100vw !important;
+            height: 100vh !important;
+            max-width: 100vw !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            border-radius: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            background: #000 !important;
+        }
+
+        :-webkit-full-screen .video-container {
+            flex: 1;
+            border-radius: 0 !important;
+            max-height: calc(100vh - 120px);
+        }
+
+        :-moz-full-screen .video-container {
+            flex: 1;
+            border-radius: 0 !important;
+            max-height: calc(100vh - 120px);
+        }
+
+        :fullscreen .video-container {
+            flex: 1;
+            border-radius: 0 !important;
+            max-height: calc(100vh - 120px);
+        }
+
+        :-webkit-full-screen .video-container div[id^="player-"] {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        :-moz-full-screen .video-container div[id^="player-"] {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        :fullscreen .video-container div[id^="player-"] {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        :-webkit-full-screen .controls-panel {
+            border-radius: 0 !important;
+            padding: 20px !important;
+        }
+
+        :-moz-full-screen .controls-panel {
+            border-radius: 0 !important;
+            padding: 20px !important;
+        }
+
+        :fullscreen .controls-panel {
+            border-radius: 0 !important;
+            padding: 20px !important;
+        }
+
+        :-webkit-full-screen .exit-fullscreen {
+            display: flex !important;
+        }
+
+        :-moz-full-screen .exit-fullscreen {
+            display: flex !important;
+        }
+
+        :fullscreen .exit-fullscreen {
+            display: flex !important;
+        }
+
+        :-webkit-full-screen .corner-box {
+            bottom: 10px !important;
+            right: 10px !important;
+        }
+
+        :-moz-full-screen .corner-box {
+            bottom: 10px !important;
+            right: 10px !important;
+        }
+
+        :fullscreen .corner-box {
+            bottom: 10px !important;
+            right: 10px !important;
         }
 
         /* === SISTEMA DE LOGIN OPTIMIZADO === */
@@ -1031,130 +955,31 @@
             }
             
             .player-container {
-                padding: 0;
+                padding: 10px;
                 margin: 10px 0;
             }
 
-            /* Controles en modo normal móvil */
-            .control-btn-text {
-                display: none;
+            /* Controles del reproductor en móvil */
+            .video-container div[id^="player-"] {
+                height: 300px !important;
             }
             
-            .control-btn {
-                padding: 6px 8px;
+            .video-controls button {
+                padding: 8px 12px;
+                font-size: 12px;
             }
             
             .time-display {
-                min-width: 70px;
-                font-size: 10px;
-            }
-            
-            .video-controls-panel {
-                padding: 8px 10px;
-            }
-            
-            .control-buttons {
-                flex-wrap: nowrap;
-            }
-            
-            .control-btn {
-                padding: 4px 6px;
-                font-size: 10px;
-            }
-            
-            /* Fullscreen móvil */
-            .video-container.fullscreen-mode {
-                height: calc(100vh - 95px);
-            }
-            
-            .fullscreen-mode .video-controls-panel {
-                padding: 12px 15px;
-            }
-            
-            .fullscreen-mode .control-btn {
-                padding: 14px 14px;
-                min-width: 48px;
-                min-height: 48px;
-                justify-content: center;
-            }
-            
-            .fullscreen-mode .control-btn-icon {
-                font-size: 24px;
-                width: 26px;
-                height: 26px;
-            }
-            
-            .fullscreen-mode .time-display {
-                font-size: 14px;
+                font-size: 12px;
                 min-width: 90px;
             }
-            
-            .fullscreen-mode .progress-bar-container {
-                height: 10px;
-            }
-            
-            .fullscreen-mode .progress-thumb {
-                width: 22px;
-                height: 22px;
-            }
-            
-            .fullscreen-mode .corner-box {
-                bottom: 110px;
-                width: 40px;
-                height: 22px;
-            }
-            
-            /* Landscape móvil */
-            @media (orientation: landscape) {
-                .video-container.fullscreen-mode {
-                    height: calc(100vh - 75px);
-                }
-                
-                .fullscreen-mode .video-controls-panel {
-                    padding: 8px 15px;
-                }
-                
-                .fullscreen-mode .control-btn {
-                    padding: 10px 12px;
-                    min-width: 44px;
-                    min-height: 44px;
-                }
-                
-                .fullscreen-mode .control-btn-icon {
-                    font-size: 20px;
-                }
-                
-                .fullscreen-mode .corner-box {
-                    bottom: 85px;
-                }
-            }
-        }
-        
-        @media (min-width: 769px) and (max-width: 1024px) {
-            .control-btn-text {
-                display: inline;
-            }
-            
-            .video-container.fullscreen-mode {
-                height: calc(100vh - 85px);
-            }
-            
-            .fullscreen-mode .control-btn {
-                padding: 12px 16px;
-            }
-            
-            .fullscreen-mode .control-btn-text {
-                font-size: 13px;
-            }
-        }
-        
-        @media (min-width: 1025px) {
-            .control-btn-text {
-                display: inline;
-            }
-            
-            .video-container.fullscreen-mode {
-                height: calc(100vh - 80px);
+
+            .corner-box {
+                width: 80px;
+                height: 35px;
+                font-size: 20px;
+                bottom: 8px;
+                right: 8px;
             }
         }
         
@@ -1170,67 +995,44 @@
                 margin-right: 0;
                 justify-content: center;
             }
-        }
-
-        /* === ASEGURAR QUE LOS CONTROLES ESTÉN SIEMPRE ENCIMA === */
-        .video-container.fullscreen-mode * {
-            z-index: auto;
-        }
-
-        .video-container.fullscreen-mode .video-controls-panel {
-            z-index: 9998 !important;
-        }
-
-        .video-container.fullscreen-mode .exit-fullscreen {
-            z-index: 9999 !important;
-        }
-
-        .video-container.fullscreen-mode .corner-box {
-            z-index: 9997 !important;
-        }
-
-        /* === PREVENIR SCROLL EN FULLSCREEN === */
-        body.fullscreen-active {
-            overflow: hidden;
-        }
-
-        /* === MEJORAS DE ACCESIBILIDAD === */
-        .control-btn:focus {
-            outline: 2px solid var(--azul-claro);
-            outline-offset: 2px;
-        }
-
-        .progress-bar-container:focus-within {
-            outline: 2px solid var(--azul-claro);
-            outline-offset: 2px;
-        }
-
-        /* === ANIMACIONES SUAVES === */
-        .video-controls-panel {
-            animation: slideUp 0.3s ease-out;
-        }
-
-        @keyframes slideUp {
-            from {
-                transform: translateY(100%);
-                opacity: 0;
+            
+            .video-container div[id^="player-"] {
+                height: 250px !important;
             }
-            to {
-                transform: translateY(0);
-                opacity: 1;
+            
+            .player-container {
+                padding: 10px;
             }
-        }
-
-        .fullscreen-mode .video-controls-panel {
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
+            
+            .video-controls {
+                gap: 8px;
             }
-            to {
-                opacity: 1;
+            
+            .video-controls button {
+                padding: 8px 10px;
+                font-size: 11px;
+            }
+            
+            .time-display {
+                font-size: 11px;
+                min-width: 80px;
+            }
+            
+            .controls-panel {
+                padding: 10px;
+            }
+            
+            .progress-row {
+                gap: 10px;
+                margin-bottom: 10px;
+            }
+            
+            .corner-box {
+                width: 70px;
+                height: 30px;
+                font-size: 18px;
+                bottom: 6px;
+                right: 6px;
             }
         }
 
@@ -1394,6 +1196,7 @@
         let currentGrupoId = null;
         let escuelaData = null;
         let currentCourseData = null;
+        let dragging = false;
 
         // === SISTEMA DE JSONP MEJORADO ===
         function callJSONP(action, data = {}) {
@@ -1973,44 +1776,35 @@
                     
                     expandedContent += "</div>";
                     
-                    // === REPRODUCTOR CON CONTROLES MEJORADOS ===
+                    // === NUEVO REPRODUCTOR CON DISEÑO MEJORADO ===
                     if (content['URL Video'] && content['URL Video'].trim() !== '') {
                         expandedContent += "<div id='player-container-" + lessonId + "' class='player-container' style='display: none;'>";
                         expandedContent += "<div class='video-container' id='videoContainer-" + lessonId + "'>";
                         expandedContent += "<div id='player-" + lessonId + "'></div>";
                         expandedContent += "<div class='overlay' id='overlay-" + lessonId + "'></div>";
-                        expandedContent += "<div class='corner-box'></div>";
+                        expandedContent += "<div class='corner-box'>";
+                        if (escuelaData && escuelaData.Logo_Escuela) {
+                            expandedContent += "<img src='" + escuelaData.Logo_Escuela + "' alt='Logo' class='school-logo-mini'>";
+                        } else {
+                            expandedContent += "🎓";
+                        }
+                        expandedContent += "</div>";
                         expandedContent += "<div class='exit-fullscreen' id='exitFullscreenBtn-" + lessonId + "'>✖</div>";
                         expandedContent += "</div>";
                         
-                        // Panel de controles estilo YouTube
-                        expandedContent += "<div class='video-controls-panel'>";
-                        expandedContent += "<div class='progress-controls'>";
-                        expandedContent += "<div class='progress-bar-container' id='progressBar-" + lessonId + "'>";
-                        expandedContent += "<div class='progress-bar' id='progress-" + lessonId + "'>";
-                        expandedContent += "<div class='progress-thumb' id='thumb-" + lessonId + "'></div>";
-                        expandedContent += "</div>";
+                        expandedContent += "<div class='controls-panel'>";
+                        expandedContent += "<div class='progress-row'>";
+                        expandedContent += "<div class='progress-container-player' id='progressBar-" + lessonId + "'>";
+                        expandedContent += "<div class='progress-player' id='progress-" + lessonId + "'></div>";
+                        expandedContent += "<div class='thumb' id='thumb-" + lessonId + "'></div>";
                         expandedContent += "</div>";
                         expandedContent += "<div class='time-display' id='timeDisplay-" + lessonId + "'>0:00 / 0:00</div>";
                         expandedContent += "</div>";
                         
-                        expandedContent += "<div class='control-buttons'>";
-                        expandedContent += "<div class='control-buttons-left'>";
-                        expandedContent += "<button class='control-btn play-pause' id='playPauseBtn-" + lessonId + "'>";
-                        expandedContent += "<span class='control-btn-icon'>▶</span>";
-                        expandedContent += "<span class='control-btn-text'>Play</span>";
-                        expandedContent += "</button>";
-                        expandedContent += "<button class='control-btn restart' id='restartBtn-" + lessonId + "'>";
-                        expandedContent += "<span class='control-btn-icon'>⏮</span>";
-                        expandedContent += "<span class='control-btn-text'>Reiniciar</span>";
-                        expandedContent += "</button>";
-                        expandedContent += "</div>";
-                        expandedContent += "<div class='control-buttons-right'>";
-                        expandedContent += "<button class='control-btn fullscreen' id='fullscreenBtn-" + lessonId + "'>";
-                        expandedContent += "<span class='control-btn-icon'>⛶</span>";
-                        expandedContent += "<span class='control-btn-text'>Pantalla completa</span>";
-                        expandedContent += "</button>";
-                        expandedContent += "</div>";
+                        expandedContent += "<div class='video-controls'>";
+                        expandedContent += "<button id='playPauseBtn-" + lessonId + "'>▶ Play</button>";
+                        expandedContent += "<button id='restartBtn-" + lessonId + "'>⏮ Reiniciar</button>";
+                        expandedContent += "<button id='fullscreenBtn-" + lessonId + "'>⛶ Pantalla completa</button>";
                         expandedContent += "</div>";
                         expandedContent += "</div>";
                         expandedContent += "</div>";
@@ -2074,9 +1868,6 @@
             setTimeout(() => {
                 expandedContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 100);
-            
-            // Actualizar logos en los reproductores después de expandir el módulo
-            setTimeout(updateVideoPlayersLogo, 100);
         }
 
         function collapseModule() {
@@ -2363,7 +2154,6 @@
             adjustPlayerSize(lessonId);
             
             setupCustomControls(lessonId);
-            updateVideoPlayersLogo();
             
             setInterval(function() {
                 updateProgress(lessonId);
@@ -2373,22 +2163,22 @@
         function onPlayerStateChange(lessonId, event) {
             var btn = document.getElementById("playPauseBtn-" + lessonId);
             if (btn) {
-                btn.innerHTML = event.data === YT.PlayerState.PLAYING ? 
-                    '<span class="control-btn-icon">⏸</span><span class="control-btn-text">Pausa</span>' : 
-                    '<span class="control-btn-icon">▶</span><span class="control-btn-text">Play</span>';
+                btn.textContent = event.data === YT.PlayerState.PLAYING ? "⏸ Pause" : "▶ Play";
             }
         }
 
         // === FUNCIÓN PARA ACTUALIZAR TIEMPO EN BARRA DE PROGRESO ===
         function formatTime(seconds) {
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
+            if (!seconds || isNaN(seconds)) return "0:00";
+            
+            var mins = Math.floor(seconds / 60);
+            var secs = Math.floor(seconds % 60);
             return mins + ":" + (secs < 10 ? "0" : "") + secs;
         }
 
         function updateProgress(lessonId) {
             var player = currentPlayers[lessonId];
-            if (!player || !player.getCurrentTime || window.dragging) return;
+            if (!player || !player.getCurrentTime || dragging) return;
 
             var currentTime = player.getCurrentTime();
             var duration = player.getDuration();
@@ -2396,17 +2186,15 @@
             
             var progressElement = document.getElementById("progress-" + lessonId);
             var thumbElement = document.getElementById("thumb-" + lessonId);
+            var progressBarElement = document.getElementById("progressBar-" + lessonId);
             var timeDisplay = document.getElementById("timeDisplay-" + lessonId);
             
             if (progressElement) {
                 progressElement.style.width = percent + "%";
             }
             
-            if (thumbElement) {
-                var progressBarContainer = document.getElementById("progressBar-" + lessonId);
-                if (progressBarContainer) {
-                    thumbElement.style.left = (percent / 100 * progressBarContainer.offsetWidth) + "px";
-                }
+            if (thumbElement && progressBarElement) {
+                thumbElement.style.left = (percent / 100 * progressBarElement.offsetWidth) + "px";
             }
             
             // ACTUALIZAR DISPLAY DE TIEMPO
@@ -2422,13 +2210,13 @@
             var restartBtn = document.getElementById("restartBtn-" + lessonId);
             var fullscreenBtn = document.getElementById("fullscreenBtn-" + lessonId);
             var exitFullscreenBtn = document.getElementById("exitFullscreenBtn-" + lessonId);
-            var progressBarContainer = document.getElementById("progressBar-" + lessonId);
+            var progressBar = document.getElementById("progressBar-" + lessonId);
             var thumb = document.getElementById("thumb-" + lessonId);
 
             if (overlay) {
                 overlay.onclick = function(e) { 
-                    if (!e.target.closest('.video-controls-panel')) {
-                        togglePlayPause(lessonId);
+                    if (!e.target.closest('.video-controls') && !e.target.closest('.exit-fullscreen')) {
+                        togglePlayPause(lessonId); 
                     }
                 };
             }
@@ -2439,31 +2227,6 @@
             if (exitFullscreenBtn) exitFullscreenBtn.onclick = function() { exitFullScreen(lessonId); };
 
             // Sistema de arrastre para la barra de progreso
-            if (progressBarContainer) {
-                progressBarContainer.addEventListener("click", function(e) {
-                    if (!window.dragging) {
-                        var rect = progressBarContainer.getBoundingClientRect();
-                        var x = e.clientX - rect.left;
-                        if (x < 0) x = 0;
-                        if (x > rect.width) x = rect.width;
-                        seekToPosition(lessonId, x / rect.width);
-                    }
-                });
-
-                progressBarContainer.addEventListener("mouseenter", function() {
-                    if (thumb) thumb.style.opacity = "1";
-                });
-                
-                progressBarContainer.addEventListener("mouseleave", function() {
-                    if (thumb && !window.dragging) thumb.style.opacity = "0";
-                });
-                
-                // Soporte táctil para móvil
-                progressBarContainer.addEventListener("touchstart", function(e) {
-                    if (thumb) thumb.style.opacity = "1";
-                });
-            }
-
             if (thumb) {
                 thumb.addEventListener("mousedown", function(e) { 
                     e.preventDefault();
@@ -2473,6 +2236,18 @@
                     e.preventDefault();
                     startDrag(e, lessonId); 
                 }, {passive: false});
+            }
+
+            if (progressBar) {
+                progressBar.addEventListener("click", function(e) {
+                    if (!dragging) {
+                        var rect = progressBar.getBoundingClientRect();
+                        var x = e.clientX - rect.left;
+                        if (x < 0) x = 0;
+                        if (x > rect.width) x = rect.width;
+                        seekToPosition(lessonId, x / rect.width);
+                    }
+                });
             }
 
             // Eventos globales de arrastre
@@ -2516,8 +2291,6 @@
                     adjustPlayerSize(lessonId);
                 }, 300);
             });
-
-            updateVideoPlayersLogo();
         }
 
         function togglePlayPause(lessonId) {
@@ -2542,17 +2315,17 @@
 
         function startDrag(e, lessonId) {
             e.preventDefault();
-            window.dragging = true;
+            dragging = true;
             window.currentDragLessonId = lessonId;
         }
 
         function dragMove(e, lessonId) {
-            if (window.dragging && window.currentDragLessonId === lessonId) {
+            if (dragging && window.currentDragLessonId === lessonId) {
                 e.preventDefault();
-                var progressBarContainer = document.getElementById("progressBar-" + lessonId);
-                if (!progressBarContainer) return;
+                var progressBar = document.getElementById("progressBar-" + lessonId);
+                if (!progressBar) return;
 
-                var rect = progressBarContainer.getBoundingClientRect();
+                var rect = progressBar.getBoundingClientRect();
                 var clientX = e.touches ? e.touches[0].clientX : e.clientX;
                 var x = clientX - rect.left;
                 
@@ -2564,7 +2337,7 @@
         }
 
         function endDrag(e) {
-            window.dragging = false;
+            dragging = false;
             window.currentDragLessonId = null;
         }
 
@@ -2578,23 +2351,21 @@
             
             var progressElement = document.getElementById("progress-" + lessonId);
             var thumbElement = document.getElementById("thumb-" + lessonId);
-            var progressBarContainer = document.getElementById("progressBar-" + lessonId);
+            var progressBarElement = document.getElementById("progressBar-" + lessonId);
             
             if (progressElement) {
                 progressElement.style.width = (percent * 100) + "%";
             }
             
-            if (thumbElement && progressBarContainer) {
-                thumbElement.style.left = (percent * progressBarContainer.offsetWidth) + "px";
+            if (thumbElement && progressBarElement) {
+                thumbElement.style.left = (percent * progressBarElement.offsetWidth) + "px";
             }
         }
 
         function goFullScreen(lessonId) {
-            var container = document.getElementById("videoContainer-" + lessonId);
+            var container = document.getElementById("player-container-" + lessonId);
             if (!container) return;
 
-            container.classList.add('fullscreen-mode');
-            
             if (container.requestFullscreen) {
                 container.requestFullscreen();
             } else if (container.webkitRequestFullscreen) {
@@ -2602,20 +2373,6 @@
             } else if (container.msRequestFullscreen) {
                 container.msRequestFullscreen();
             }
-            
-            setTimeout(function() {
-                var player = currentPlayers[lessonId];
-                if (player && typeof player.setSize === 'function') {
-                    adjustPlayerSizeForFullscreen(lessonId);
-                }
-            }, 100);
-        }
-
-        function adjustPlayerSizeForFullscreen(lessonId) {
-            var player = currentPlayers[lessonId];
-            if (!player) return;
-            
-            player.setSize(window.innerWidth, window.innerHeight);
         }
 
         function exitFullScreen(lessonId) {
@@ -2625,20 +2382,6 @@
                 document.webkitExitFullscreen();
             } else if (document.msExitFullscreen) {
                 document.msExitFullscreen();
-            }
-            
-            if (lessonId) {
-                var container = document.getElementById("videoContainer-" + lessonId);
-                if (container) {
-                    container.classList.remove('fullscreen-mode');
-                    
-                    setTimeout(function() {
-                        var player = currentPlayers[lessonId];
-                        if (player && typeof player.setSize === 'function') {
-                            adjustPlayerSize(lessonId);
-                        }
-                    }, 100);
-                }
             }
         }
 
@@ -2652,44 +2395,6 @@
             if (exitBtn) {
                 exitBtn.style.display = isFullscreen ? "flex" : "none";
             }
-            
-            var player = currentPlayers[lessonId];
-            if (player && typeof player.setSize === 'function') {
-                if (isFullscreen) {
-                    setTimeout(function() {
-                        adjustPlayerSizeForFullscreen(lessonId);
-                    }, 100);
-                } else {
-                    setTimeout(function() {
-                        adjustPlayerSize(lessonId);
-                    }, 100);
-                }
-            }
-        }
-
-        // === ACTUALIZAR LOGO EN REPRODUCTOR ===
-        function updateVideoPlayersLogo() {
-            const cornerBoxes = document.querySelectorAll('.corner-box');
-            cornerBoxes.forEach(box => {
-                if (escuelaData && escuelaData.Logo_Escuela) {
-                    let logoImg = box.querySelector('.school-logo-mini');
-                    if (!logoImg) {
-                        logoImg = document.createElement('img');
-                        logoImg.className = 'school-logo-mini';
-                        logoImg.style.cssText = 'width: 100%; height: 100%; object-fit: contain; border-radius: 2px;';
-                        box.appendChild(logoImg);
-                    }
-                    logoImg.src = escuelaData.Logo_Escuela;
-                    logoImg.alt = escuelaData['Nombre_Escuela '] || 'Escuela';
-                    box.classList.add('has-logo');
-                } else {
-                    box.classList.remove('has-logo');
-                    const logoImg = box.querySelector('.school-logo-mini');
-                    if (logoImg) {
-                        logoImg.remove();
-                    }
-                }
-            });
         }
 
         // === SISTEMA UNIFICADO DE MANUALES ===
