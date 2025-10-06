@@ -900,6 +900,58 @@
             margin: 0;
         }
 
+        /* === NUEVOS ESTILOS PARA INFORMACIÓN DE CURSO === */
+        .course-info-text {
+            margin-top: 15px;
+            padding: 12px;
+            background: var(--neutro);
+            border-radius: 8px;
+            border-left: 4px solid var(--azul);
+        }
+        
+        .course-info-item {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .course-info-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .course-info-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .course-info-content {
+            flex: 1;
+        }
+        
+        .course-info-label {
+            font-weight: 600;
+            color: var(--azul-oscuro);
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+        
+        .course-info-value {
+            color: var(--azul-profundo);
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .course-info-value a {
+            color: var(--azul);
+            text-decoration: none;
+        }
+        
+        .course-info-value a:hover {
+            text-decoration: underline;
+        }
+
         /* Responsive para el reproductor normal */
         @media (max-width: 768px) {
             .video-container div[id^="player-"] {
@@ -933,6 +985,15 @@
                 flex: 1;
                 min-width: 120px;
                 justify-content: center;
+            }
+            
+            .course-info-text {
+                padding: 10px;
+            }
+            
+            .course-info-item {
+                flex-direction: column;
+                gap: 5px;
             }
         }
         
@@ -1026,7 +1087,7 @@
             font-size: 22px;
         }
 
-        input[type=text], input[type=password] {
+        input[type=text], input[type=password], input[type=email], input[type=tel] {
             width: 100%;
             padding: 10px;
             margin: 6px 0;
@@ -1041,7 +1102,7 @@
             transition: border-color 0.3s;
         }
 
-        input[type=text]:focus, input[type=password]:focus {
+        input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, input[type=tel]:focus {
             border-bottom: 2px solid var(--naranja);
         }
 
@@ -1056,6 +1117,86 @@
             text-align: center;
             margin: 8px 0;
             min-height: 18px;
+        }
+
+        .login-links {
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .login-link {
+            background: transparent;
+            border: none;
+            color: var(--azul);
+            text-decoration: underline;
+            font-size: 12px;
+            cursor: pointer;
+            padding: 5px;
+        }
+        
+        .login-link:hover {
+            color: var(--azul-oscuro);
+        }
+
+        /* === MODALES PARA REGISTRO Y RECUPERACIÓN === */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 10000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            color: var(--azul-oscuro);
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--azul-oscuro);
+            font-size: 13px;
         }
 
         /* === CABECERAS DE CURSO Y MÓDULO === */
@@ -1249,6 +1390,10 @@
                 padding: 10px;
                 margin: 10px 0;
             }
+            
+            .modal-content {
+                padding: 20px;
+            }
         }
         
         @media (max-width: 480px) {
@@ -1262,6 +1407,10 @@
                 width: 100%;
                 margin-right: 0;
                 justify-content: center;
+            }
+            
+            .modal-content {
+                padding: 15px;
             }
         }
 
@@ -1348,6 +1497,59 @@
             <input type="password" id="password" placeholder="Contraseña" />
             <div class="error-message" id="errorMessage"></div>
             <input type="submit" class="btn btn-primary" value="Ingresar" onclick="LoginUser()" />
+            
+            <div class="login-links">
+                <button class="login-link" onclick="showRegisterModal()">¿No tienes cuenta? Regístrate</button>
+                <button class="login-link" onclick="showForgotPasswordModal()">¿Olvidaste tu contraseña?</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Registro -->
+    <div id="registerModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Crear Cuenta</h2>
+                <button class="close-modal" onclick="closeRegisterModal()">✕</button>
+            </div>
+            <div class="form-group">
+                <input type="text" id="registerName" placeholder="Nombre" />
+            </div>
+            <div class="form-group">
+                <input type="text" id="registerLastName" placeholder="Apellido" />
+            </div>
+            <div class="form-group">
+                <input type="text" id="registerUser" placeholder="Usuario" />
+            </div>
+            <div class="form-group">
+                <input type="password" id="registerPassword" placeholder="Contraseña" />
+            </div>
+            <div class="form-group">
+                <input type="email" id="registerEmail" placeholder="Correo electrónico" />
+            </div>
+            <div class="form-group">
+                <input type="tel" id="registerPhone" placeholder="Teléfono (opcional)" />
+            </div>
+            <div class="error-message" id="registerErrorMessage"></div>
+            <button class="btn btn-primary" onclick="registerUser()">Registrarse</button>
+        </div>
+    </div>
+
+    <!-- Modal de Olvidé Contraseña -->
+    <div id="forgotPasswordModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Recuperar Contraseña</h2>
+                <button class="close-modal" onclick="closeForgotPasswordModal()">✕</button>
+            </div>
+            <p style="margin-bottom: 15px; text-align: center; color: var(--gray); font-size: 14px;">
+                Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.
+            </p>
+            <div class="form-group">
+                <input type="email" id="forgotPasswordEmail" placeholder="Correo electrónico" />
+            </div>
+            <div class="error-message" id="forgotPasswordErrorMessage"></div>
+            <button class="btn btn-primary" onclick="sendPasswordReset()">Enviar enlace</button>
         </div>
     </div>
 
@@ -1378,6 +1580,12 @@
                     </div>
                     <div class="course-info">
                         <p id="courseDescription" class="course-description">Descripción del curso...</p>
+                        
+                        <!-- Información del curso (calendario y mensaje) -->
+                        <div id="courseInfoText" class="course-info-text" style="display: none;">
+                            <!-- El contenido se agregará dinámicamente -->
+                        </div>
+                        
                         <div id="courseButtons" class="course-buttons">
                             <!-- Los botones se agregarán dinámicamente -->
                         </div>
@@ -1622,6 +1830,104 @@
             loadCursos();
         }
 
+        // === NUEVAS FUNCIONES PARA REGISTRO Y RECUPERACIÓN ===
+        function showRegisterModal() {
+            document.getElementById('registerModal').style.display = 'flex';
+            clearRegisterForm();
+        }
+        
+        function closeRegisterModal() {
+            document.getElementById('registerModal').style.display = 'none';
+        }
+        
+        function showForgotPasswordModal() {
+            document.getElementById('forgotPasswordModal').style.display = 'flex';
+            document.getElementById('forgotPasswordErrorMessage').innerHTML = '';
+            document.getElementById('forgotPasswordEmail').value = '';
+        }
+        
+        function closeForgotPasswordModal() {
+            document.getElementById('forgotPasswordModal').style.display = 'none';
+        }
+        
+        function clearRegisterForm() {
+            document.getElementById('registerName').value = '';
+            document.getElementById('registerLastName').value = '';
+            document.getElementById('registerUser').value = '';
+            document.getElementById('registerPassword').value = '';
+            document.getElementById('registerEmail').value = '';
+            document.getElementById('registerPhone').value = '';
+            document.getElementById('registerErrorMessage').innerHTML = '';
+        }
+        
+        async function registerUser() {
+            const name = document.getElementById('registerName').value.trim();
+            const lastName = document.getElementById('registerLastName').value.trim();
+            const user = document.getElementById('registerUser').value.trim();
+            const password = document.getElementById('registerPassword').value.trim();
+            const email = document.getElementById('registerEmail').value.trim();
+            const phone = document.getElementById('registerPhone').value.trim();
+            
+            // Validaciones básicas
+            if (!name || !lastName || !user || !password || !email) {
+                document.getElementById('registerErrorMessage').innerHTML = "Todos los campos excepto teléfono son obligatorios";
+                return;
+            }
+            
+            if (password.length < 6) {
+                document.getElementById('registerErrorMessage').innerHTML = "La contraseña debe tener al menos 6 caracteres";
+                return;
+            }
+            
+            document.getElementById('registerErrorMessage').innerHTML = "🔄 Creando cuenta...";
+            
+            try {
+                const response = await callJSONP('register', {
+                    nombre: name,
+                    apellido: lastName,
+                    usuario: user,
+                    contraseña: password,
+                    email: email,
+                    telefono: phone
+                });
+                
+                if (response.success) {
+                    showNotification('✅ Cuenta creada exitosamente. Ahora puedes iniciar sesión.');
+                    closeRegisterModal();
+                    document.getElementById('username').value = user;
+                    document.getElementById('password').value = '';
+                } else {
+                    document.getElementById('registerErrorMessage').innerHTML = "❌ " + response.error;
+                }
+            } catch (error) {
+                document.getElementById('registerErrorMessage').innerHTML = "🔒 Error de conexión: " + error.message;
+            }
+        }
+        
+        async function sendPasswordReset() {
+            const email = document.getElementById('forgotPasswordEmail').value.trim();
+            
+            if (!email) {
+                document.getElementById('forgotPasswordErrorMessage').innerHTML = "Por favor ingresa tu correo electrónico";
+                return;
+            }
+            
+            document.getElementById('forgotPasswordErrorMessage').innerHTML = "🔄 Enviando enlace de recuperación...";
+            
+            try {
+                const response = await callJSONP('forgotPassword', { email });
+                
+                if (response.success) {
+                    showNotification('✅ Se ha enviado un enlace de recuperación a tu correo electrónico.');
+                    closeForgotPasswordModal();
+                } else {
+                    document.getElementById('forgotPasswordErrorMessage').innerHTML = "❌ " + response.error;
+                }
+            } catch (error) {
+                document.getElementById('forgotPasswordErrorMessage').innerHTML = "🔒 Error de conexión: " + error.message;
+            }
+        }
+
         // === FUNCIÓN PARA CARGAR PROGRESO CORREGIDA ===
         async function loadUserProgress(alumnoId) {
             try {
@@ -1737,6 +2043,9 @@
                     document.getElementById('courseHeaderImage').style.display = 'none';
                 }
                 
+                // Actualizar información del curso (calendario y mensaje)
+                updateCourseInfo();
+                
                 // Actualizar botones del curso
                 updateCourseButtons();
                 
@@ -1776,6 +2085,49 @@
             }
         }
 
+        // === NUEVA FUNCIÓN PARA MOSTRAR INFORMACIÓN DEL CURSO ===
+        function updateCourseInfo() {
+            const infoContainer = document.getElementById('courseInfoText');
+            infoContainer.innerHTML = '';
+            
+            let hasInfo = false;
+            
+            // Mostrar calendario como texto
+            if (currentCourseData.Calendario) {
+                hasInfo = true;
+                const calendarItem = document.createElement('div');
+                calendarItem.className = 'course-info-item';
+                calendarItem.innerHTML = `
+                    <div class="course-info-icon">📅</div>
+                    <div class="course-info-content">
+                        <div class="course-info-label">Calendario del Curso</div>
+                        <div class="course-info-value">
+                            <a href="${currentCourseData.Calendario}" target="_blank">Ver calendario completo</a>
+                        </div>
+                    </div>
+                `;
+                infoContainer.appendChild(calendarItem);
+            }
+            
+            // Mostrar mensaje como texto
+            if (currentCourseData.Mensaje) {
+                hasInfo = true;
+                const messageItem = document.createElement('div');
+                messageItem.className = 'course-info-item';
+                messageItem.innerHTML = `
+                    <div class="course-info-icon">📢</div>
+                    <div class="course-info-content">
+                        <div class="course-info-label">Mensaje Importante</div>
+                        <div class="course-info-value">${currentCourseData.Mensaje}</div>
+                    </div>
+                `;
+                infoContainer.appendChild(messageItem);
+            }
+            
+            // Mostrar el contenedor solo si hay información
+            infoContainer.style.display = hasInfo ? 'block' : 'none';
+        }
+
         function updateCourseButtons() {
             const buttonsContainer = document.getElementById('courseButtons');
             buttonsContainer.innerHTML = '';
@@ -1800,28 +2152,6 @@
                     window.open(currentCourseData.Whatsapp, '_blank');
                 };
                 buttonsContainer.appendChild(whatsappBtn);
-            }
-            
-            // Botón Calendario
-            if (currentCourseData.Calendario) {
-                const calendarBtn = document.createElement('button');
-                calendarBtn.className = 'btn btn-secondary';
-                calendarBtn.innerHTML = '📅 Calendario';
-                calendarBtn.onclick = function() {
-                    window.open(currentCourseData.Calendario, '_blank');
-                };
-                buttonsContainer.appendChild(calendarBtn);
-            }
-            
-            // Botón Mensaje
-            if (currentCourseData.Mensaje) {
-                const messageBtn = document.createElement('button');
-                messageBtn.className = 'btn btn-primary';
-                messageBtn.innerHTML = '📢 Mensaje Importante';
-                messageBtn.onclick = function() {
-                    alert(currentCourseData.Mensaje);
-                };
-                buttonsContainer.appendChild(messageBtn);
             }
         }
 
@@ -2717,6 +3047,8 @@
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeManualViewer();
+                closeRegisterModal();
+                closeForgotPasswordModal();
             }
         });
 
