@@ -6,1241 +6,1254 @@
     <title>Learning Path - Dashboard</title>
     <script src="https://www.youtube.com/iframe_api"></script>
     <style>
-        /* === SISTEMA DE DISEÑO UNIFICADO === */
-        :root {
-            --naranja: #fbbf24;
-            --naranja-claro: #fdba74;
-            --azul: #3b82f6;
-            --azul-claro: #0ea5e9;
-            --azul-oscuro: #1e3a8a;
-            --azul-profundo: #1e293b;
-            --neutro: #f1f5f9;
-            --blanco: #ffffff;
-            --success: #10B981;
-            --error: #EF4444;
-            --gray: #64748B;
-            --sombra: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            --sombra-intensa: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            --radio: 15px;
-        }
+    /* === SISTEMA DE DISEÑO UNIFICADO === */
+    :root {
+        --naranja: #fbbf24;
+        --naranja-claro: #fdba74;
+        --azul: #3b82f6;
+        --azul-claro: #0ea5e9;
+        --azul-oscuro: #1e3a8a;
+        --azul-profundo: #1e293b;
+        --neutro: #f1f5f9;
+        --blanco: #ffffff;
+        --success: #10B981;
+        --error: #EF4444;
+        --gray: #64748B;
+        --sombra: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        --sombra-intensa: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        --radio: 15px;
+    }
+    
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow-x: hidden;
+    }
+    
+    body {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        background: linear-gradient(160deg, var(--azul) 0%, var(--naranja) 100%);
+        min-height: 100vh;
+        color: var(--azul-profundo);
+        line-height: 1.6;
+    }
+    
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 15px 20px 5px;
+        min-height: calc(100vh - 10px);
+    }
+
+    /* === COMPONENTES REUTILIZABLES === */
+    .card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: var(--radio);
+        padding: 20px;
+        transition: all 0.3s ease;
+        box-shadow: var(--sombra);
+        margin-bottom: 20px;
+    }
+
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--sombra-intensa);
+    }
+
+    .btn {
+        border: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        text-decoration: none;
+        font-size: 13px;
+        white-space: nowrap;
+    }
+
+    .btn:hover {
+        transform: scale(1.05);
+    }
+
+    .btn-primary {
+        background: linear-gradient(to right, var(--naranja), var(--azul-claro));
+        color: white;
+    }
+
+    .btn-secondary {
+        background: linear-gradient(to right, var(--azul), var(--azul-claro));
+        color: white;
+    }
+
+    .btn-success {
+        background: linear-gradient(to right, #25D366, #128C7E);
+        color: white;
+    }
+
+    .btn-error {
+        background: var(--error);
+        color: white;
+    }
+
+    .btn-small {
+        padding: 6px 12px;
+        font-size: 11px;
+    }
+
+    /* === LAYOUT PRINCIPAL === */
+    .header-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .school-brand {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex: 1;
+        min-width: 250px;
+    }
+
+    .school-logo {
+        width: 50px;
+        height: 50px;
+        object-fit: contain;
+        border-radius: 8px;
+        background: var(--neutro);
+        padding: 4px;
+    }
+
+    .school-name {
+        color: var(--azul-oscuro);
+        font-size: 18px;
+        font-weight: 700;
+    }
+
+    .user-welcome {
+        text-align: right;
+        flex: 1;
+        min-width: 180px;
+    }
+
+    .user-welcome h2 {
+        color: var(--azul-oscuro);
+        margin-bottom: 5px;
+        font-size: 16px;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        background: var(--success);
+        color: white;
+        border-radius: 12px;
+        font-size: 10px;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    /* === SISTEMA DE NAVEGACIÓN === */
+    .dashboard {
+        max-height: calc(100vh - 30px);
+        overflow-y: auto;
+        margin-bottom: 5px;
+    }
+
+    .back-btn {
+        margin-bottom: 15px;
+    }
+
+    /* === SISTEMA DE GRILLAS RESPONSIVO === */
+    .grid {
+        display: grid;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .grid-cursos {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+
+    .grid-modulos {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+
+    /* === TARJETAS DE CONTENIDO MEJORADAS === */
+    .curso-card, .module-card {
+        cursor: pointer;
+        border-left: 5px solid var(--azul);
+        border-right: 5px solid var(--naranja);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .curso-imagen, .module-imagen {
+        width: 100%;
+        height: 160px;
+        background: linear-gradient(135deg, var(--azul), var(--naranja));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 50px;
+        overflow: hidden;
+        position: relative;
+        border-radius: 10px;
+        margin-bottom: 15px;
+    }
+
+    .curso-imagen img, .module-imagen img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+        border-radius: 10px;
+    }
+
+    .curso-card:hover .curso-imagen img,
+    .module-card:hover .module-imagen img {
+        transform: scale(1.05);
+    }
+
+    .curso-titulo, .module-titulo {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--azul-oscuro);
+        margin-bottom: 8px;
+        text-align: center;
+        border-bottom: 2px solid var(--azul);
+        padding-bottom: 8px;
+        word-wrap: break-word;
+    }
+
+    .curso-content {
+        padding: 0;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .curso-grupo {
+        color: var(--gray);
+        font-size: 13px;
+        margin-bottom: 8px;
+        text-align: center;
+        font-weight: 500;
+    }
+
+    .btn-acceder {
+        width: 100%;
+        margin-top: auto;
+    }
+
+    /* === SISTEMA DE PROGRESO UNIFICADO === */
+    .progress-container {
+        margin: 12px 0;
+        padding: 8px;
+        background: var(--neutro);
+        border-radius: 6px;
+    }
+
+    .progress-bar-container {
+        background: #e0e0e0;
+        border-radius: 8px;
+        height: 16px;
+        overflow: hidden;
+        margin-bottom: 4px;
+        position: relative;
+    }
+
+    .progress-bar {
+        background: linear-gradient(to right, var(--azul), var(--naranja));
+        height: 100%;
+        transition: width 0.5s ease;
+        border-radius: 8px;
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+
+    .progress-text {
+        text-align: center;
+        font-size: 11px;
+        color: var(--gray);
+        font-weight: 600;
+    }
+
+    .progress-label {
+        font-size: 11px;
+        color: var(--gray);
+        margin-bottom: 4px;
+        text-align: center;
+        font-weight: 600;
+    }
+
+    /* === SISTEMA DE LECCIONES MEJORADO === */
+    .content-item {
+        padding: 12px;
+        margin-bottom: 10px;
+        border-left: 3px solid var(--azul);
+        cursor: default;
+    }
+
+    .content-item.completed {
+        background: rgba(59, 130, 246, 0.15);
+        border-left-color: var(--azul);
+    }
+
+    .lesson-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .lesson-checkbox {
+        width: 18px;
+        height: 18px;
+        margin-right: 8px;
+        cursor: pointer;
+        accent-color: var(--azul);
+    }
+
+    .lesson-title {
+        color: var(--azul-profundo);
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        flex: 1;
+        word-wrap: break-word;
+    }
+
+    .content-item.completed .lesson-title {
+        text-decoration: line-through;
+        color: var(--gray);
+    }
+
+    .lesson-preview {
+        display: flex;
+        gap: 12px;
+        margin-top: 8px;
+        margin-left: 26px;
+        align-items: flex-start;
+    }
+
+    .lesson-thumbnail {
+        flex-shrink: 0;
+        width: 140px;
+        height: 80px;
+        border-radius: 6px;
+        overflow: hidden;
+        background: linear-gradient(135deg, var(--azul), var(--naranja));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 20px;
+        position: relative;
+        cursor: pointer;
+        transition: transform 0.3s;
+    }
+
+    .lesson-thumbnail:hover {
+        transform: scale(1.05);
+    }
+
+    .lesson-thumbnail img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .lesson-thumbnail .play-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 20px;
+        color: white;
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .lesson-description {
+        flex: 1;
+        color: var(--azul-profundo);
+        font-size: 13px;
+        line-height: 1.4;
+        max-height: 80px;
+        overflow-y: auto;
+        padding-right: 5px;
+    }
+
+    .content-links {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-left: 26px;
+        align-items: flex-start;
+    }
+
+    .action-btn {
+        padding: 6px 12px;
+        font-size: 11px;
+        color: white !important;
+    }
+
+    /* === NUEVO REPRODUCTOR DE VIDEO PERSONALIZADO - CORREGIDO === */
+    .player-container {
+        width: 100%;
+        max-width: 800px;
+        background: #000;
+        border-radius: 15px;
+        padding: 15px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        position: relative;
+        margin: 12px 0;
+        display: none;
+    }
+
+    .video-container {
+        position: relative;
+        width: 100%;
+        background: #000;
+        border-radius: 10px 10px 0 0;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .video-container div[id^="player-"] {
+        width: 100% !important;
+        aspect-ratio: 16 / 9;
+        height: auto !important;
+        max-height: 450px;
+    }
+
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10;
+        cursor: pointer;
+    }
+
+    .corner-box {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        width: 100px;
+        height: 40px;
+        background: rgba(0,0,0,0.95);
+        border-radius: 6px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px;
+        z-index: 20;
+        pointer-events: none;
+        cursor: default;
+        color: #fff;
+        backdrop-filter: blur(5px);
+        padding: 5px;
+    }
+
+    .corner-box img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    .exit-fullscreen {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 50px;
+        height: 50px;
+        background: rgba(255,255,255,0.9);
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px;
+        z-index: 30;
+        cursor: pointer;
+        display: none;
+        color: #000;
+        font-weight: bold;
+    }
+
+    .controls-panel {
+        background: #000;
+        padding: 15px;
+        border-radius: 0 0 10px 10px;
+        margin-top: 0;
+    }
+
+    .progress-row {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+    .progress-container-player {
+        flex: 1;
+        height: 20px;
+        background: #444;
+        border-radius: 10px;
+        position: relative;
+        cursor: pointer;
+        z-index: 15;
+    }
+
+    .progress-player {
+        height: 100%;
+        background: #ff0000;
+        border-radius: 10px;
+        width: 0%;
+        transform-origin: left center;
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+
+    .thumb {
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 20px;
+        height: 20px;
+        background: #fff;
+        border-radius: 50%;
+        cursor: pointer;
+        z-index: 25;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        left: 0px;
+    }
+
+    .time-display {
+        color: #fff;
+        font-size: 14px;
+        font-weight: bold;
+        min-width: 100px;
+        text-align: center;
+        font-family: monospace;
+    }
+
+    .video-controls {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        z-index: 30;
+        position: relative;
+    }
+
+    .video-controls button {
+        background: #ff0000;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s;
+        flex: 1;
+        max-width: 200px;
+    }
+
+    .video-controls button:hover {
+        background: #cc0000;
+    }
+
+    /* Pantalla completa CORREGIDA - Video centrado y completo */
+    .player-container:-webkit-full-screen {
+        width: 100vw !important;
+        height: 100vh !important;
+        max-width: 100vw !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        background: #000 !important;
+    }
+    
+    .player-container:-moz-full-screen {
+        width: 100vw !important;
+        height: 100vh !important;
+        max-width: 100vw !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        background: #000 !important;
+    }
+    
+    .player-container:fullscreen {
+        width: 100vw !important;
+        height: 100vh !important;
+        max-width: 100vw !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        background: #000 !important;
+    }
+    
+    :-webkit-full-screen .video-container {
+        flex: 1;
+        border-radius: 0 !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 0;
+    }
+    
+    :-moz-full-screen .video-container {
+        flex: 1;
+        border-radius: 0 !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 0;
+    }
+    
+    :fullscreen .video-container {
+        flex: 1;
+        border-radius: 0 !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 0;
+    }
+    
+    :-webkit-full-screen .video-container div[id^="player-"] {
+        width: 100% !important;
+        aspect-ratio: 16 / 9;
+        height: auto !important;
+        max-height: 100%;
+        object-fit: contain;
+    }
+    
+    :-moz-full-screen .video-container div[id^="player-"] {
+        width: 100% !important;
+        aspect-ratio: 16 / 9;
+        height: auto !important;
+        max-height: 100%;
+        object-fit: contain;
+    }
+    
+    :fullscreen .video-container div[id^="player-"] {
+        width: 100% !important;
+        aspect-ratio: 16 / 9;
+        height: auto !important;
+        max-height: 100%;
+        object-fit: contain;
+    }
+    
+    :-webkit-full-screen .controls-panel {
+        border-radius: 0 !important;
+        padding: 15px 20px !important;
+        flex-shrink: 0;
+    }
+    
+    :-moz-full-screen .controls-panel {
+        border-radius: 0 !important;
+        padding: 15px 20px !important;
+        flex-shrink: 0;
+    }
+    
+    :fullscreen .controls-panel {
+        border-radius: 0 !important;
+        padding: 15px 20px !important;
+        flex-shrink: 0;
+    }
+    
+    :-webkit-full-screen .exit-fullscreen {
+        display: flex !important;
+    }
+    
+    :-moz-full-screen .exit-fullscreen {
+        display: flex !important;
+    }
+    
+    :fullscreen .exit-fullscreen {
+        display: flex !important;
+    }
+    
+    :-webkit-full-screen .corner-box {
+        bottom: 10px !important;
+        right: 10px !important;
+    }
+    
+    :-moz-full-screen .corner-box {
+        bottom: 10px !important;
+        right: 10px !important;
+    }
+    
+    :fullscreen .corner-box {
+        bottom: 10px !important;
+        right: 10px !important;
+    }
+
+    /* === CORRECCIÓN DEFINITIVA PARA LANDSCAPE - VIDEO AL 60% === */
+    @media (max-width: 926px) and (orientation: landscape) {
         
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow-x: hidden;
-        }
-        
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background: linear-gradient(160deg, var(--azul) 0%, var(--naranja) 100%);
-            min-height: 100vh;
-            color: var(--azul-profundo);
-            line-height: 1.6;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 15px 20px 5px;
-            min-height: calc(100vh - 10px);
-        }
-
-        /* === COMPONENTES REUTILIZABLES === */
-        .card {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: var(--radio);
-            padding: 20px;
-            transition: all 0.3s ease;
-            box-shadow: var(--sombra);
-            margin-bottom: 20px;
-        }
-
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--sombra-intensa);
-        }
-
-        .btn {
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            text-decoration: none;
-            font-size: 13px;
-            white-space: nowrap;
-        }
-
-        .btn:hover {
-            transform: scale(1.05);
-        }
-
-        .btn-primary {
-            background: linear-gradient(to right, var(--naranja), var(--azul-claro));
-            color: white;
-        }
-
-        .btn-secondary {
-            background: linear-gradient(to right, var(--azul), var(--azul-claro));
-            color: white;
-        }
-
-        .btn-success {
-            background: linear-gradient(to right, #25D366, #128C7E);
-            color: white;
-        }
-
-        .btn-error {
-            background: var(--error);
-            color: white;
-        }
-
-        .btn-small {
-            padding: 6px 12px;
-            font-size: 11px;
-        }
-
-        /* === LAYOUT PRINCIPAL === */
-        .header-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .school-brand {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex: 1;
-            min-width: 250px;
-        }
-
-        .school-logo {
-            width: 50px;
-            height: 50px;
-            object-fit: contain;
-            border-radius: 8px;
-            background: var(--neutro);
-            padding: 4px;
-        }
-
-        .school-name {
-            color: var(--azul-oscuro);
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        .user-welcome {
-            text-align: right;
-            flex: 1;
-            min-width: 180px;
-        }
-
-        .user-welcome h2 {
-            color: var(--azul-oscuro);
-            margin-bottom: 5px;
-            font-size: 16px;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            background: var(--success);
-            color: white;
-            border-radius: 12px;
-            font-size: 10px;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        /* === SISTEMA DE NAVEGACIÓN === */
-        .dashboard {
-            max-height: calc(100vh - 30px);
-            overflow-y: auto;
-            margin-bottom: 5px;
-        }
-
-        .back-btn {
-            margin-bottom: 15px;
-        }
-
-        /* === SISTEMA DE GRILLAS RESPONSIVO === */
-        .grid {
-            display: grid;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .grid-cursos {
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        }
-
-        .grid-modulos {
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        }
-
-        /* === TARJETAS DE CONTENIDO MEJORADAS === */
-        .curso-card, .module-card {
-            cursor: pointer;
-            border-left: 5px solid var(--azul);
-            border-right: 5px solid var(--naranja);
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        .curso-imagen, .module-imagen {
-            width: 100%;
-            height: 160px;
-            background: linear-gradient(135deg, var(--azul), var(--naranja));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 50px;
-            overflow: hidden;
-            position: relative;
-            border-radius: 10px;
-            margin-bottom: 15px;
-        }
-
-        .curso-imagen img, .module-imagen img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-            border-radius: 10px;
-        }
-
-        .curso-card:hover .curso-imagen img,
-        .module-card:hover .module-imagen img {
-            transform: scale(1.05);
-        }
-
-        .curso-titulo, .module-titulo {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--azul-oscuro);
-            margin-bottom: 8px;
-            text-align: center;
-            border-bottom: 2px solid var(--azul);
-            padding-bottom: 8px;
-            word-wrap: break-word;
-        }
-
-        .curso-content {
-            padding: 0;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .curso-grupo {
-            color: var(--gray);
-            font-size: 13px;
-            margin-bottom: 8px;
-            text-align: center;
-            font-weight: 500;
-        }
-
-        .btn-acceder {
-            width: 100%;
-            margin-top: auto;
-        }
-
-        /* === SISTEMA DE PROGRESO UNIFICADO === */
-        .progress-container {
-            margin: 12px 0;
-            padding: 8px;
-            background: var(--neutro);
-            border-radius: 6px;
-        }
-
-        .progress-bar-container {
-            background: #e0e0e0;
-            border-radius: 8px;
-            height: 16px;
-            overflow: hidden;
-            margin-bottom: 4px;
-            position: relative;
-        }
-
-        .progress-bar {
-            background: linear-gradient(to right, var(--azul), var(--naranja));
-            height: 100%;
-            transition: width 0.5s ease;
-            border-radius: 8px;
-            position: absolute;
-            left: 0;
-            top: 0;
-        }
-
-        .progress-text {
-            text-align: center;
-            font-size: 11px;
-            color: var(--gray);
-            font-weight: 600;
-        }
-
-        .progress-label {
-            font-size: 11px;
-            color: var(--gray);
-            margin-bottom: 4px;
-            text-align: center;
-            font-weight: 600;
-        }
-
-        /* === SISTEMA DE LECCIONES MEJORADO === */
-        .content-item {
-            padding: 12px;
-            margin-bottom: 10px;
-            border-left: 3px solid var(--azul);
-            cursor: default;
-        }
-
-        .content-item.completed {
-            background: rgba(59, 130, 246, 0.15);
-            border-left-color: var(--azul);
-        }
-
-        .lesson-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .lesson-checkbox {
-            width: 18px;
-            height: 18px;
-            margin-right: 8px;
-            cursor: pointer;
-            accent-color: var(--azul);
-        }
-
-        .lesson-title {
-            color: var(--azul-profundo);
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            flex: 1;
-            word-wrap: break-word;
-        }
-
-        .content-item.completed .lesson-title {
-            text-decoration: line-through;
-            color: var(--gray);
-        }
-
-        .lesson-preview {
-            display: flex;
-            gap: 12px;
-            margin-top: 8px;
-            margin-left: 26px;
-            align-items: flex-start;
-        }
-
-        .lesson-thumbnail {
-            flex-shrink: 0;
-            width: 140px;
-            height: 80px;
-            border-radius: 6px;
-            overflow: hidden;
-            background: linear-gradient(135deg, var(--azul), var(--naranja));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 20px;
-            position: relative;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-
-        .lesson-thumbnail:hover {
-            transform: scale(1.05);
-        }
-
-        .lesson-thumbnail img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .lesson-thumbnail .play-icon {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 20px;
-            color: white;
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 50%;
-            width: 35px;
-            height: 35px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .lesson-description {
-            flex: 1;
-            color: var(--azul-profundo);
-            font-size: 13px;
-            line-height: 1.4;
-            max-height: 80px;
-            overflow-y: auto;
-            padding-right: 5px;
-        }
-
-        .content-links {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-left: 26px;
-            align-items: flex-start;
-        }
-
-        .action-btn {
-            padding: 6px 12px;
-            font-size: 11px;
-            color: white !important;
-        }
-
-        /* === NUEVO REPRODUCTOR DE VIDEO PERSONALIZADO - CORREGIDO === */
-        .player-container {
-            width: 100%;
-            max-width: 800px;
-            background: #000;
-            border-radius: 15px;
-            padding: 15px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-            position: relative;
-            margin: 12px 0;
-            display: none;
-        }
-
-        .video-container {
-            position: relative;
-            width: 100%;
-            background: #000;
-            border-radius: 10px 10px 0 0;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .video-container div[id^="player-"] {
+        /* 🔹 PLAYER-CONTAINER: estructura principal en landscape */
+        :-webkit-full-screen .player-container,
+        :-moz-full-screen .player-container,
+        :fullscreen .player-container {
+            display: flex !important;
+            flex-direction: column !important;
             width: 100% !important;
-            aspect-ratio: 16 / 9;
-            height: auto !important;
-            max-height: 450px;
+            height: 100vh !important;
+            background: #000 !important;
+            justify-content: space-between !important;
         }
 
-        .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 10;
-            cursor: pointer;
+        /* 🔹 CONTENEDOR DE VIDEO: ocupa espacio disponible pero centrado al 60% */
+        :-webkit-full-screen .video-container,
+        :-moz-full-screen .video-container,
+        :fullscreen .video-container {
+            flex: 1 !important; /* Ocupa todo el espacio disponible */
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            background: #000 !important;
+            width: 100% !important;
+            height: auto !important;
+            max-height: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            position: relative !important;
+            overflow: hidden !important;
+        }
+
+        /* 🔹 NUEVO CONTENEDOR INTERNO PARA EL VIDEO - CORRECCIÓN DEL 60% */
+        :-webkit-full-screen .video-container div[id^="player-"],
+        :-moz-full-screen .video-container div[id^="player-"],
+        :fullscreen .video-container div[id^="player-"] {
+            width: 60% !important; /* 🔹 NUEVO: Video al 60% del ancho */
+            height: auto !important;
+            max-width: 60% !important; /* 🔹 NUEVO: Máximo 60% del ancho */
+            max-height: 100% !important;
+            object-fit: contain !important;
+            aspect-ratio: 16 / 9 !important;
+            flex-shrink: 0;
+            background: #000 !important; /* 🔹 NUEVO: Fondo negro para el video */
+            box-shadow: 0 0 0 2px rgba(255,255,255,0.1); /* 🔹 NUEVO: Delineado sutil */
+        }
+
+        /* 🔹 CONTROLES: altura fija en la parte inferior */
+        :-webkit-full-screen .controls-panel,
+        :-moz-full-screen .controls-panel,
+        :fullscreen .controls-panel {
+            flex-shrink: 0 !important;
+            height: 80px !important; /* Altura fija para controles */
+            min-height: 80px !important;
+            max-height: 80px !important;
+            padding: 10px 15px !important;
+            background: #000 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-around !important;
+        }
+
+        /* Ajuste de botones */
+        :-webkit-full-screen .video-controls button,
+        :-moz-full-screen .video-controls button,
+        :fullscreen .video-controls button {
+            font-size: 14px !important;
+            padding: 8px 12px !important;
+            min-width: 90px;
+            margin: 0 5px !important;
+        }
+
+        /* 🔹 NUEVO: Ajuste del corner-box para posicionarlo correctamente */
+        :-webkit-full-screen .corner-box,
+        :-moz-full-screen .corner-box,
+        :fullscreen .corner-box {
+            bottom: 10px !important;
+            right: calc(20% + 10px) !important; /* 🔹 NUEVO: Ajustado para estar alineado con el video */
+            width: 80px;
+            height: 35px;
+            font-size: 20px;
+        }
+    }
+
+    /* === MEJORAS EN BOTONES DE CABECERAS === */
+    .course-buttons, .module-buttons {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 15px;
+    }
+    
+    .course-buttons .btn, .module-buttons .btn {
+        margin: 0;
+    }
+
+    /* Responsive para el reproductor normal */
+    @media (max-width: 768px) {
+        .video-container div[id^="player-"] {
+            max-height: 300px;
+        }
+        
+        .video-controls button {
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+        
+        .time-display {
+            font-size: 12px;
+            min-width: 90px;
         }
 
         .corner-box {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            width: 100px;
-            height: 40px;
-            background: rgba(0,0,0,0.95);
-            border-radius: 6px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            z-index: 20;
-            pointer-events: none;
-            cursor: default;
-            color: #fff;
-            backdrop-filter: blur(5px);
-            padding: 5px;
-        }
-
-        .corner-box img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-
-        .exit-fullscreen {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 50px;
-            height: 50px;
-            background: rgba(255,255,255,0.9);
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            z-index: 30;
-            cursor: pointer;
-            display: none;
-            color: #000;
-            font-weight: bold;
-        }
-
-        .controls-panel {
-            background: #000;
-            padding: 15px;
-            border-radius: 0 0 10px 10px;
-            margin-top: 0;
-        }
-
-        .progress-row {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .progress-container-player {
-            flex: 1;
-            height: 20px;
-            background: #444;
-            border-radius: 10px;
-            position: relative;
-            cursor: pointer;
-            z-index: 15;
-        }
-
-        .progress-player {
-            height: 100%;
-            background: #ff0000;
-            border-radius: 10px;
-            width: 0%;
-            transform-origin: left center;
-            position: absolute;
-            left: 0;
-            top: 0;
-        }
-
-        .thumb {
-            position: absolute;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 20px;
-            height: 20px;
-            background: #fff;
-            border-radius: 50%;
-            cursor: pointer;
-            z-index: 25;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            left: 0px;
-        }
-
-        .time-display {
-            color: #fff;
-            font-size: 14px;
-            font-weight: bold;
-            min-width: 100px;
-            text-align: center;
-            font-family: monospace;
-        }
-
-        .video-controls {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            z-index: 30;
-            position: relative;
-        }
-
-        .video-controls button {
-            background: #ff0000;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.3s;
-            flex: 1;
-            max-width: 200px;
-        }
-
-        .video-controls button:hover {
-            background: #cc0000;
-        }
-
-        /* Pantalla completa CORREGIDA - Video centrado y completo */
-        .player-container:-webkit-full-screen {
-            width: 100vw !important;
-            height: 100vh !important;
-            max-width: 100vw !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            border-radius: 0 !important;
-            display: flex !important;
-            flex-direction: column !important;
-            background: #000 !important;
+            width: 80px;
+            height: 35px;
+            font-size: 20px;
+            bottom: 8px;
+            right: 8px;
         }
         
-        .player-container:-moz-full-screen {
-            width: 100vw !important;
-            height: 100vh !important;
-            max-width: 100vw !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            border-radius: 0 !important;
-            display: flex !important;
-            flex-direction: column !important;
-            background: #000 !important;
-        }
-        
-        .player-container:fullscreen {
-            width: 100vw !important;
-            height: 100vh !important;
-            max-width: 100vw !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            border-radius: 0 !important;
-            display: flex !important;
-            flex-direction: column !important;
-            background: #000 !important;
-        }
-        
-        :-webkit-full-screen .video-container {
-            flex: 1;
-            border-radius: 0 !important;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 0;
-        }
-        
-        :-moz-full-screen .video-container {
-            flex: 1;
-            border-radius: 0 !important;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 0;
-        }
-        
-        :fullscreen .video-container {
-            flex: 1;
-            border-radius: 0 !important;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 0;
-        }
-        
-        :-webkit-full-screen .video-container div[id^="player-"] {
-            width: 100% !important;
-            aspect-ratio: 16 / 9;
-            height: auto !important;
-            max-height: 100%;
-            object-fit: contain;
-        }
-        
-        :-moz-full-screen .video-container div[id^="player-"] {
-            width: 100% !important;
-            aspect-ratio: 16 / 9;
-            height: auto !important;
-            max-height: 100%;
-            object-fit: contain;
-        }
-        
-        :fullscreen .video-container div[id^="player-"] {
-            width: 100% !important;
-            aspect-ratio: 16 / 9;
-            height: auto !important;
-            max-height: 100%;
-            object-fit: contain;
-        }
-        
-        :-webkit-full-screen .controls-panel {
-            border-radius: 0 !important;
-            padding: 15px 20px !important;
-            flex-shrink: 0;
-        }
-        
-        :-moz-full-screen .controls-panel {
-            border-radius: 0 !important;
-            padding: 15px 20px !important;
-            flex-shrink: 0;
-        }
-        
-        :fullscreen .controls-panel {
-            border-radius: 0 !important;
-            padding: 15px 20px !important;
-            flex-shrink: 0;
-        }
-        
-        :-webkit-full-screen .exit-fullscreen {
-            display: flex !important;
-        }
-        
-        :-moz-full-screen .exit-fullscreen {
-            display: flex !important;
-        }
-        
-        :fullscreen .exit-fullscreen {
-            display: flex !important;
-        }
-        
-        :-webkit-full-screen .corner-box {
-            bottom: 10px !important;
-            right: 10px !important;
-        }
-        
-        :-moz-full-screen .corner-box {
-            bottom: 10px !important;
-            right: 10px !important;
-        }
-        
-        :fullscreen .corner-box {
-            bottom: 10px !important;
-            right: 10px !important;
-        }
-
-        /* === CORRECCIÓN DEFINITIVA PARA LANDSCAPE - PROPORCIÓN MANTENIDA === */
-        @media (max-width: 926px) and (orientation: landscape) {
-            
-            /* 🔹 PLAYER-CONTAINER: estructura principal en landscape */
-            :-webkit-full-screen .player-container,
-            :-moz-full-screen .player-container,
-            :fullscreen .player-container {
-                display: flex !important;
-                flex-direction: column !important;
-                width: 100% !important;
-                height: 100vh !important;
-                background: #000 !important;
-                justify-content: space-between !important;
-            }
-
-            /* 🔹 CONTENEDOR DE VIDEO: ocupa espacio disponible */
-            :-webkit-full-screen .video-container,
-            :-moz-full-screen .video-container,
-            :fullscreen .video-container {
-                flex: 1 !important; /* Ocupa todo el espacio disponible */
-                display: flex !important;
-                justify-content: center !important;
-                align-items: center !important;
-                background: #000 !important;
-                width: 100% !important;
-                height: auto !important;
-                max-height: none !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                position: relative !important;
-                overflow: hidden !important;
-            }
-
-            /* 🔹 VIDEO DENTRO DEL CONTENEDOR: proporción 16:9 centrado */
-            :-webkit-full-screen .video-container div[id^="player-"],
-            :-moz-full-screen .video-container div[id^="player-"],
-            :fullscreen .video-container div[id^="player-"] {
-                width: auto !important;
-                height: auto !important;
-                max-width: 100% !important;
-                max-height: 100% !important;
-                object-fit: contain !important;
-                aspect-ratio: 16 / 9 !important;
-                flex-shrink: 0;
-            }
-
-            /* 🔹 CONTROLES: altura fija en la parte inferior */
-            :-webkit-full-screen .controls-panel,
-            :-moz-full-screen .controls-panel,
-            :fullscreen .controls-panel {
-                flex-shrink: 0 !important;
-                height: 80px !important; /* Altura fija para controles */
-                min-height: 80px !important;
-                max-height: 80px !important;
-                padding: 10px 15px !important;
-                background: #000 !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: space-around !important;
-            }
-
-            /* Ajuste de botones */
-            :-webkit-full-screen .video-controls button,
-            :-moz-full-screen .video-controls button,
-            :fullscreen .video-controls button {
-                font-size: 14px !important;
-                padding: 8px 12px !important;
-                min-width: 90px;
-                margin: 0 5px !important;
-            }
-        }
-
-        /* === MEJORAS EN BOTONES DE CABECERAS === */
+        /* Ajustes para botones en móvil */
         .course-buttons, .module-buttons {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-top: 15px;
+            gap: 8px;
         }
         
         .course-buttons .btn, .module-buttons .btn {
-            margin: 0;
-        }
-
-        /* Responsive para el reproductor normal */
-        @media (max-width: 768px) {
-            .video-container div[id^="player-"] {
-                max-height: 300px;
-            }
-            
-            .video-controls button {
-                padding: 8px 12px;
-                font-size: 12px;
-            }
-            
-            .time-display {
-                font-size: 12px;
-                min-width: 90px;
-            }
-
-            .corner-box {
-                width: 80px;
-                height: 35px;
-                font-size: 20px;
-                bottom: 8px;
-                right: 8px;
-            }
-            
-            /* Ajustes para botones en móvil */
-            .course-buttons, .module-buttons {
-                gap: 8px;
-            }
-            
-            .course-buttons .btn, .module-buttons .btn {
-                flex: 1;
-                min-width: 120px;
-                justify-content: center;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .video-container div[id^="player-"] {
-                max-height: 250px;
-            }
-            
-            .player-container {
-                padding: 10px;
-            }
-            
-            .video-controls {
-                gap: 8px;
-            }
-            
-            .video-controls button {
-                padding: 8px 10px;
-                font-size: 11px;
-            }
-            
-            .time-display {
-                font-size: 11px;
-                min-width: 80px;
-            }
-            
-            .controls-panel {
-                padding: 10px;
-            }
-            
-            .progress-row {
-                gap: 10px;
-                margin-bottom: 10px;
-            }
-            
-            .corner-box {
-                width: 70px;
-                height: 30px;
-                font-size: 18px;
-                bottom: 6px;
-                right: 6px;
-            }
-            
-            /* Ajustes para botones en móvil pequeño */
-            .course-buttons, .module-buttons {
-                gap: 6px;
-            }
-            
-            .course-buttons .btn, .module-buttons .btn {
-                font-size: 11px;
-                padding: 6px 10px;
-            }
-        }
-
-        /* === SISTEMA DE LOGIN OPTIMIZADO === */
-        .login-container {
-            display: flex;
+            flex: 1;
+            min-width: 120px;
             justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .video-container div[id^="player-"] {
+            max-height: 250px;
         }
         
-        .form-container {
-            width: 320px;
-            padding: 25px;
-            text-align: center;
-        }
-
-        .school-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .login-school-logo {
-            max-width: 80px;
-            max-height: 60px;
-            object-fit: contain;
-            margin: 0 auto 12px;
-            display: block;
-            border-radius: 8px;
-            background: var(--neutro);
-            padding: 8px;
-        }
-
-        .login-title {
-            text-align: center;
-            color: var(--azul-oscuro);
-            margin-bottom: 15px;
-            font-weight: 700;
-            font-size: 22px;
-        }
-
-        input[type=text], input[type=password] {
-            width: 100%;
+        .player-container {
             padding: 10px;
-            margin: 6px 0;
-            border: none;
-            border-bottom: 2px solid #ddd;
-            outline: none;
-            text-align: center;
-            font-size: 15px;
-            font-weight: bold;
-            background: white;
-            border-radius: 6px;
-            transition: border-color 0.3s;
         }
-
-        input[type=text]:focus, input[type=password]:focus {
-            border-bottom: 2px solid var(--naranja);
+        
+        .video-controls {
+            gap: 8px;
         }
-
-        input[type=submit], input[type=button] {
-            width: 100%;
-            margin: 5px 0;
-        }
-
-        .error-message {
-            color: var(--error);
+        
+        .video-controls button {
+            padding: 8px 10px;
             font-size: 11px;
+        }
+        
+        .time-display {
+            font-size: 11px;
+            min-width: 80px;
+        }
+        
+        .controls-panel {
+            padding: 10px;
+        }
+        
+        .progress-row {
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .corner-box {
+            width: 70px;
+            height: 30px;
+            font-size: 18px;
+            bottom: 6px;
+            right: 6px;
+        }
+        
+        /* Ajustes para botones en móvil pequeño */
+        .course-buttons, .module-buttons {
+            gap: 6px;
+        }
+        
+        .course-buttons .btn, .module-buttons .btn {
+            font-size: 11px;
+            padding: 6px 10px;
+        }
+    }
+
+    /* === SISTEMA DE LOGIN OPTIMIZADO === */
+    .login-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+    }
+    
+    .form-container {
+        width: 320px;
+        padding: 25px;
+        text-align: center;
+    }
+
+    .school-header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .login-school-logo {
+        max-width: 80px;
+        max-height: 60px;
+        object-fit: contain;
+        margin: 0 auto 12px;
+        display: block;
+        border-radius: 8px;
+        background: var(--neutro);
+        padding: 8px;
+    }
+
+    .login-title {
+        text-align: center;
+        color: var(--azul-oscuro);
+        margin-bottom: 15px;
+        font-weight: 700;
+        font-size: 22px;
+    }
+
+    input[type=text], input[type=password] {
+        width: 100%;
+        padding: 10px;
+        margin: 6px 0;
+        border: none;
+        border-bottom: 2px solid #ddd;
+        outline: none;
+        text-align: center;
+        font-size: 15px;
+        font-weight: bold;
+        background: white;
+        border-radius: 6px;
+        transition: border-color 0.3s;
+    }
+
+    input[type=text]:focus, input[type=password]:focus {
+        border-bottom: 2px solid var(--naranja);
+    }
+
+    input[type=submit], input[type=button] {
+        width: 100%;
+        margin: 5px 0;
+    }
+
+    .error-message {
+        color: var(--error);
+        font-size: 11px;
+        text-align: center;
+        margin: 8px 0;
+        min-height: 18px;
+    }
+
+    /* === CABECERAS DE CURSO Y MÓDULO === */
+    .course-header, .module-header-expanded {
+        display: none;
+    }
+
+    .course-title-section, .module-title-section {
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    .course-title-section h1 {
+        color: var(--azul-oscuro);
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .module-title-section h2 {
+        color: var(--azul-oscuro);
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .course-content, .module-content {
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+    }
+
+    .course-image-container, .module-image-container {
+        flex: 0 0 150px;
+    }
+
+    .course-header-image, .module-header-image {
+        width: 100%;
+        max-height: 120px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+    .course-info, .module-info {
+        flex: 1;
+    }
+
+    .course-description, .module-description {
+        color: var(--azul-profundo);
+        line-height: 1.5;
+        margin-bottom: 12px;
+        font-size: 14px;
+    }
+
+    /* === COMPONENTES DE INTERFAZ AVANZADOS === */
+    .notification {
+        position: fixed;
+        top: 15px;
+        right: 15px;
+        padding: 12px 16px;
+        border-radius: 8px;
+        background: var(--success);
+        color: white;
+        font-weight: bold;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        opacity: 0;
+        transform: translateX(300px);
+        transition: all 0.3s ease;
+        z-index: 1000;
+        font-size: 13px;
+    }
+
+    .notification.show {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .notification.error {
+        background: var(--error);
+    }
+
+    /* === MODAL UNIFICADO PARA MANUALES === */
+    #universalManualModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.9);
+        z-index: 10000;
+        display: none;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #universalManualModal .modal-content {
+        position: relative;
+        width: 90%;
+        height: 90%;
+        max-width: 900px;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    #universalManualModal .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px;
+        background: var(--azul-oscuro);
+        color: white;
+    }
+
+    #universalManualModal .modal-header h3 {
+        margin: 0;
+        font-size: 16px;
+    }
+
+    #universalManualModal .close-modal {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    #universalManualModal iframe {
+        width: 100%;
+        height: calc(100% - 50px);
+        border: none;
+    }
+
+    /* === SISTEMA RESPONSIVO MEJORADO === */
+    @media (max-width: 768px) {
+        .container {
+            padding: 10px 10px 5px;
+        }
+        
+        .header-container {
+            flex-direction: column;
             text-align: center;
-            margin: 8px 0;
-            min-height: 18px;
+            padding: 12px 15px;
         }
-
-        /* === CABECERAS DE CURSO Y MÓDULO === */
-        .course-header, .module-header-expanded {
-            display: none;
-        }
-
-        .course-title-section, .module-title-section {
+        
+        .school-brand, .user-welcome {
+            justify-content: center;
             text-align: center;
-            margin-bottom: 15px;
+            min-width: auto;
         }
 
-        .course-title-section h1 {
-            color: var(--azul-oscuro);
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .module-title-section h2 {
-            color: var(--azul-oscuro);
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 8px;
+        .user-welcome {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .course-content, .module-content {
-            display: flex;
-            gap: 20px;
-            align-items: flex-start;
-        }
-
-        .course-image-container, .module-image-container {
-            flex: 0 0 150px;
-        }
-
-        .course-header-image, .module-header-image {
-            width: 100%;
-            max-height: 120px;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-
-        .course-info, .module-info {
-            flex: 1;
-        }
-
-        .course-description, .module-description {
-            color: var(--azul-profundo);
-            line-height: 1.5;
-            margin-bottom: 12px;
-            font-size: 14px;
-        }
-
-        /* === COMPONENTES DE INTERFAZ AVANZADOS === */
-        .notification {
-            position: fixed;
-            top: 15px;
-            right: 15px;
-            padding: 12px 16px;
-            border-radius: 8px;
-            background: var(--success);
-            color: white;
-            font-weight: bold;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            opacity: 0;
-            transform: translateX(300px);
-            transition: all 0.3s ease;
-            z-index: 1000;
-            font-size: 13px;
-        }
-
-        .notification.show {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .notification.error {
-            background: var(--error);
-        }
-
-        /* === MODAL UNIFICADO PARA MANUALES === */
-        #universalManualModal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 10000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #universalManualModal .modal-content {
-            position: relative;
-            width: 90%;
-            height: 90%;
-            max-width: 900px;
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        #universalManualModal .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px;
-            background: var(--azul-oscuro);
-            color: white;
-        }
-
-        #universalManualModal .modal-header h3 {
-            margin: 0;
-            font-size: 16px;
-        }
-
-        #universalManualModal .close-modal {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-        }
-
-        #universalManualModal iframe {
-            width: 100%;
-            height: calc(100% - 50px);
-            border: none;
-        }
-
-        /* === SISTEMA RESPONSIVO MEJORADO === */
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px 10px 5px;
-            }
-            
-            .header-container {
-                flex-direction: column;
-                text-align: center;
-                padding: 12px 15px;
-            }
-            
-            .school-brand, .user-welcome {
-                justify-content: center;
-                text-align: center;
-                min-width: auto;
-            }
-
-            .user-welcome {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .course-content, .module-content {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .course-image-container, .module-image-container {
-                flex: 0 0 auto;
-                width: 100%;
-                max-width: 200px;
-                margin: 0 auto;
-            }
-            
-            .grid-cursos, .grid-modulos {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-            
-            .lesson-preview {
-                flex-direction: column;
-                margin-left: 0;
-            }
-            
-            .lesson-thumbnail {
-                width: 100%;
-                height: 150px;
-            }
-            
-            .content-links {
-                margin-left: 0;
-                justify-content: center;
-            }
-            
-            .player-container {
-                padding: 10px;
-                margin: 10px 0;
-            }
+            flex-direction: column;
+            gap: 15px;
         }
         
-        @media (max-width: 480px) {
-            .form-container {
-                width: 100%;
-                max-width: 300px;
-                padding: 20px;
-            }
-            
-            .btn {
-                width: 100%;
-                margin-right: 0;
-                justify-content: center;
-            }
-        }
-
-        /* === ESTILOS ADICIONALES PARA CONTENIDO EXPANDIDO === */
-        .expanded-module {
+        .course-image-container, .module-image-container {
+            flex: 0 0 auto;
             width: 100%;
-            padding: 0;
-            margin-bottom: 5px;
+            max-width: 200px;
+            margin: 0 auto;
         }
-
-        .module-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 12px;
+        
+        .grid-cursos, .grid-modulos {
+            grid-template-columns: 1fr;
+            gap: 15px;
         }
-
-        .module-progress-expanded {
-            margin: 15px 0;
-            padding: 12px;
-            text-align: center;
+        
+        .lesson-preview {
+            flex-direction: column;
+            margin-left: 0;
         }
-
-        .content-list-expanded {
-            margin-top: 15px;
-            margin-bottom: 5px;
-        }
-
-        .notes-area {
-            display: none;
-            margin-top: 8px;
-        }
-
-        .notes-textarea {
+        
+        .lesson-thumbnail {
             width: 100%;
-            height: 100px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            resize: vertical;
-            font-family: inherit;
+            height: 150px;
         }
-
-        .save-notes-btn {
-            margin-top: 8px;
-        }
-
-        .manual-container {
-            display: none;
-            margin-top: 8px;
-        }
-
-        .image-fallback {
-            font-size: 50px;
-            display: flex;
-            align-items: center;
+        
+        .content-links {
+            margin-left: 0;
             justify-content: center;
+        }
+        
+        .player-container {
+            padding: 10px;
+            margin: 10px 0;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .form-container {
             width: 100%;
-            height: 100%;
-        }
-
-        .loading {
-            text-align: center;
+            max-width: 300px;
             padding: 20px;
-            color: var(--gray);
         }
+        
+        .btn {
+            width: 100%;
+            margin-right: 0;
+            justify-content: center;
+        }
+    }
 
-        .no-content {
-            text-align: center;
-            padding: 20px;
-            color: var(--gray);
-        }
-    </style>
+    /* === ESTILOS ADICIONALES PARA CONTENIDO EXPANDIDO === */
+    .expanded-module {
+        width: 100%;
+        padding: 0;
+        margin-bottom: 5px;
+    }
+
+    .module-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        padding-bottom: 12px;
+    }
+
+    .module-progress-expanded {
+        margin: 15px 0;
+        padding: 12px;
+        text-align: center;
+    }
+
+    .content-list-expanded {
+        margin-top: 15px;
+        margin-bottom: 5px;
+    }
+
+    .notes-area {
+        display: none;
+        margin-top: 8px;
+    }
+
+    .notes-textarea {
+        width: 100%;
+        height: 100px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        resize: vertical;
+        font-family: inherit;
+    }
+
+    .save-notes-btn {
+        margin-top: 8px;
+    }
+
+    .manual-container {
+        display: none;
+        margin-top: 8px;
+    }
+
+    .image-fallback {
+        font-size: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    .loading {
+        text-align: center;
+        padding: 20px;
+        color: var(--gray);
+    }
+
+    .no-content {
+        text-align: center;
+        padding: 20px;
+        color: var(--gray);
+    }
+</style>
 </head>
 <body>
     <!-- Página 1: Login -->
