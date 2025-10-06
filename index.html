@@ -845,7 +845,7 @@
             }
         }
         
-        /* === CORRECCIÓN PARA LANDSCAPE EN MÓVIL - VIDEO NO CORTADO === */
+        /* === CORRECCIÓN DEFINITIVA PARA LANDSCAPE - VALORES MÁS BAJOS === */
         @media (max-width: 926px) and (orientation: landscape) {
             :-webkit-full-screen .controls-panel {
                 padding: 8px 12px !important;
@@ -859,24 +859,36 @@
                 padding: 8px 12px !important;
             }
             
-            /* REDUCIDO A 55vh PARA EVITAR CORTES */
+            /* REDUCIDO A 45vh PARA EVITAR CORTES */
+            :-webkit-full-screen .video-container {
+                max-height: 45vh !important;
+            }
+            
+            :-moz-full-screen .video-container {
+                max-height: 45vh !important;
+            }
+            
+            :fullscreen .video-container {
+                max-height: 45vh !important;
+            }
+            
             :-webkit-full-screen .video-container div[id^="player-"] {
-                max-height: 55vh !important;
-                height: 55vh !important;
+                max-height: 45vh !important;
+                height: 45vh !important;
                 width: 100% !important;
                 object-fit: contain;
             }
             
             :-moz-full-screen .video-container div[id^="player-"] {
-                max-height: 55vh !important;
-                height: 55vh !important;
+                max-height: 45vh !important;
+                height: 45vh !important;
                 width: 100% !important;
                 object-fit: contain;
             }
             
             :fullscreen .video-container div[id^="player-"] {
-                max-height: 55vh !important;
-                height: 55vh !important;
+                max-height: 45vh !important;
+                height: 45vh !important;
                 width: 100% !important;
                 object-fit: contain;
             }
@@ -938,20 +950,32 @@
         
         /* Ajuste adicional para pantallas landscape muy pequeñas */
         @media (max-width: 926px) and (orientation: landscape) and (max-height: 450px) {
-            /* REDUCIDO A 50vh PARA PANTALLAS MUY PEQUEÑAS */
+            /* REDUCIDO A 40vh PARA PANTALLAS MUY PEQUEÑAS */
+            :-webkit-full-screen .video-container {
+                max-height: 40vh !important;
+            }
+            
+            :-moz-full-screen .video-container {
+                max-height: 40vh !important;
+            }
+            
+            :fullscreen .video-container {
+                max-height: 40vh !important;
+            }
+            
             :-webkit-full-screen .video-container div[id^="player-"] {
-                max-height: 50vh !important;
-                height: 50vh !important;
+                max-height: 40vh !important;
+                height: 40vh !important;
             }
             
             :-moz-full-screen .video-container div[id^="player-"] {
-                max-height: 50vh !important;
-                height: 50vh !important;
+                max-height: 40vh !important;
+                height: 40vh !important;
             }
             
             :fullscreen .video-container div[id^="player-"] {
-                max-height: 50vh !important;
-                height: 50vh !important;
+                max-height: 40vh !important;
+                height: 40vh !important;
             }
             
             :-webkit-full-screen .controls-panel {
@@ -984,20 +1008,32 @@
         
         /* Nueva media query para pantallas landscape de altura media */
         @media (max-width: 926px) and (orientation: landscape) and (min-height: 451px) and (max-height: 600px) {
-            /* 52vh PARA PANTALLAS CON ALTURA MEDIA */
+            /* 42vh PARA PANTALLAS CON ALTURA MEDIA */
+            :-webkit-full-screen .video-container {
+                max-height: 42vh !important;
+            }
+            
+            :-moz-full-screen .video-container {
+                max-height: 42vh !important;
+            }
+            
+            :fullscreen .video-container {
+                max-height: 42vh !important;
+            }
+            
             :-webkit-full-screen .video-container div[id^="player-"] {
-                max-height: 52vh !important;
-                height: 52vh !important;
+                max-height: 42vh !important;
+                height: 42vh !important;
             }
             
             :-moz-full-screen .video-container div[id^="player-"] {
-                max-height: 52vh !important;
-                height: 52vh !important;
+                max-height: 42vh !important;
+                height: 42vh !important;
             }
             
             :fullscreen .video-container div[id^="player-"] {
-                max-height: 52vh !important;
-                height: 52vh !important;
+                max-height: 42vh !important;
+                height: 42vh !important;
             }
         }
 
