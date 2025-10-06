@@ -784,15 +784,16 @@
     :-webkit-full-screen .video-container div[id^="player-"],
     :-moz-full-screen .video-container div[id^="player-"],
     :fullscreen .video-container div[id^="player-"] {
-        aspect-ratio: 16 / 9 !important;
-        height: 52.5% !important;       /* 25% más pequeño que antes */
-        width: auto !important;          /* Ancho automático según aspect-ratio */
-        max-height: 100% !important;     /* Nunca excede el contenedor */
-        object-fit: contain !important;
-        margin: 0 auto !important;
-        display: block !important;
-        position: relative !important;
+    aspect-ratio: 16 / 9 !important;
+    width: 75% !important;          /* Reduce un 25% del ancho del contenedor */
+    height: auto !important;         /* Altura se calcula automáticamente */
+    max-height: 100% !important;     /* Nunca supera el contenedor */
+    object-fit: contain !important;
+    margin: 0 auto !important;
+    display: block !important;
+    position: relative !important;
     }
+
 }
 
             
