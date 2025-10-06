@@ -721,7 +721,79 @@
             bottom: 10px !important;
             right: 10px !important;
         }
-        
+
+        /* === CORRECCIÓN DEFINITIVA PARA LANDSCAPE - PROPORCIÓN MANTENIDA === */
+        @media (max-width: 926px) and (orientation: landscape) {
+            
+            /* 🔹 PLAYER-CONTAINER: estructura principal en landscape */
+            :-webkit-full-screen .player-container,
+            :-moz-full-screen .player-container,
+            :fullscreen .player-container {
+                display: flex !important;
+                flex-direction: column !important;
+                width: 100% !important;
+                height: 100vh !important;
+                background: #000 !important;
+                justify-content: space-between !important;
+            }
+
+            /* 🔹 CONTENEDOR DE VIDEO: ocupa espacio disponible */
+            :-webkit-full-screen .video-container,
+            :-moz-full-screen .video-container,
+            :fullscreen .video-container {
+                flex: 1 !important; /* Ocupa todo el espacio disponible */
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+                background: #000 !important;
+                width: 100% !important;
+                height: auto !important;
+                max-height: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                position: relative !important;
+                overflow: hidden !important;
+            }
+
+            /* 🔹 VIDEO DENTRO DEL CONTENEDOR: proporción 16:9 centrado */
+            :-webkit-full-screen .video-container div[id^="player-"],
+            :-moz-full-screen .video-container div[id^="player-"],
+            :fullscreen .video-container div[id^="player-"] {
+                width: auto !important;
+                height: auto !important;
+                max-width: 100% !important;
+                max-height: 100% !important;
+                object-fit: contain !important;
+                aspect-ratio: 16 / 9 !important;
+                flex-shrink: 0;
+            }
+
+            /* 🔹 CONTROLES: altura fija en la parte inferior */
+            :-webkit-full-screen .controls-panel,
+            :-moz-full-screen .controls-panel,
+            :fullscreen .controls-panel {
+                flex-shrink: 0 !important;
+                height: 80px !important; /* Altura fija para controles */
+                min-height: 80px !important;
+                max-height: 80px !important;
+                padding: 10px 15px !important;
+                background: #000 !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-around !important;
+            }
+
+            /* Ajuste de botones */
+            :-webkit-full-screen .video-controls button,
+            :-moz-full-screen .video-controls button,
+            :fullscreen .video-controls button {
+                font-size: 14px !important;
+                padding: 8px 12px !important;
+                min-width: 90px;
+                margin: 0 5px !important;
+            }
+        }
+
         /* === MEJORAS EN BOTONES DE CABECERAS === */
         .course-buttons, .module-buttons {
             display: flex;
@@ -733,132 +805,6 @@
         .course-buttons .btn, .module-buttons .btn {
             margin: 0;
         }
-
-/* === LANDSCAPE - VIDEO REDUCIDO 25% Y CENTRADO === */
-@media (max-width: 926px) and (orientation: landscape) {
-
-    /* Contenedor de video: ocupa 70% de altura del viewport */
-    :-webkit-full-screen .video-container,
-    :-moz-full-screen .video-container,
-    :fullscreen .video-container {
-        width: 100% !important;
-        height: 70vh !important;
-        max-height: 70vh !important;
-        background: #000 !important;
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        margin: 0 auto !important;
-        position: relative !important;
-        overflow: hidden !important;
-    }
-
-    /* Controles: 30% restante */
-    :-webkit-full-screen .controls-panel,
-    :-moz-full-screen .controls-panel,
-    :fullscreen .controls-panel {
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: flex-start !important;
-        padding: 15px 20px !important;
-        background: #000 !important;
-        border-radius: 0 !important;
-        flex-shrink: 0 !important;
-        height: 30vh !important;
-        min-height: 100px !important;
-        box-sizing: border-box !important;
-    }
-
-    /* Video: reducido y centrado */
-    :-webkit-full-screen .video-container div[id^="player-"],
-    :-moz-full-screen .video-container div[id^="player-"],
-    :fullscreen .video-container div[id^="player-"] {
-        width: 75% !important;          /* Reduce un 25% del ancho */
-        max-width: 75% !important;
-        height: auto !important;
-        max-height: 100% !important;
-        aspect-ratio: 16 / 9 !important;
-        object-fit: contain !important;
-        margin: 0 auto !important;
-        display: block !important;
-        position: relative !important;
-    }
-
-    /* Ajuste de botones de controles */
-    :-webkit-full-screen .video-controls button,
-    :-moz-full-screen .video-controls button,
-    :fullscreen .video-controls button {
-        font-size: 14px !important;
-        padding: 10px 15px !important;
-        flex: 1 !important;
-        min-width: 90px !important;
-        margin: 5px !important;
-    }
-
-    /* Ajustes de progreso y tiempo */
-    :-webkit-full-screen .progress-row,
-    :-moz-full-screen .progress-row,
-    :fullscreen .progress-row {
-        margin-bottom: 8px !important;
-    }
-
-    :-webkit-full-screen .progress-container-player,
-    :-moz-full-screen .progress-container-player,
-    :fullscreen .progress-container-player {
-        height: 15px !important;
-    }
-
-    :-webkit-full-screen .time-display,
-    :-moz-full-screen .time-display,
-    :fullscreen .time-display {
-        font-size: 11px !important;
-        min-width: 85px !important;
-    }
-}
-
-/* Ajuste adicional para pantallas landscape muy pequeñas */
-@media (max-width: 926px) and (orientation: landscape) and (max-height: 450px) {
-    :-webkit-full-screen .video-container,
-    :-moz-full-screen .video-container,
-    :fullscreen .video-container {
-        max-height: 40vh !important;
-    }
-
-    :-webkit-full-screen .video-container div[id^="player-"],
-    :-moz-full-screen .video-container div[id^="player-"],
-    :fullscreen .video-container div[id^="player-"] {
-        max-height: 40vh !important;
-    }
-
-    :-webkit-full-screen .controls-panel,
-    :-moz-full-screen .controls-panel,
-    :fullscreen .controls-panel {
-        padding: 5px 10px !important;
-    }
-
-    :-webkit-full-screen .video-controls button,
-    :-moz-full-screen .video-controls button,
-    :fullscreen .video-controls button {
-        padding: 5px 8px !important;
-        font-size: 10px !important;
-    }
-}
-
-/* Ajuste landscape altura media */
-@media (max-width: 926px) and (orientation: landscape) and (min-height: 451px) and (max-height: 600px) {
-    :-webkit-full-screen .video-container,
-    :-moz-full-screen .video-container,
-    :fullscreen .video-container {
-        max-height: 45vh !important;
-    }
-
-    :-webkit-full-screen .video-container div[id^="player-"],
-    :-moz-full-screen .video-container div[id^="player-"],
-    :fullscreen .video-container div[id^="player-"] {
-        max-height: 45vh !important;
-    }
-}
-
 
         /* Responsive para el reproductor normal */
         @media (max-width: 768px) {
