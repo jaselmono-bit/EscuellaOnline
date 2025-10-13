@@ -1047,25 +1047,32 @@
 
         @media (max-width: 480px) {
             .lesson-header {
-                flex-wrap: wrap;
+                flex-wrap: nowrap; /* Cambiado de wrap a nowrap */
+                align-items: center; /* Asegurar alineación vertical */
             }
             
             .lesson-number-container {
                 margin-right: 8px;
+                flex-shrink: 0; /* Evitar que se reduzca */
             }
             
             .lesson-thumbnail {
                 width: 80px;
                 height: 50px;
                 margin-right: 8px;
+                flex-shrink: 0; /* Evitar que se reduzca */
             }
             
             .lesson-title {
                 font-size: 13px;
-                flex: 1 1 100%;
-                order: 3;
-                margin-top: 8px;
-                text-align: center;
+                flex: 1; /* Ocupar espacio restante */
+                order: unset; /* Eliminar el orden forzado */
+                margin-top: 0; /* Eliminar margen superior */
+                text-align: left; /* Alinear a la izquierda */
+                white-space: nowrap; /* Evitar salto de línea */
+                overflow: hidden; /* Ocultar desbordamiento */
+                text-overflow: ellipsis; /* Mostrar puntos suspensivos si es muy largo */
+                align-self: center; /* Centrar verticalmente */
             }
             
             .lesson-actions {
