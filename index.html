@@ -303,74 +303,92 @@
             font-weight: 600;
         }
 
-        /* === SISTEMA DE LECCIONES MEJORADO === */
-        .content-item {
-            padding: 12px;
-            margin-bottom: 10px;
-            border-left: 3px solid var(--azul);
-            cursor: default;
+        /* === NUEVO SISTEMA DE ACORDEÓN PARA CLASES === */
+        .lesson-accordion {
+            background: var(--blanco);
+            border-radius: 10px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            box-shadow: var(--sombra);
+            border: 1px solid #e2e8f0;
         }
 
-        .content-item.completed {
-            background: rgba(59, 130, 246, 0.15);
-            border-left-color: var(--azul);
+        .lesson-accordion.active {
+            border-color: var(--azul);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
         }
 
         .lesson-header {
             display: flex;
             align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .lesson-checkbox {
-            width: 18px;
-            height: 18px;
-            margin-right: 8px;
+            padding: 16px;
             cursor: pointer;
-            accent-color: var(--azul);
+            background: var(--blanco);
+            transition: background 0.3s ease;
+            position: relative;
         }
 
-        .lesson-title {
-            color: var(--azul-profundo);
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            flex: 1;
-            word-wrap: break-word;
+        .lesson-header:hover {
+            background: #f8fafc;
         }
 
-        .content-item.completed .lesson-title {
-            text-decoration: line-through;
-            color: var(--gray);
+        .lesson-accordion.active .lesson-header {
+            background: #f0f9ff;
         }
 
-        .lesson-preview {
+        .lesson-number-container {
             display: flex;
+            align-items: center;
             gap: 12px;
-            margin-top: 8px;
-            margin-left: 26px;
-            align-items: flex-start;
+            margin-right: 12px;
+            flex-shrink: 0;
         }
 
-        .lesson-thumbnail {
-            flex-shrink: 0;
-            width: 140px;
-            height: 80px;
-            border-radius: 6px;
-            overflow: hidden;
-            background: linear-gradient(135deg, var(--azul), var(--naranja));
+        .lesson-number {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--azul);
+            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 20px;
-            position: relative;
-            cursor: pointer;
-            transition: transform 0.3s;
+            font-weight: bold;
+            font-size: 14px;
         }
 
-        .lesson-thumbnail:hover {
-            transform: scale(1.05);
+        .lesson-accordion.completed .lesson-number {
+            background: var(--success);
+        }
+
+        .lesson-arrow {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+            color: var(--gray);
+        }
+
+        .lesson-accordion.active .lesson-arrow {
+            transform: rotate(180deg);
+            color: var(--azul);
+        }
+
+        .lesson-thumbnail {
+            width: 120px;
+            height: 70px;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-right: 12px;
+            flex-shrink: 0;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
         }
 
         .lesson-thumbnail img {
@@ -384,39 +402,83 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 20px;
-            color: white;
             background: rgba(0, 0, 0, 0.7);
             border-radius: 50%;
-            width: 35px;
-            height: 35px;
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: white;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .lesson-thumbnail:hover .play-icon {
+            opacity: 1;
+        }
+
+        .lesson-title {
+            flex: 1;
+            font-weight: 600;
+            color: var(--azul-profundo);
+            font-size: 15px;
+            text-align: center;
+        }
+
+        .lesson-accordion.completed .lesson-title {
+            text-decoration: line-through;
+            color: var(--gray);
+        }
+
+        .lesson-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            background: var(--blanco);
+        }
+
+        .lesson-accordion.active .lesson-content {
+            max-height: 1000px;
+            padding: 0 16px 16px;
         }
 
         .lesson-description {
-            flex: 1;
             color: var(--azul-profundo);
-            font-size: 13px;
-            line-height: 1.4;
-            max-height: 80px;
-            overflow-y: auto;
-            padding-right: 5px;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 16px;
+            padding-top: 12px;
+            border-top: 1px solid #e2e8f0;
         }
 
-        .content-links {
+        .lesson-checkbox {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 8px 0;
+        }
+
+        .lesson-checkbox input {
+            margin-right: 8px;
+            accent-color: var(--azul);
+        }
+
+        .lesson-checkbox label {
+            font-size: 14px;
+            color: var(--azul-profundo);
+            font-weight: 500;
+        }
+
+        .lesson-actions {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
-            margin-left: 26px;
-            align-items: flex-start;
         }
 
-        .action-btn {
-            padding: 6px 12px;
-            font-size: 11px;
-            color: white !important;
+        .lesson-actions .btn {
+            margin: 0;
         }
 
         /* === NUEVO REPRODUCTOR DE VIDEO PERSONALIZADO - CORREGIDO === */
@@ -952,99 +1014,67 @@
             text-decoration: underline;
         }
 
-        /* Responsive para el reproductor normal */
+        /* === RESPONSIVE PARA EL ACORDEÓN === */
         @media (max-width: 768px) {
-            .video-container div[id^="player-"] {
-                max-height: 300px;
+            .lesson-header {
+                padding: 12px;
             }
             
-            .video-controls button {
-                padding: 8px 12px;
-                font-size: 12px;
-            }
-            
-            .time-display {
-                font-size: 12px;
-                min-width: 90px;
-            }
-
-            .corner-box {
-                width: 80px;
-                height: 35px;
-                font-size: 20px;
-                bottom: 8px;
-                right: 8px;
-            }
-            
-            /* Ajustes para botones en móvil */
-            .course-buttons, .module-buttons {
+            .lesson-number-container {
                 gap: 8px;
+                margin-right: 8px;
             }
             
-            .course-buttons .btn, .module-buttons .btn {
-                flex: 1;
-                min-width: 120px;
-                justify-content: center;
+            .lesson-thumbnail {
+                width: 100px;
+                height: 60px;
             }
             
-            .course-info-text {
-                padding: 10px;
+            .lesson-title {
+                font-size: 14px;
+                text-align: left;
             }
             
-            .course-info-item {
-                flex-direction: column;
-                gap: 5px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .video-container div[id^="player-"] {
-                max-height: 250px;
-            }
-            
-            .player-container {
-                padding: 10px;
-            }
-            
-            .video-controls {
-                gap: 8px;
-            }
-            
-            .video-controls button {
-                padding: 8px 10px;
-                font-size: 11px;
-            }
-            
-            .time-display {
-                font-size: 11px;
-                min-width: 80px;
-            }
-            
-            .controls-panel {
-                padding: 10px;
-            }
-            
-            .progress-row {
-                gap: 10px;
-                margin-bottom: 10px;
-            }
-            
-            .corner-box {
-                width: 70px;
-                height: 30px;
-                font-size: 18px;
-                bottom: 6px;
-                right: 6px;
-            }
-            
-            /* Ajustes para botones en móvil pequeño */
-            .course-buttons, .module-buttons {
+            .lesson-actions {
                 gap: 6px;
             }
             
-            .course-buttons .btn, .module-buttons .btn {
+            .lesson-actions .btn {
                 font-size: 11px;
                 padding: 6px 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .lesson-header {
+                flex-wrap: wrap;
+            }
+            
+            .lesson-number-container {
+                margin-right: 8px;
+            }
+            
+            .lesson-thumbnail {
+                width: 80px;
+                height: 50px;
+                margin-right: 8px;
+            }
+            
+            .lesson-title {
+                font-size: 13px;
+                flex: 1 1 100%;
+                order: 3;
+                margin-top: 8px;
+                text-align: center;
+            }
+            
+            .lesson-actions {
+                gap: 4px;
+            }
+            
+            .lesson-actions .btn {
+                font-size: 10px;
+                padding: 5px 8px;
             }
         }
 
@@ -1371,21 +1401,6 @@
                 gap: 15px;
             }
             
-            .lesson-preview {
-                flex-direction: column;
-                margin-left: 0;
-            }
-            
-            .lesson-thumbnail {
-                width: 100%;
-                height: 150px;
-            }
-            
-            .content-links {
-                margin-left: 0;
-                justify-content: center;
-            }
-            
             .player-container {
                 padding: 10px;
                 margin: 10px 0;
@@ -1638,6 +1653,9 @@
         // === NUEVAS VARIABLES PARA CONTROL DE CONTROLES ===
         let hideControlsTimers = {};
         let isFullscreen = false;
+        
+        // === VARIABLES PARA EL ACORDEÓN ===
+        let currentOpenAccordion = null;
 
         // === SISTEMA DE JSONP MEJORADO ===
         function callJSONP(action, data = {}) {
@@ -2281,139 +2299,129 @@
                     var isCompleted = userProgress[lessonId] && userProgress[lessonId].completed;
                     var hasNotes = userProgress[lessonId] && userProgress[lessonId].notes && userProgress[lessonId].notes.trim() !== '';
                     
-                    expandedContent += "<div class='content-item card" + (isCompleted ? " completed" : "") + "'>";
+                    // === NUEVA ESTRUCTURA DE ACORDEÓN ===
+                    expandedContent += `
+                    <div class='lesson-accordion ${isCompleted ? 'completed' : ''}' data-lesson="${lessonId}">
+                        <div class='lesson-header' onclick="toggleLessonAccordion('${lessonId}')">
+                            <div class='lesson-number-container'>
+                                <div class='lesson-number'>${j+1}</div>
+                                <div class='lesson-arrow'>▼</div>
+                            </div>`;
                     
-                    expandedContent += "<div class='lesson-header'>";
-                    expandedContent += "<input type='checkbox' id='check_" + lessonId + "' class='lesson-checkbox' ";
-                    expandedContent += "onchange='markAsViewed(\"" + lessonId + "\", \"" + moduleId + "\", \"" + (selectedModule['Nombre del Módulo'] || selectedModule.Nombre_Modulo) + "\", \"" + (content['Nombre de la Clase'] || content.Nombre_Clase) + "\", this)' ";
-                    if (isCompleted) {
-                        expandedContent += "checked ";
-                    }
-                    expandedContent += "/>";
-                    expandedContent += "<label for='check_" + lessonId + "' class='lesson-title'>" + (content['Nombre de la Clase'] || content.Nombre_Clase) + "</label>";
-                    expandedContent += "</div>";
-                    
-                    // === MINIATURA Y DESCRIPCIÓN ===
+                    // Miniatura del video
                     var videoUrl = content['URL Video'] || '';
                     var videoId = extractVideoId(videoUrl);
-                    var description = content['Descripción'] || '';
-                    
-                    if (videoId || description) {
-                        expandedContent += "<div class='lesson-preview'>";
-                        
-                        // Miniatura del video (si existe)
-                        if (videoId) {
-                            var thumbnailUrl = 'https://img.youtube.com/vi/' + videoId + '/mqdefault.jpg';
-                            expandedContent += "<div class='lesson-thumbnail' onclick='showVideoPlayer(\"" + lessonId + "\", \"" + videoUrl + "\")'>";
-                            expandedContent += "<img src='" + thumbnailUrl + "' alt='Miniatura del video'>";
-                            expandedContent += "<div class='play-icon'>▶</div>";
-                            expandedContent += "</div>";
-                        }
-                        
-                        // Descripción de la clase
-                        if (description) {
-                            expandedContent += "<div class='lesson-description'>" + description + "</div>";
-                        }
-                        
-                        expandedContent += "</div>";
+                    if (videoId) {
+                        var thumbnailUrl = 'https://img.youtube.com/vi/' + videoId + '/mqdefault.jpg';
+                        expandedContent += `
+                            <div class='lesson-thumbnail' onclick="event.stopPropagation(); showVideoPlayer('${lessonId}', '${content['URL Video']}')">
+                                <img src='${thumbnailUrl}' alt='Miniatura del video'>
+                                <div class='play-icon'>▶</div>
+                            </div>`;
+                    } else {
+                        expandedContent += `
+                            <div class='lesson-thumbnail'>
+                                <div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; color: #64748b; font-size: 20px;">📹</div>
+                            </div>`;
                     }
                     
-                    expandedContent += "<div class='content-links'>";
+                    expandedContent += `
+                            <div class='lesson-title'>${content['Nombre de la Clase'] || content.Nombre_Clase}</div>
+                        </div>
+                        <div class='lesson-content'>
+                            <div class='lesson-description'>${content['Descripción'] || 'No hay descripción disponible para esta clase.'}</div>
+                            <div class='lesson-checkbox'>
+                                <input type='checkbox' id='check_${lessonId}' 
+                                       onchange='markAsViewed("${lessonId}", "${moduleId}", "${(selectedModule['Nombre del Módulo'] || selectedModule.Nombre_Modulo)}", "${(content['Nombre de la Clase'] || content.Nombre_Clase)}", this)' 
+                                       ${isCompleted ? 'checked' : ''} />
+                                <label for='check_${lessonId}'>Marcar como completada</label>
+                            </div>
+                            <div class='lesson-actions'>`;
                     
+                    // Botones de acciones
                     if (content['URL Video'] && content['URL Video'].trim() !== '') {
-                        expandedContent += "<button id='show-player-" + lessonId + "' class='btn btn-secondary action-btn' onclick='showVideoPlayer(\"" + lessonId + "\", \"" + content['URL Video'] + "\")'>🎬 Ver Video</button>";
-                        expandedContent += "<button id='hide-player-" + lessonId + "' class='btn btn-secondary action-btn' onclick='hideVideoPlayer(\"" + lessonId + "\")' style='display: none;'>❌ Cerrar Video</button>";
+                        expandedContent += `<button class='btn btn-secondary action-btn' onclick='showVideoPlayer("${lessonId}", "${content['URL Video']}")'>🎬 Ver Video</button>`;
                     }
                     
                     if (content['URL Manual'] && content['URL Manual'].trim() !== '') {
-                        expandedContent += "<button id='show-manual-" + lessonId + "' class='btn btn-secondary action-btn' onclick='showManual(\"" + lessonId + "\", \"" + content['URL Manual'] + "\")'>📄 Ver Manual</button>";
-                        expandedContent += "<button id='hide-manual-" + lessonId + "' class='btn btn-secondary action-btn' onclick='hideManual(\"" + lessonId + "\")' style='display: none;'>❌ Cerrar Manual</button>";
+                        expandedContent += `<button class='btn btn-secondary action-btn' onclick='showManual("${lessonId}", "${content['URL Manual']}")'>📄 Ver Manual</button>`;
                     }
                     
-                    expandedContent += "<button id='notes-btn-" + lessonId + "' class='btn btn-primary action-btn' onclick='toggleNotes(\"" + lessonId + "\")'>";
+                    expandedContent += `<button class='btn btn-primary action-btn' onclick='toggleNotes("${lessonId}")'>`;
                     expandedContent += hasNotes ? "📝 Ver notas (" + (userProgress[lessonId].notes.length > 0 ? "1" : "0") + ")" : "📝 Agregar notas";
-                    expandedContent += "</button>";
+                    expandedContent += `</button>`;
                     
                     // Botón Clase Siguiente (excepto para la última clase)
                     if (j < selectedModule.Clases.length - 1) {
-                        expandedContent += "<button class='btn btn-secondary action-btn' onclick='nextClass(\"" + lessonId + "\", \"" + moduleId + "\")'>➡️ Clase Siguiente</button>";
+                        expandedContent += `<button class='btn btn-secondary action-btn' onclick='nextClass("${lessonId}", "${moduleId}")'>➡️ Clase Siguiente</button>`;
                     }
                     
-                    expandedContent += "</div>";
+                    expandedContent += `</div>
+                        </div>
+                    </div>`;
                     
-                    // === NUEVO REPRODUCTOR CORREGIDO ===
+                    // === REPRODUCTOR DE VIDEO ===
                     if (content['URL Video'] && content['URL Video'].trim() !== '') {
-                        expandedContent += "<div id='player-container-" + lessonId + "' class='player-container' style='display: none;'>";
-                        expandedContent += "<div class='video-container' id='videoContainer-" + lessonId + "'>";
-                        expandedContent += "<div id='player-" + lessonId + "'></div>";
-                        expandedContent += "<div class='overlay' id='overlay-" + lessonId + "'></div>";
-                        expandedContent += "<div class='corner-box'>";
+                        expandedContent += `<div id='player-container-${lessonId}' class='player-container' style='display: none;'>
+                            <div class='video-container' id='videoContainer-${lessonId}'>
+                                <div id='player-${lessonId}'></div>
+                                <div class='overlay' id='overlay-${lessonId}'></div>
+                                <div class='corner-box'>`;
                         if (escuelaData && escuelaData.Logo_Escuela) {
-                            expandedContent += "<img src='" + escuelaData.Logo_Escuela + "' alt='Logo' class='school-logo-mini'>";
+                            expandedContent += `<img src='${escuelaData.Logo_Escuela}' alt='Logo' class='school-logo-mini'>`;
                         } else {
                             expandedContent += "🎓";
                         }
-                        expandedContent += "</div>";
-                        expandedContent += "<div class='exit-fullscreen' id='exitFullscreenBtn-" + lessonId + "'>✖</div>";
-                        expandedContent += "</div>";
-                        
-                        expandedContent += "<div class='controls-panel'>";
-                        expandedContent += "<div class='progress-row'>";
-                        expandedContent += "<div class='progress-container-player' id='progressBar-" + lessonId + "'>";
-                        expandedContent += "<div class='progress-player' id='progress-" + lessonId + "'></div>";
-                        expandedContent += "<div class='thumb' id='thumb-" + lessonId + "'></div>";
-                        expandedContent += "</div>";
-                        expandedContent += "<div class='time-display' id='timeDisplay-" + lessonId + "'>0:00 / 0:00</div>";
-                        expandedContent += "</div>";
-                        
-                        expandedContent += "<div class='video-controls'>";
-                        expandedContent += "<button id='playPauseBtn-" + lessonId + "'>▶ Play</button>";
-                        expandedContent += "<button id='restartBtn-" + lessonId + "'>⏮ Reiniciar</button>";
-                        expandedContent += "<button id='fullscreenBtn-" + lessonId + "'>⛶ Pantalla completa</button>";
-                        expandedContent += "</div>";
-                        expandedContent += "</div>";
-                        expandedContent += "</div>";
+                        expandedContent += `</div>
+                                <div class='exit-fullscreen' id='exitFullscreenBtn-${lessonId}'>✖</div>
+                            </div>
+                            <div class='controls-panel'>
+                                <div class='progress-row'>
+                                    <div class='progress-container-player' id='progressBar-${lessonId}'>
+                                        <div class='progress-player' id='progress-${lessonId}'></div>
+                                        <div class='thumb' id='thumb-${lessonId}'></div>
+                                    </div>
+                                    <div class='time-display' id='timeDisplay-${lessonId}'>0:00 / 0:00</div>
+                                </div>
+                                <div class='video-controls'>
+                                    <button id='playPauseBtn-${lessonId}'>▶ Play</button>
+                                    <button id='restartBtn-${lessonId}'>⏮ Reiniciar</button>
+                                    <button id='fullscreenBtn-${lessonId}'>⛶ Pantalla completa</button>
+                                </div>
+                            </div>
+                        </div>`;
                     }
                     
-                    // Contenedor para el manual PDF
+                    // === CONTENEDOR PARA EL MANUAL ===
                     if (content['URL Manual'] && content['URL Manual'].trim() !== '') {
-                        expandedContent += "<div id='manual-container-" + lessonId + "' class='manual-container card' style='display: none;'>";
-                        expandedContent += "<div class='manual-header'>";
-                        expandedContent += "<h4>📚 Material de Estudio</h4>";
-                        expandedContent += "<p>Accede a tu contenido educativo</p>";
-                        expandedContent += "</div>";
-                        
-                        expandedContent += "<div class='content-links'>";
-                        expandedContent += "<button class='btn btn-secondary action-btn' onclick='downloadManual(\"" + lessonId + "\", \"" + content['URL Manual'] + "\")'>";
-                        expandedContent += "📥 Descargar";
-                        expandedContent += "</button>";
-                        
-                        expandedContent += "<button class='btn btn-secondary action-btn' onclick='printManual(\"" + lessonId + "\")'>";
-                        expandedContent += "🖨️ Imprimir";
-                        expandedContent += "</button>";
-                        expandedContent += "</div>";
-                        
-                        expandedContent += "<div id='welcome-message-" + lessonId + "' class='welcome-message'>";
-                        expandedContent += "<h5>¡Bienvenido!</h5>";
-                        expandedContent += "<p>Haz clic en \"Ver Manual\" para acceder al material de estudio.</p>";
-                        expandedContent += "<p>Una vez abierto, podrás descargarlo o imprimirlo según necesites.</p>";
-                        expandedContent += "</div>";
-                        
-                        expandedContent += "<iframe id='pdf-frame-" + lessonId + "' class='pdf-frame' style='display: none; width: 100%; height: 500px; border: none;'></iframe>";
-                        expandedContent += "</div>";
+                        expandedContent += `<div id='manual-container-${lessonId}' class='manual-container card' style='display: none;'>
+                            <div class='manual-header'>
+                                <h4>📚 Material de Estudio</h4>
+                                <p>Accede a tu contenido educativo</p>
+                            </div>
+                            <div class='content-links'>
+                                <button class='btn btn-secondary action-btn' onclick='downloadManual("${lessonId}", "${content['URL Manual']}")'>📥 Descargar</button>
+                                <button class='btn btn-secondary action-btn' onclick='printManual("${lessonId}")'>🖨️ Imprimir</button>
+                            </div>
+                            <div id='welcome-message-${lessonId}' class='welcome-message'>
+                                <h5>¡Bienvenido!</h5>
+                                <p>Haz clic en "Ver Manual" para acceder al material de estudio.</p>
+                                <p>Una vez abierto, podrás descargarlo o imprimirlo según necesites.</p>
+                            </div>
+                            <iframe id='pdf-frame-${lessonId}' class='pdf-frame' style='display: none; width: 100%; height: 500px; border: none;'></iframe>
+                        </div>`;
                     }
                     
-                    expandedContent += "<div id='notes-area-" + lessonId + "' class='notes-area card' style='display: none;'>";
-                    expandedContent += "<h4>Notas para esta lección:</h4>";
-                    expandedContent += "<textarea id='notes-text-" + lessonId + "' class='notes-textarea' placeholder='Escribe tus notas aquí...'>";
+                    // === ÁREA DE NOTAS ===
+                    expandedContent += `<div id='notes-area-${lessonId}' class='notes-area card' style='display: none;'>
+                        <h4>Notas para esta lección:</h4>
+                        <textarea id='notes-text-${lessonId}' class='notes-textarea' placeholder='Escribe tus notas aquí...'>`;
                     if (hasNotes) {
                         expandedContent += userProgress[lessonId].notes;
                     }
-                    expandedContent += "</textarea>";
-                    expandedContent += "<button id='save-notes-btn-" + lessonId + "' class='btn btn-primary save-notes-btn' onclick='saveNotes(\"" + lessonId + "\", \"" + (selectedModule['Nombre del Módulo'] || selectedModule.Nombre_Modulo) + "\", \"" + (content['Nombre de la Clase'] || content.Nombre_Clase) + "\")'>Guardar notas</button>";
-                    expandedContent += "</div>";
-                    
-                    expandedContent += "</div>";
+                    expandedContent += `</textarea>
+                        <button id='save-notes-btn-${lessonId}' class='btn btn-primary save-notes-btn' onclick='saveNotes("${lessonId}", "${(selectedModule['Nombre del Módulo'] || selectedModule.Nombre_Modulo)}", "${(content['Nombre de la Clase'] || content.Nombre_Clase)}")'>Guardar notas</button>
+                    </div>`;
                 }
                 
                 expandedContent += "</div>";
@@ -2435,6 +2443,30 @@
             }, 100);
         }
 
+        // === FUNCIÓN PARA CONTROLAR EL ACORDEÓN ===
+        function toggleLessonAccordion(lessonId) {
+            const accordion = document.querySelector(`.lesson-accordion[data-lesson="${lessonId}"]`);
+            
+            // Si ya está abierto, cerrarlo y pausar video
+            if (accordion.classList.contains('active')) {
+                accordion.classList.remove('active');
+                hideVideoPlayer(lessonId);
+                currentOpenAccordion = null;
+                return;
+            }
+            
+            // Cerrar el acordeón abierto actualmente
+            if (currentOpenAccordion && currentOpenAccordion !== accordion) {
+                const previousLessonId = currentOpenAccordion.getAttribute('data-lesson');
+                currentOpenAccordion.classList.remove('active');
+                hideVideoPlayer(previousLessonId);
+            }
+            
+            // Abrir el nuevo acordeón
+            accordion.classList.add('active');
+            currentOpenAccordion = accordion;
+        }
+
         function collapseModule() {
             var expandedContainer = document.getElementById('expanded-module-container');
             if (expandedContainer) {
@@ -2446,6 +2478,9 @@
             });
             
             document.querySelector('#modulesContainer h3').style.display = 'block';
+            
+            // Resetear el acordeón abierto
+            currentOpenAccordion = null;
         }
 
         // === FUNCIÓN CORREGIDA PARA GUARDAR PROGRESO ===
@@ -2483,7 +2518,7 @@
             const completed = checkbox.checked;
             const notes = userProgress[lessonId] ? userProgress[lessonId].notes : '';
             
-            const contentItem = checkbox.closest('.content-item');
+            const contentItem = document.querySelector(`.lesson-accordion[data-lesson="${lessonId}"]`);
             if (completed) {
                 contentItem.classList.add('completed');
             } else {
@@ -2589,7 +2624,7 @@
                 showNotification('✅ Notas guardadas correctamente');
                 saveButton.textContent = 'Guardado ✓';
                 
-                const notesButton = document.getElementById('notes-btn-' + lessonId);
+                const notesButton = document.querySelector(`.lesson-accordion[data-lesson="${lessonId}"] .btn-primary`);
                 notesButton.textContent = '📝 Ver notas (' + (notesText.length > 0 ? "1" : "0") + ')';
                 
                 setTimeout(() => {
@@ -2615,8 +2650,6 @@
             pauseAllVideos();
             
             var playerContainer = document.getElementById('player-container-' + lessonId);
-            var showButton = document.getElementById('show-player-' + lessonId);
-            var hideButton = document.getElementById('hide-player-' + lessonId);
             
             document.querySelectorAll('.player-container').forEach(container => {
                 if (container.id !== 'player-container-' + lessonId) {
@@ -2624,21 +2657,7 @@
                 }
             });
             
-            document.querySelectorAll('[id^="hide-player-"]').forEach(button => {
-                if (button.id !== 'hide-player-' + lessonId) {
-                    button.style.display = 'none';
-                }
-            });
-            
-            document.querySelectorAll('[id^="show-player-"]').forEach(button => {
-                if (button.id !== 'show-player-' + lessonId && !button.closest('.player-container')) {
-                    button.style.display = 'inline-flex';
-                }
-            });
-            
             playerContainer.style.display = 'block';
-            showButton.style.display = 'none';
-            hideButton.style.display = 'inline-flex';
             
             // Desplazar la página para mostrar el reproductor
             playerContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -2655,12 +2674,7 @@
 
         function hideVideoPlayer(lessonId) {
             var playerContainer = document.getElementById('player-container-' + lessonId);
-            var showButton = document.getElementById('show-player-' + lessonId);
-            var hideButton = document.getElementById('hide-player-' + lessonId);
-            
             playerContainer.style.display = 'none';
-            showButton.style.display = 'inline-flex';
-            hideButton.style.display = 'none';
             
             if (currentPlayers[lessonId]) {
                 currentPlayers[lessonId].pauseVideo();
@@ -3091,11 +3105,9 @@
         // === SISTEMA DE NOTAS ===
         function toggleNotes(lessonId) {
             var notesArea = document.getElementById('notes-area-' + lessonId);
-            var notesButton = document.getElementById('notes-btn-' + lessonId);
             
             if (notesArea.style.display === 'none' || !notesArea.style.display) {
                 notesArea.style.display = 'block';
-                notesButton.textContent = 'Ocultar notas';
                 
                 var notesTextarea = document.getElementById('notes-text-' + lessonId);
                 if (notesTextarea.value === '' && userProgress[lessonId] && userProgress[lessonId].notes) {
@@ -3103,7 +3115,6 @@
                 }
             } else {
                 notesArea.style.display = 'none';
-                notesButton.textContent = 'Ver/Editar notas';
             }
         }
 
@@ -3149,7 +3160,7 @@
                 }, 300);
             }
             
-            var nextLessonElement = document.getElementById('check_' + nextLesson.ID_Clase);
+            var nextLessonElement = document.querySelector(`.lesson-accordion[data-lesson="${nextLesson.ID_Clase}"]`);
             if (nextLessonElement) {
                 nextLessonElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
@@ -3214,6 +3225,7 @@
             userModules = [];
             alumnoActual = null;
             currentCourseData = null;
+            currentOpenAccordion = null;
             
             sessionStorage.clear();
             
@@ -3227,13 +3239,9 @@
         // Funciones auxiliares para manuales
         function showManual(lessonId, manualUrl) {
             var manualContainer = document.getElementById('manual-container-' + lessonId);
-            var showManualButton = document.getElementById('show-manual-' + lessonId);
-            var hideManualButton = document.getElementById('hide-manual-' + lessonId);
             
             if (manualContainer.style.display === 'none' || !manualContainer.style.display) {
                 manualContainer.style.display = 'block';
-                showManualButton.style.display = 'none';
-                hideManualButton.style.display = 'inline-flex';
                 
                 var welcomeMessage = document.getElementById('welcome-message-' + lessonId);
                 var pdfFrame = document.getElementById('pdf-frame-' + lessonId);
@@ -3244,8 +3252,6 @@
                     var viewerUrl = convertToGoogleDriveViewer(manualUrl);
                     pdfFrame.src = viewerUrl;
                 }
-                
-                showManualButton.innerHTML = '📄 Ocultar Manual';
             } else {
                 hideManual(lessonId);
             }
@@ -3253,12 +3259,8 @@
 
         function hideManual(lessonId) {
             var manualContainer = document.getElementById('manual-container-' + lessonId);
-            var showManualButton = document.getElementById('show-manual-' + lessonId);
-            var hideManualButton = document.getElementById('hide-manual-' + lessonId);
             
             manualContainer.style.display = 'none';
-            showManualButton.style.display = 'inline-flex';
-            hideManualButton.style.display = 'none';
             
             var welcomeMessage = document.getElementById('welcome-message-' + lessonId);
             var pdfFrame = document.getElementById('pdf-frame-' + lessonId);
@@ -3268,8 +3270,6 @@
                 pdfFrame.style.display = 'none';
                 pdfFrame.src = '';
             }
-            
-            showManualButton.innerHTML = '📄 Ver Manual';
         }
 
         // === FUNCIÓN DE DEPURACIÓN ===
