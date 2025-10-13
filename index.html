@@ -2314,7 +2314,7 @@
                     if (videoId) {
                         var thumbnailUrl = 'https://img.youtube.com/vi/' + videoId + '/mqdefault.jpg';
                         expandedContent += `
-                            <div class='lesson-thumbnail' onclick="event.stopPropagation(); showVideoPlayer('${lessonId}', '${content['URL Video']}')">
+                            <div class='lesson-thumbnail' onclick="event.stopPropagation(); toggleVideoPlayer('${lessonId}', '${content['URL Video']}')">
                                 <img src='${thumbnailUrl}' alt='Miniatura del video'>
                                 <div class='play-icon'>▶</div>
                             </div>`;
@@ -2336,13 +2336,10 @@
                                        ${isCompleted ? 'checked' : ''} />
                                 <label for='check_${lessonId}'>Marcar como completada</label>
                             </div>
-                            <div class='lesson-actions'>`;
+                            <div class='lesson-actions'>
+                                <button id='video-btn-${lessonId}' class='btn btn-secondary action-btn' onclick='toggleVideoPlayer("${lessonId}", "${content['URL Video']}")'>🎬 Ver Video</button>`;
                     
-                    // Botones de acciones
-                    if (content['URL Video'] && content['URL Video'].trim() !== '') {
-                        expandedContent += `<button class='btn btn-secondary action-btn' onclick='showVideoPlayer("${lessonId}", "${content['URL Video']}")'>🎬 Ver Video</button>`;
-                    }
-                    
+                    // Botones de acciones adicionales
                     if (content['URL Manual'] && content['URL Manual'].trim() !== '') {
                         expandedContent += `<button class='btn btn-secondary action-btn' onclick='showManual("${lessonId}", "${content['URL Manual']}")'>📄 Ver Manual</button>`;
                     }
@@ -2481,6 +2478,22 @@
             
             // Resetear el acordeón abierto
             currentOpenAccordion = null;
+        }
+
+        // === NUEVA FUNCIÓN PARA ALTERNAR EL REPRODUCTOR DE VIDEO ===
+        function toggleVideoPlayer(lessonId, videoUrl) {
+            const playerContainer = document.getElementById('player-container-' + lessonId);
+            const videoBtn = document.getElementById('video-btn-' + lessonId);
+            
+            if (playerContainer.style.display === 'none' || !playerContainer.style.display) {
+                // Mostrar el video
+                showVideoPlayer(lessonId, videoUrl);
+                videoBtn.textContent = '❌ Cerrar Video';
+            } else {
+                // Ocultar el video
+                hideVideoPlayer(lessonId);
+                videoBtn.textContent = '🎬 Ver Video';
+            }
         }
 
         // === FUNCIÓN CORREGIDA PARA GUARDAR PROGRESO ===
@@ -2654,6 +2667,12 @@
             document.querySelectorAll('.player-container').forEach(container => {
                 if (container.id !== 'player-container-' + lessonId) {
                     container.style.display = 'none';
+                    // Restaurar el texto del botón de otros videos
+                    const otherLessonId = container.id.replace('player-container-', '');
+                    const otherVideoBtn = document.getElementById('video-btn-' + otherLessonId);
+                    if (otherVideoBtn) {
+                        otherVideoBtn.textContent = '🎬 Ver Video';
+                    }
                 }
             });
             
@@ -2678,6 +2697,12 @@
             
             if (currentPlayers[lessonId]) {
                 currentPlayers[lessonId].pauseVideo();
+            }
+            
+            // Restaurar el texto del botón
+            const videoBtn = document.getElementById('video-btn-' + lessonId);
+            if (videoBtn) {
+                videoBtn.textContent = '🎬 Ver Video';
             }
         }
 
