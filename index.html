@@ -303,7 +303,7 @@
             font-weight: 600;
         }
 
-        /* === NUEVO SISTEMA DE ACORDEÓN PARA CLASES === */
+        /* === NUEVO SISTEMA DE ACORDEÓN PARA CLASES - MODIFICADO === */
         .lesson-accordion {
             background: var(--blanco);
             border-radius: 10px;
@@ -419,12 +419,41 @@
             opacity: 1;
         }
 
+        /* === NUEVA ESTRUCTURA PARA CHECKBOX AL LADO DE LA MINIATURA === */
+        .lesson-media-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .lesson-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+            padding: 0;
+            flex-shrink: 0;
+        }
+
+        .lesson-checkbox input {
+            margin: 0;
+            accent-color: var(--azul);
+        }
+
+        .lesson-checkbox label {
+            font-size: 13px;
+            color: var(--azul-profundo);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
         .lesson-title {
             flex: 1;
             font-weight: 600;
             color: var(--azul-profundo);
             font-size: 15px;
-            text-align: center;
+            text-align: left;
         }
 
         .lesson-accordion.completed .lesson-title {
@@ -444,37 +473,30 @@
             padding: 0 16px 16px;
         }
 
-        .lesson-description {
-            color: var(--azul-profundo);
-            font-size: 14px;
-            line-height: 1.5;
+        /* === NUEVA ESTRUCTURA PARA DESCRIPCIÓN CENTRADA === */
+        .lesson-description-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             margin-bottom: 16px;
             padding-top: 12px;
             border-top: 1px solid #e2e8f0;
         }
 
-        .lesson-checkbox {
-            display: flex;
-            align-items: center;
-            margin-bottom: 12px;
-            padding: 8px 0;
-        }
-
-        .lesson-checkbox input {
-            margin-right: 8px;
-            accent-color: var(--azul);
-        }
-
-        .lesson-checkbox label {
-            font-size: 14px;
+        .lesson-description {
             color: var(--azul-profundo);
-            font-weight: 500;
+            font-size: 14px;
+            line-height: 1.5;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
         .lesson-actions {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
+            justify-content: center;
         }
 
         .lesson-actions .btn {
@@ -1014,7 +1036,7 @@
             text-decoration: underline;
         }
 
-        /* === RESPONSIVE PARA EL ACORDEÓN === */
+        /* === RESPONSIVE PARA EL ACORDEÓN MODIFICADO === */
         @media (max-width: 768px) {
             .lesson-header {
                 padding: 12px;
@@ -1032,7 +1054,6 @@
             
             .lesson-title {
                 font-size: 14px;
-                text-align: left;
             }
             
             .lesson-actions {
@@ -1047,32 +1068,29 @@
 
         @media (max-width: 480px) {
             .lesson-header {
-                flex-wrap: nowrap; /* Cambiado de wrap a nowrap */
-                align-items: center; /* Asegurar alineación vertical */
+                flex-direction: column;
+                align-items: flex-start;
             }
             
             .lesson-number-container {
-                margin-right: 8px;
-                flex-shrink: 0; /* Evitar que se reduzca */
+                margin-bottom: 8px;
+            }
+            
+            .lesson-media-container {
+                width: 100%;
+                justify-content: space-between;
+                margin-bottom: 8px;
             }
             
             .lesson-thumbnail {
                 width: 80px;
                 height: 50px;
-                margin-right: 8px;
-                flex-shrink: 0; /* Evitar que se reduzca */
             }
             
             .lesson-title {
                 font-size: 13px;
-                flex: 1; /* Ocupar espacio restante */
-                order: unset; /* Eliminar el orden forzado */
-                margin-top: 0; /* Eliminar margen superior */
-                text-align: left; /* Alinear a la izquierda */
-                white-space: nowrap; /* Evitar salto de línea */
-                overflow: hidden; /* Ocultar desbordamiento */
-                text-overflow: ellipsis; /* Mostrar puntos suspensivos si es muy largo */
-                align-self: center; /* Centrar verticalmente */
+                width: 100%;
+                text-align: center;
             }
             
             .lesson-actions {
@@ -1083,6 +1101,79 @@
                 font-size: 10px;
                 padding: 5px 8px;
             }
+        }
+
+        /* === MODAL PARA ENCUESTAS === */
+        .survey-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 10000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .survey-modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 0;
+            width: 100%;
+            max-width: 900px;
+            height: 90%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .survey-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background: var(--azul-oscuro);
+            color: white;
+        }
+
+        .survey-modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .close-survey-modal {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.3s;
+        }
+
+        .close-survey-modal:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .survey-iframe-container {
+            width: 100%;
+            height: calc(100% - 60px);
+            border: none;
+        }
+
+        .survey-iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
 
         /* === SISTEMA DE LOGIN OPTIMIZADO === */
@@ -1315,7 +1406,7 @@
             background: var(--error);
         }
 
-        /* === MODAL UNIFICADO PARA MANUALES === */
+        /* === MODAL UNIFICADO PARA MANUALES Y CALENDARIO === */
         #universalManualModal {
             position: fixed;
             top: 0;
@@ -1627,7 +1718,7 @@
         </div>
     </div>
 
-    <!-- Modal Unificado para Manuales -->
+    <!-- Modal Unificado para Manuales y Calendario -->
     <div id="universalManualModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1635,6 +1726,19 @@
                 <button class="close-modal" onclick="closeManualViewer()">✕</button>
             </div>
             <iframe id="manualModalFrame"></iframe>
+        </div>
+    </div>
+
+    <!-- Modal para Encuestas -->
+    <div id="universalSurveyModal" class="survey-modal-overlay">
+        <div class="survey-modal-content">
+            <div class="survey-modal-header">
+                <h3 class="survey-modal-title">Encuesta</h3>
+                <button class="close-survey-modal" onclick="closeSurveyViewer()">✕</button>
+            </div>
+            <div class="survey-iframe-container">
+                <iframe id="surveyModalFrame"></iframe>
+            </div>
         </div>
     </div>
 
@@ -2124,29 +2228,12 @@
             }
         }
 
-        // === NUEVA FUNCIÓN PARA MOSTRAR INFORMACIÓN DEL CURSO ===
+        // === NUEVA FUNCIÓN PARA MOSTRAR INFORMACIÓN DEL CURSO - MODIFICADA ===
         function updateCourseInfo() {
             const infoContainer = document.getElementById('courseInfoText');
             infoContainer.innerHTML = '';
             
             let hasInfo = false;
-            
-            // Mostrar calendario como texto
-            if (currentCourseData.Calendario) {
-                hasInfo = true;
-                const calendarItem = document.createElement('div');
-                calendarItem.className = 'course-info-item';
-                calendarItem.innerHTML = `
-                    <div class="course-info-icon">📅</div>
-                    <div class="course-info-content">
-                        <div class="course-info-label">Calendario del Curso</div>
-                        <div class="course-info-value">
-                            <a href="${currentCourseData.Calendario}" target="_blank">Ver calendario completo</a>
-                        </div>
-                    </div>
-                `;
-                infoContainer.appendChild(calendarItem);
-            }
             
             // Mostrar mensaje como texto
             if (currentCourseData.Mensaje) {
@@ -2167,6 +2254,7 @@
             infoContainer.style.display = hasInfo ? 'block' : 'none';
         }
 
+        // === FUNCIÓN ACTUALIZADA PARA BOTONES DEL CURSO - CON CALENDARIO ===
         function updateCourseButtons() {
             const buttonsContainer = document.getElementById('courseButtons');
             buttonsContainer.innerHTML = '';
@@ -2180,6 +2268,17 @@
                     showCourseManual(currentCourseData.Manual_c);
                 };
                 buttonsContainer.appendChild(manualBtn);
+            }
+            
+            // Botón calendario lectivo
+            if (currentCourseData.Calendario) {
+                const calendarBtn = document.createElement('button');
+                calendarBtn.className = 'btn btn-secondary';
+                calendarBtn.innerHTML = '📅 Calendario Lectivo';
+                calendarBtn.onclick = function() {
+                    openManualViewer(currentCourseData.Calendario, 'Calendario Lectivo');
+                };
+                buttonsContainer.appendChild(calendarBtn);
             }
             
             // Botón WhatsApp
@@ -2213,7 +2312,7 @@
             document.getElementById('mainTitle').textContent = 'Mis Cursos';
         }
 
-        // === SISTEMA DE MÓDULOS Y CLASES ===
+        // === SISTEMA DE MÓDULOS Y CLASES - MODIFICADO ===
         function displayModulos(modules, cursoId, grupoId) {
             const container = document.getElementById("modulesContainer");
             container.innerHTML = '<button class="btn btn-secondary back-btn" onclick="volverACursos()">← Volver a Mis Cursos</button>';
@@ -2320,14 +2419,15 @@
                     var isCompleted = userProgress[lessonId] && userProgress[lessonId].completed;
                     var hasNotes = userProgress[lessonId] && userProgress[lessonId].notes && userProgress[lessonId].notes.trim() !== '';
                     
-                    // === NUEVA ESTRUCTURA DE ACORDEÓN ===
+                    // === NUEVA ESTRUCTURA DE ACORDEÓN MODIFICADA ===
                     expandedContent += `
                     <div class='lesson-accordion ${isCompleted ? 'completed' : ''}' data-lesson="${lessonId}">
                         <div class='lesson-header' onclick="toggleLessonAccordion('${lessonId}')">
                             <div class='lesson-number-container'>
                                 <div class='lesson-number'>${j+1}</div>
                                 <div class='lesson-arrow'>▼</div>
-                            </div>`;
+                            </div>
+                            <div class='lesson-media-container'>`;
                     
                     // Miniatura del video
                     var videoUrl = content['URL Video'] || '';
@@ -2335,30 +2435,39 @@
                     if (videoId) {
                         var thumbnailUrl = 'https://img.youtube.com/vi/' + videoId + '/mqdefault.jpg';
                         expandedContent += `
-                            <div class='lesson-thumbnail' onclick="event.stopPropagation(); toggleVideoPlayer('${lessonId}', '${content['URL Video']}')">
-                                <img src='${thumbnailUrl}' alt='Miniatura del video'>
-                                <div class='play-icon'>▶</div>
-                            </div>`;
+                                <div class='lesson-thumbnail' onclick="event.stopPropagation(); toggleVideoPlayer('${lessonId}', '${content['URL Video']}')">
+                                    <img src='${thumbnailUrl}' alt='Miniatura del video'>
+                                    <div class='play-icon'>▶</div>
+                                </div>`;
                     } else {
                         expandedContent += `
-                            <div class='lesson-thumbnail'>
-                                <div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; color: #64748b; font-size: 20px;">📹</div>
-                            </div>`;
+                                <div class='lesson-thumbnail'>
+                                    <div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; color: #64748b; font-size: 20px;">📹</div>
+                                </div>`;
                     }
                     
+                    // Checkbox al lado de la miniatura
                     expandedContent += `
+                                <div class='lesson-checkbox'>
+                                    <input type='checkbox' id='check_${lessonId}' 
+                                           onchange='markAsViewed("${lessonId}", "${moduleId}", "${(selectedModule['Nombre del Módulo'] || selectedModule.Nombre_Modulo)}", "${(content['Nombre de la Clase'] || content.Nombre_Clase)}", this)' 
+                                           ${isCompleted ? 'checked' : ''} />
+                                    <label for='check_${lessonId}'>Completada</label>
+                                </div>
+                            </div>
                             <div class='lesson-title'>${content['Nombre de la Clase'] || content.Nombre_Clase}</div>
                         </div>
                         <div class='lesson-content'>
-                            <div class='lesson-description'>${content['Descripción'] || 'No hay descripción disponible para esta clase.'}</div>
-                            <div class='lesson-checkbox'>
-                                <input type='checkbox' id='check_${lessonId}' 
-                                       onchange='markAsViewed("${lessonId}", "${moduleId}", "${(selectedModule['Nombre del Módulo'] || selectedModule.Nombre_Modulo)}", "${(content['Nombre de la Clase'] || content.Nombre_Clase)}", this)' 
-                                       ${isCompleted ? 'checked' : ''} />
-                                <label for='check_${lessonId}'>Marcar como completada</label>
+                            <div class='lesson-description-container'>
+                                <div class='lesson-description'>${content['Descripción'] || 'No hay descripción disponible para esta clase.'}</div>
                             </div>
                             <div class='lesson-actions'>
                                 <button id='video-btn-${lessonId}' class='btn btn-secondary action-btn' onclick='toggleVideoPlayer("${lessonId}", "${content['URL Video']}")'>🎬 Ver Video</button>`;
+                    
+                    // Botón de encuesta si existe
+                    if (content['URL Encuesta'] && content['URL Encuesta'].trim() !== '') {
+                        expandedContent += `<button class='btn btn-primary action-btn' onclick='openSurvey("${content['URL Encuesta']}")'>📝 Completar Encuesta</button>`;
+                    }
                     
                     // Botones de acciones adicionales
                     if (content['URL Manual'] && content['URL Manual'].trim() !== '') {
@@ -3107,7 +3216,7 @@
             }
         }
 
-        // === SISTEMA UNIFICADO DE MANUALES ===
+        // === SISTEMA UNIFICADO DE MANUALES Y CALENDARIO ===
         function showCourseManual(manualUrl) {
             if (manualUrl) {
                 openManualViewer(manualUrl, 'Manual del Curso');
@@ -3142,10 +3251,31 @@
             }
         }
 
+        // === NUEVAS FUNCIONES PARA ENCUESTAS ===
+        function openSurvey(surveyUrl) {
+            const modal = document.getElementById('universalSurveyModal');
+            const frame = document.getElementById('surveyModalFrame');
+            
+            if (modal && frame) {
+                frame.src = surveyUrl;
+                modal.style.display = 'flex';
+            }
+        }
+
+        function closeSurveyViewer() {
+            const modal = document.getElementById('universalSurveyModal');
+            const frame = document.getElementById('surveyModalFrame');
+            if (modal && frame) {
+                modal.style.display = 'none';
+                frame.src = '';
+            }
+        }
+
         // Cerrar modal con ESC
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeManualViewer();
+                closeSurveyViewer();
                 closeRegisterModal();
                 closeForgotPasswordModal();
             }
