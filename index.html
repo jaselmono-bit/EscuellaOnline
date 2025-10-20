@@ -303,7 +303,7 @@
             font-weight: 600;
         }
 
-        /* === NUEVO SISTEMA DE ACORDEÓN PARA CLASES - MODIFICADO === */
+        /* === NUEVA ESTRUCTURA DE ACORDEÓN PARA CLASES - REORGANIZADA === */
         .lesson-accordion {
             background: var(--blanco);
             border-radius: 10px;
@@ -320,7 +320,7 @@
 
         .lesson-header {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             padding: 16px;
             cursor: pointer;
             background: var(--blanco);
@@ -338,7 +338,7 @@
 
         .lesson-number-container {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 12px;
             margin-right: 12px;
             flex-shrink: 0;
@@ -381,7 +381,6 @@
             height: 70px;
             border-radius: 6px;
             overflow: hidden;
-            margin-right: 12px;
             flex-shrink: 0;
             background: #e2e8f0;
             display: flex;
@@ -389,6 +388,7 @@
             justify-content: center;
             position: relative;
             cursor: pointer;
+            margin-right: 12px;
         }
 
         .lesson-thumbnail img {
@@ -419,46 +419,69 @@
             opacity: 1;
         }
 
-        /* === NUEVA ESTRUCTURA PARA CHECKBOX AL LADO DE LA MINIATURA === */
-        .lesson-media-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        /* === NUEVA ESTRUCTURA REORGANIZADA === */
+        .lesson-main-content {
             flex: 1;
-        }
-
-        .lesson-checkbox {
             display: flex;
-            align-items: center;
-            gap: 8px;
-            margin: 0;
-            padding: 0;
-            flex-shrink: 0;
-        }
-
-        .lesson-checkbox input {
-            margin: 0;
-            accent-color: var(--azul);
-        }
-
-        .lesson-checkbox label {
-            font-size: 13px;
-            color: var(--azul-profundo);
-            font-weight: 500;
-            white-space: nowrap;
+            flex-direction: column;
+            align-items: center; /* Centrar el título y la descripción */
         }
 
         .lesson-title {
-            flex: 1;
             font-weight: 600;
             color: var(--azul-profundo);
             font-size: 15px;
-            text-align: left;
+            text-align: center;
+            margin-bottom: 8px;
+            width: 100%;
         }
 
         .lesson-accordion.completed .lesson-title {
             text-decoration: line-through;
             color: var(--gray);
+        }
+
+        .lesson-description {
+            color: var(--azul-profundo);
+            font-size: 14px;
+            line-height: 1.5;
+            text-align: center;
+            margin-bottom: 12px;
+            width: 100%;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* === NUEVO BOTÓN VISTA === */
+        .vista-button-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        .btn-vista {
+            background: var(--azul);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-vista:hover {
+            background: var(--azul-oscuro);
+            transform: scale(1.05);
+        }
+
+        .btn-vista.completed {
+            background: var(--success);
         }
 
         .lesson-content {
@@ -473,30 +496,12 @@
             padding: 0 16px 16px;
         }
 
-        /* === NUEVA ESTRUCTURA PARA DESCRIPCIÓN CENTRADA === */
-        .lesson-description-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 16px;
-            padding-top: 12px;
-            border-top: 1px solid #e2e8f0;
-        }
-
-        .lesson-description {
-            color: var(--azul-profundo);
-            font-size: 14px;
-            line-height: 1.5;
-            text-align: center;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
         .lesson-actions {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
-            justify-content: center;
+            justify-content: flex-start;
+            margin-top: 16px;
         }
 
         .lesson-actions .btn {
@@ -1036,24 +1041,26 @@
             text-decoration: underline;
         }
 
-        /* === RESPONSIVE PARA EL ACORDEÓN MODIFICADO === */
+        /* === RESPONSIVE PARA EL ACORDEÓN REORGANIZADO === */
         @media (max-width: 768px) {
             .lesson-header {
                 padding: 12px;
+                flex-direction: column;
             }
             
             .lesson-number-container {
-                gap: 8px;
-                margin-right: 8px;
+                margin-bottom: 8px;
             }
             
             .lesson-thumbnail {
-                width: 100px;
-                height: 60px;
+                width: 100%;
+                height: 150px;
+                margin-right: 0;
+                margin-bottom: 12px;
             }
             
-            .lesson-title {
-                font-size: 14px;
+            .lesson-main-content {
+                width: 100%;
             }
             
             .lesson-actions {
@@ -1068,29 +1075,11 @@
 
         @media (max-width: 480px) {
             .lesson-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .lesson-number-container {
-                margin-bottom: 8px;
-            }
-            
-            .lesson-media-container {
-                width: 100%;
-                justify-content: space-between;
-                margin-bottom: 8px;
+                padding: 10px;
             }
             
             .lesson-thumbnail {
-                width: 80px;
-                height: 50px;
-            }
-            
-            .lesson-title {
-                font-size: 13px;
-                width: 100%;
-                text-align: center;
+                height: 120px;
             }
             
             .lesson-actions {
@@ -2419,7 +2408,7 @@
                     var isCompleted = userProgress[lessonId] && userProgress[lessonId].completed;
                     var hasNotes = userProgress[lessonId] && userProgress[lessonId].notes && userProgress[lessonId].notes.trim() !== '';
                     
-                    // === NUEVA ESTRUCTURA DE ACORDEÓN MODIFICADA ===
+                    // === NUEVA ESTRUCTURA DE ACORDEÓN REORGANIZADA ===
                     expandedContent += `
                     <div class='lesson-accordion ${isCompleted ? 'completed' : ''}' data-lesson="${lessonId}">
                         <div class='lesson-header' onclick="toggleLessonAccordion('${lessonId}')">
@@ -2427,7 +2416,7 @@
                                 <div class='lesson-number'>${j+1}</div>
                                 <div class='lesson-arrow'>▼</div>
                             </div>
-                            <div class='lesson-media-container'>`;
+                            <div class='lesson-thumbnail' onclick="event.stopPropagation(); toggleVideoPlayer('${lessonId}', '${content['URL Video']}')">`;
                     
                     // Miniatura del video
                     var videoUrl = content['URL Video'] || '';
@@ -2435,52 +2424,47 @@
                     if (videoId) {
                         var thumbnailUrl = 'https://img.youtube.com/vi/' + videoId + '/mqdefault.jpg';
                         expandedContent += `
-                                <div class='lesson-thumbnail' onclick="event.stopPropagation(); toggleVideoPlayer('${lessonId}', '${content['URL Video']}')">
-                                    <img src='${thumbnailUrl}' alt='Miniatura del video'>
-                                    <div class='play-icon'>▶</div>
-                                </div>`;
+                                        <img src='${thumbnailUrl}' alt='Miniatura del video'>
+                                        <div class='play-icon'>▶</div>`;
                     } else {
                         expandedContent += `
-                                <div class='lesson-thumbnail'>
-                                    <div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; color: #64748b; font-size: 20px;">📹</div>
-                                </div>`;
+                                        <div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; color: #64748b; font-size: 20px;">📹</div>`;
                     }
                     
-                    // Checkbox al lado de la miniatura
                     expandedContent += `
-                                <div class='lesson-checkbox'>
-                                    <input type='checkbox' id='check_${lessonId}' 
-                                           onchange='markAsViewed("${lessonId}", "${moduleId}", "${(selectedModule['Nombre del Módulo'] || selectedModule.Nombre_Modulo)}", "${(content['Nombre de la Clase'] || content.Nombre_Clase)}", this)' 
-                                           ${isCompleted ? 'checked' : ''} />
-                                    <label for='check_${lessonId}'>Completada</label>
+                            </div>
+                            <div class='lesson-main-content'>
+                                <div class='lesson-title'>${content['Nombre de la Clase'] || content.Nombre_Clase}</div>
+                                <div class='lesson-description'>${content['Descripción'] || 'No hay descripción disponible para esta clase.'}</div>
+                                <div class='vista-button-container'>
+                                    <button id='vista-btn-${lessonId}' class='btn-vista ${isCompleted ? 'completed' : ''}' 
+                                            onclick="event.stopPropagation(); toggleVista('${lessonId}', '${moduleId}', '${(selectedModule['Nombre del Módulo'] || selectedModule.Nombre_Modulo)}', '${(content['Nombre de la Clase'] || content.Nombre_Clase)}')">
+                                        ${isCompleted ? 'Vista ✓' : 'Vista'}
+                                    </button>
                                 </div>
                             </div>
-                            <div class='lesson-title'>${content['Nombre de la Clase'] || content.Nombre_Clase}</div>
                         </div>
                         <div class='lesson-content'>
-                            <div class='lesson-description-container'>
-                                <div class='lesson-description'>${content['Descripción'] || 'No hay descripción disponible para esta clase.'}</div>
-                            </div>
                             <div class='lesson-actions'>
                                 <button id='video-btn-${lessonId}' class='btn btn-secondary action-btn' onclick='toggleVideoPlayer("${lessonId}", "${content['URL Video']}")'>🎬 Ver Video</button>`;
                     
-                    // Botón de encuesta si existe
-                    if (content['URL Encuesta'] && content['URL Encuesta'].trim() !== '') {
-                        expandedContent += `<button class='btn btn-primary action-btn' onclick='openSurvey("${content['URL Encuesta']}")'>📝 Completar Encuesta</button>`;
-                    }
-                    
-                    // Botones de acciones adicionales
+                    // Botón de manual si existe
                     if (content['URL Manual'] && content['URL Manual'].trim() !== '') {
                         expandedContent += `<button class='btn btn-secondary action-btn' onclick='showManual("${lessonId}", "${content['URL Manual']}")'>📄 Ver Manual</button>`;
+                    }
+                    
+                    // Botón de preguntas (antes encuesta) si existe
+                    if (content['URL Encuesta'] && content['URL Encuesta'].trim() !== '') {
+                        expandedContent += `<button class='btn btn-primary action-btn' onclick='openSurvey("${content['URL Encuesta']}")'>❓ Preguntas</button>`;
                     }
                     
                     expandedContent += `<button id='notes-btn-${lessonId}' class='btn btn-primary action-btn' onclick='toggleNotes("${lessonId}")'>`;
                     expandedContent += hasNotes ? "📝 Ver notas (" + (userProgress[lessonId].notes.length > 0 ? "1" : "0") + ")" : "📝 Agregar notas";
                     expandedContent += `</button>`;
                     
-                    // Botón Clase Siguiente (excepto para la última clase)
+                    // Botón Siguiente Clase (excepto para la última clase)
                     if (j < selectedModule.Clases.length - 1) {
-                        expandedContent += `<button class='btn btn-secondary action-btn' onclick='nextClass("${lessonId}", "${moduleId}")'>➡️ Clase Siguiente</button>`;
+                        expandedContent += `<button class='btn btn-secondary action-btn' onclick='nextClass("${lessonId}", "${moduleId}")'>➡️ Siguiente Clase</button>`;
                     }
                     
                     expandedContent += `</div>
@@ -2568,6 +2552,25 @@
             setTimeout(() => {
                 expandedContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 100);
+        }
+
+        // === NUEVA FUNCIÓN PARA EL BOTÓN VISTA ===
+        function toggleVista(lessonId, moduleId, moduleName, lessonName) {
+            const vistaBtn = document.getElementById('vista-btn-' + lessonId);
+            const isCurrentlyCompleted = vistaBtn.classList.contains('completed');
+            const newCompletedState = !isCurrentlyCompleted;
+            
+            // Actualizar visualmente el botón inmediatamente
+            if (newCompletedState) {
+                vistaBtn.classList.add('completed');
+                vistaBtn.textContent = 'Vista ✓';
+            } else {
+                vistaBtn.classList.remove('completed');
+                vistaBtn.textContent = 'Vista';
+            }
+            
+            // Llamar a la función existente para guardar el estado
+            markAsViewed(lessonId, moduleId, moduleName, lessonName, {checked: newCompletedState});
         }
 
         // === FUNCIÓN PARA CONTROLAR EL ACORDEÓN ===
@@ -2682,6 +2685,18 @@
                 contentItem.classList.remove('completed');
             }
             
+            // Actualizar el botón Vista
+            const vistaBtn = document.getElementById('vista-btn-' + lessonId);
+            if (vistaBtn) {
+                if (completed) {
+                    vistaBtn.classList.add('completed');
+                    vistaBtn.textContent = 'Vista ✓';
+                } else {
+                    vistaBtn.classList.remove('completed');
+                    vistaBtn.textContent = 'Vista';
+                }
+            }
+            
             try {
                 // Guardar progreso en la base de datos
                 const saveResult = await saveProgressToDatabase(lessonId, completed, notes);
@@ -2710,13 +2725,21 @@
                 console.error('❌ Error al guardar:', error);
                 showNotification('❌ Error al guardar: ' + error.message, 'error');
                 
-                // Revertir el checkbox
+                // Revertir el estado
                 checkbox.checked = !completed;
                 
                 if (completed) {
                     contentItem.classList.remove('completed');
+                    if (vistaBtn) {
+                        vistaBtn.classList.remove('completed');
+                        vistaBtn.textContent = 'Vista';
+                    }
                 } else {
                     contentItem.classList.add('completed');
+                    if (vistaBtn) {
+                        vistaBtn.classList.add('completed');
+                        vistaBtn.textContent = 'Vista ✓';
+                    }
                 }
             }
         }
