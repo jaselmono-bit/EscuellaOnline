@@ -1821,24 +1821,43 @@
         let respuestasEncuesta = {};
         let archivosEncuesta = {};
 
-        // === SISTEMA DE JSONP MEJORADO ===
+        // === SISTEMA DE JSONP CORREGIDO ===
         function callJSONP(action, data = {}) {
             return new Promise((resolve, reject) => {
+                // Acciones que necesitan enviar datos complejos
+                const complexDataActions = ['guardarRespuestasAlumno', 'subirArchivoDrive'];
+                
                 const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
                 
                 const params = new URLSearchParams();
                 params.append('action', action);
                 params.append('callback', callbackName);
                 
-                Object.keys(data).forEach(key => {
-                    if (data[key] !== undefined && data[key] !== null) {
-                        params.append(key, String(data[key]));
-                    }
-                });
+                // Si es una acción que requiere datos complejos, serializar como jsonData
+                if (complexDataActions.includes(action) && Object.keys(data).length > 0) {
+                    // Serializar todos los datos como jsonData para estas acciones específicas
+                    const jsonData = JSON.stringify(data);
+                    console.log('📦 Enviando datos complejos como jsonData:', action, 'Length:', jsonData.length);
+                    params.append('jsonData', jsonData);
+                } else {
+                    // Para otras acciones, enviar parámetros normalmente
+                    Object.keys(data).forEach(key => {
+                        if (data[key] !== undefined && data[key] !== null) {
+                            params.append(key, String(data[key]));
+                        }
+                    });
+                }
                 
                 const url = CONFIG.API_BASE_URL + '?' + params.toString();
                 
-                console.log('🔍 Llamando a:', url);
+                // Verificar longitud de URL (límite ~8000 caracteres)
+                if (url.length > 8000) {
+                    console.warn('⚠️ URL muy larga:', url.length, 'caracteres');
+                    reject(new Error('Los datos son demasiado grandes para enviar. Por favor, reduce la cantidad de información.'));
+                    return;
+                }
+                
+                console.log('🔍 Llamando JSONP:', action, 'URL length:', url.length);
                 
                 const script = document.createElement('script');
                 script.src = url;
@@ -1849,7 +1868,7 @@
                         script.parentNode.removeChild(script);
                     }
                     
-                    console.log('📨 Respuesta recibida:', response);
+                    console.log('📨 Respuesta JSONP recibida:', response);
                     
                     if (response && response.success !== undefined) {
                         resolve(response);
@@ -2277,7 +2296,9 @@
                 showNotification('❌ No tienes acceso a este curso', 'error');
                 return;
             }
-            
+
+            // CONTINÚA EN LA SIGUIENTE PARTE...
+
             document.getElementById('courseTitle').textContent = currentCourseData.Nombre_Curso;
             document.getElementById('courseDescription').textContent = currentCourseData.Descripcion || 'No hay descripción disponible para este curso.';
             
@@ -2406,6 +2427,7 @@
             document.getElementById('cursosDisponiblesContainer').style.display = 'grid';
             document.querySelectorAll('.section-title, .section-subtitle').forEach(el => el.style.display = 'block');
         }
+
         // === SISTEMA COMPLETO DE MÓDULOS Y CLASES ===
         function displayModulos(modules, cursoId, grupoId) {
             const container = document.getElementById("modulesContainer");
@@ -2697,7 +2719,7 @@
             currentOpenAccordion = accordion;
         }
 
-        // === SISTEMA DE ENCUESTAS COMPLETO ===
+        // === SISTEMA DE ENCUESTAS CORREGIDO ===
         async function abrirEncuesta(encuestaId, claseId) {
             console.log('🎯 Abriendo encuesta:', encuestaId, 'para clase:', claseId);
             
@@ -2868,12 +2890,14 @@
             
             showNotification('🔄 Enviando respuestas...');
             
-            // Subir archivos si existen
-            for (const idPregunta in archivosEncuesta) {
-                const archivoData = archivosEncuesta[idPregunta];
-                try {
+            try {
+                // Primero subir archivos si existen
+                for (const idPregunta in archivosEncuesta) {
+                    const archivoData = archivosEncuesta[idPregunta];
+                    
                     showNotification(`📤 Subiendo archivo: ${archivoData.nombre}...`);
                     
+                    // Usar JSONP con jsonData para subir archivo
                     const resultado = await callJSONP('subirArchivoDrive', {
                         archivo: archivoData.base64,
                         nombreArchivo: archivoData.nombre,
@@ -2883,42 +2907,42 @@
                     
                     if (resultado.success) {
                         archivosEncuesta[idPregunta].url = resultado.url;
+                        console.log('✅ Archivo subido:', archivoData.nombre);
                     } else {
                         showNotification(`❌ Error subiendo archivo: ${resultado.error}`, 'error');
                         return;
                     }
-                } catch (error) {
-                    showNotification(`❌ Error: ${error.message}`, 'error');
-                    return;
                 }
-            }
-            
-            // Preparar datos para guardar
-            const respuestasArray = preguntasEncuestaActual.map(pregunta => {
-                const respuestaAlumno = respuestasEncuesta[pregunta.ID_Pregunta] || '';
-                const urlArchivo = archivosEncuesta[pregunta.ID_Pregunta] ? archivosEncuesta[pregunta.ID_Pregunta].url : '';
                 
-                return {
-                    ID_Pregunta: pregunta.ID_Pregunta,
-                    Respuesta_Alumno: respuestaAlumno,
-                    Respuesta_Correcta: pregunta.Respuesta_Correcta,
-                    Tipo_Pregunta: pregunta.Tipo_Pregunta,
-                    Puntaje_Pregunta: parseFloat(pregunta.Puntaje_Pregunta || 1),
-                    URL_Archivo: urlArchivo
-                };
-            });
-            
-            const datosGuardar = {
-                idAlumno: alumnoActual.ID_Alumno,
-                idClase: currentClaseId,
-                idEncuesta: currentEncuestaId,
-                respuestas: respuestasArray
-            };
-            
-            try {
-                const resultado = await callJSONP('guardarRespuestasAlumno', {
-                    data: JSON.stringify(datosGuardar)
+                // Preparar respuestas para enviar
+                const respuestasArray = preguntasEncuestaActual.map(pregunta => {
+                    const respuestaAlumno = respuestasEncuesta[pregunta.ID_Pregunta] || '';
+                    const urlArchivo = archivosEncuesta[pregunta.ID_Pregunta] ? 
+                                      archivosEncuesta[pregunta.ID_Pregunta].url : '';
+                    
+                    return {
+                        ID_Pregunta: pregunta.ID_Pregunta,
+                        Respuesta_Alumno: respuestaAlumno,
+                        Respuesta_Correcta: pregunta.Respuesta_Correcta || '',
+                        Tipo_Pregunta: pregunta.Tipo_Pregunta || 'TEXTO',
+                        Puntaje_Pregunta: parseFloat(pregunta.Puntaje_Pregunta || 1),
+                        URL_Archivo: urlArchivo
+                    };
                 });
+                
+                // Preparar datos para enviar
+                const datosGuardar = {
+                    idAlumno: alumnoActual.ID_Alumno,
+                    idClase: currentClaseId,
+                    idEncuesta: currentEncuestaId,
+                    respuestas: respuestasArray
+                };
+                
+                console.log('📊 Enviando respuestas de encuesta...');
+                console.log('Datos a enviar:', JSON.stringify(datosGuardar));
+                
+                // Usar JSONP con jsonData para guardar respuestas
+                const resultado = await callJSONP('guardarRespuestasAlumno', datosGuardar);
                 
                 if (resultado.success) {
                     const calificacion = resultado.calificacion || 0;
@@ -2939,6 +2963,7 @@
                 }
                 
             } catch (error) {
+                console.error('❌ Error enviando respuestas:', error);
                 showNotification('❌ Error: ' + error.message, 'error');
             }
         }
@@ -3134,15 +3159,18 @@
             const porcentaje = Math.min(100, Math.max(0, calificacion));
             const estrellasActivas = Math.round((porcentaje / 100) * 5);
             
-            let html = '<div class="calificacion-estrellas">';
+            let html = '<div class="calificacion-container">';
+            html += '<div class="calificacion-estrellas">';
             for (let i = 1; i <= 5; i++) {
                 html += `<span class="estrella ${i <= estrellasActivas ? 'activa' : ''}">★</span>`;
             }
             html += '</div>';
             html += `<div class="calificacion-texto">Calificación: <span class="calificacion-valor">${porcentaje}/100</span></div>`;
+            html += '</div>';
             
             return html;
         }
+
         // === SISTEMA DE VIDEO COMPLETO ===
         function toggleVideoPlayer(lessonId, videoUrl) {
             const playerContainer = document.getElementById('player-container-' + lessonId);
@@ -3575,25 +3603,7 @@
             }
             
             const calificacion = userProgress[lessonId].calificacion;
-            const porcentaje = Math.min(100, Math.max(0, calificacion));
-            const estrellasActivas = Math.round((porcentaje / 100) * 5);
-            
-            let estrellasHTML = '<div class="calificacion-container">';
-            estrellasHTML += '<div class="calificacion-estrellas">';
-            
-            for (let i = 1; i <= 5; i++) {
-                if (i <= estrellasActivas) {
-                    estrellasHTML += '<span class="estrella activa">★</span>';
-                } else {
-                    estrellasHTML += '<span class="estrella">★</span>';
-                }
-            }
-            
-            estrellasHTML += '</div>';
-            estrellasHTML += `<div class="calificacion-texto">Calificación: <span class="calificacion-valor">${porcentaje}/100</span></div>`;
-            estrellasHTML += '</div>';
-            
-            return estrellasHTML;
+            return renderCalificacionEstrellasHTML(calificacion);
         }
 
         function toggleVista(lessonId, moduleId, moduleName, lessonName) {
@@ -3692,7 +3702,6 @@
                 });
                 
                 const params = {
-                    action: 'saveProgress',
                     ID_Alumno: alumnoActual.ID_Alumno,
                     ID_Clase: lessonId,
                     Fecha_Guardado: new Date().toISOString().split('T')[0],
@@ -4157,7 +4166,7 @@
             }
         });
 
-        console.log('✅ Sistema completo cargado correctamente');
+        console.log('✅ Sistema completo cargado correctamente - Versión JSONP');
     </script>
 </body>
 </html>
