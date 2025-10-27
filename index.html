@@ -6,7 +6,6 @@
     <title>Learning Path - Dashboard</title>
     <script src="https://www.youtube.com/iframe_api"></script>
     <style>
-        /* === SISTEMA DE DISEÑO UNIFICADO === */
         :root {
             --naranja: #fbbf24;
             --naranja-claro: #fdba74;
@@ -52,7 +51,6 @@
             min-height: calc(100vh - 10px);
         }
 
-        /* === COMPONENTES REUTILIZABLES === */
         .card {
             background: rgba(255, 255, 255, 0.9);
             border-radius: var(--radio);
@@ -111,7 +109,6 @@
             font-size: 11px;
         }
 
-        /* === LAYOUT PRINCIPAL === */
         .header-container {
             display: flex;
             align-items: center;
@@ -166,7 +163,6 @@
             margin-bottom: 8px;
         }
 
-        /* === SISTEMA DE NAVEGACIÓN === */
         .dashboard {
             max-height: calc(100vh - 30px);
             overflow-y: auto;
@@ -177,7 +173,6 @@
             margin-bottom: 15px;
         }
 
-        /* === SISTEMA DE GRILLAS RESPONSIVO === */
         .grid {
             display: grid;
             gap: 20px;
@@ -192,11 +187,19 @@
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         }
 
-        /* === TARJETAS DE CONTENIDO MEJORADAS === */
         .curso-card, .module-card {
             cursor: pointer;
             border-left: 5px solid var(--azul);
             border-right: 5px solid var(--naranja);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .curso-disponible-card {
+            cursor: pointer;
+            border-left: 5px solid var(--success);
+            border-right: 5px solid var(--naranja-claro);
             display: flex;
             flex-direction: column;
             height: 100%;
@@ -226,7 +229,8 @@
         }
 
         .curso-card:hover .curso-imagen img,
-        .module-card:hover .module-imagen img {
+        .module-card:hover .module-imagen img,
+        .curso-disponible-card:hover .curso-imagen img {
             transform: scale(1.05);
         }
 
@@ -237,6 +241,17 @@
             margin-bottom: 8px;
             text-align: center;
             border-bottom: 2px solid var(--azul);
+            padding-bottom: 8px;
+            word-wrap: break-word;
+        }
+
+        .curso-disponible-titulo {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--success);
+            margin-bottom: 8px;
+            text-align: center;
+            border-bottom: 2px solid var(--success);
             padding-bottom: 8px;
             word-wrap: break-word;
         }
@@ -261,7 +276,97 @@
             margin-top: auto;
         }
 
-        /* === SISTEMA DE PROGRESO UNIFICADO === */
+        .btn-inscribirme {
+            width: 100%;
+            margin-top: auto;
+            background: linear-gradient(to right, var(--success), #059669);
+        }
+
+        .section-title {
+            color: var(--azul-oscuro);
+            font-size: 24px;
+            font-weight: 700;
+            margin: 30px 0 15px 0;
+            padding-bottom: 8px;
+            border-bottom: 3px solid var(--naranja);
+        }
+
+        .section-subtitle {
+            color: var(--azul-profundo);
+            font-size: 16px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .curso-preview-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .curso-preview-content {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .preview-title {
+            color: var(--azul-oscuro);
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .close-preview {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray);
+            padding: 5px;
+        }
+
+        .preview-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .preview-description {
+            color: var(--azul-profundo);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .preview-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
         .progress-container {
             margin: 12px 0;
             padding: 8px;
@@ -303,7 +408,6 @@
             font-weight: 600;
         }
 
-        /* === NUEVA ESTRUCTURA DE ACORDEÓN PARA CLASES - REORGANIZADA === */
         .lesson-accordion {
             background: var(--blanco);
             border-radius: 10px;
@@ -419,7 +523,6 @@
             opacity: 1;
         }
 
-        /* === NUEVA ESTRUCTURA REORGANIZADA === */
         .lesson-main-content {
             flex: 1;
             display: flex;
@@ -454,7 +557,6 @@
             overflow: hidden;
         }
 
-        /* === SISTEMA DE CALIFICACIÓN CON ESTRELLAS === */
         .calificacion-container {
             display: flex;
             flex-direction: column;
@@ -471,12 +573,12 @@
 
         .estrella {
             font-size: 18px;
-            color: #e0e0e0; /* Color por defecto (gris) */
+            color: #e0e0e0;
             transition: color 0.3s ease;
         }
 
         .estrella.activa {
-            color: #fbbf24; /* Color amarillo para estrellas activas */
+            color: #fbbf24;
         }
 
         .calificacion-texto {
@@ -491,7 +593,6 @@
             font-weight: 700;
         }
 
-        /* === NUEVO BOTÓN VISTA === */
         .vista-button-container {
             display: flex;
             justify-content: center;
@@ -545,7 +646,6 @@
             margin: 0;
         }
 
-        /* === NUEVO REPRODUCTOR DE VIDEO PERSONALIZADO - CORREGIDO === */
         .player-container {
             width: 100%;
             max-width: 800px;
@@ -716,304 +816,6 @@
             background: #cc0000;
         }
 
-        /* === MODIFICACIONES PARA LANDSCAPE EN PANTALLA COMPLETA === */
-        .player-container:-webkit-full-screen {
-            width: 100vw !important;
-            height: 100vh !important;
-            max-width: 100vw !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            border-radius: 0 !important;
-            display: flex !important;
-            flex-direction: column !important;
-            background: #000 !important;
-        }
-        
-        .player-container:-moz-full-screen {
-            width: 100vw !important;
-            height: 100vh !important;
-            max-width: 100vw !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            border-radius: 0 !important;
-            display: flex !important;
-            flex-direction: column !important;
-            background: #000 !important;
-        }
-        
-        .player-container:fullscreen {
-            width: 100vw !important;
-            height: 100vh !important;
-            max-width: 100vw !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            border-radius: 0 !important;
-            display: flex !important;
-            flex-direction: column !important;
-            background: #000 !important;
-        }
-        
-        :-webkit-full-screen .video-container {
-            flex: 1;
-            border-radius: 0 !important;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 0;
-        }
-        
-        :-moz-full-screen .video-container {
-            flex: 1;
-            border-radius: 0 !important;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 0;
-        }
-        
-        :fullscreen .video-container {
-            flex: 1;
-            border-radius: 0 !important;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 0;
-        }
-        
-        :-webkit-full-screen .video-container div[id^="player-"] {
-            width: 100% !important;
-            aspect-ratio: 16 / 9;
-            height: auto !important;
-            max-height: 100%;
-            object-fit: contain;
-        }
-        
-        :-moz-full-screen .video-container div[id^="player-"] {
-            width: 100% !important;
-            aspect-ratio: 16 / 9;
-            height: auto !important;
-            max-height: 100%;
-            object-fit: contain;
-        }
-        
-        :fullscreen .video-container div[id^="player-"] {
-            width: 100% !important;
-            aspect-ratio: 16 / 9;
-            height: auto !important;
-            max-height: 100%;
-            object-fit: contain;
-        }
-        
-        /* Controles flotantes en pantalla completa */
-        :-webkit-full-screen .controls-panel {
-            position: absolute !important;
-            bottom: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            width: 100% !important;
-            border-radius: 0 !important;
-            padding: 15px 20px !important;
-            background: rgba(0, 0, 0, 0.8) !important;
-            backdrop-filter: blur(5px);
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(100%);
-            transition: all 0.3s ease;
-            z-index: 40;
-        }
-        
-        :-moz-full-screen .controls-panel {
-            position: absolute !important;
-            bottom: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            width: 100% !important;
-            border-radius: 0 !important;
-            padding: 15px 20px !important;
-            background: rgba(0, 0, 0, 0.8) !important;
-            backdrop-filter: blur(5px);
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(100%);
-            transition: all 0.3s ease;
-            z-index: 40;
-        }
-        
-        :fullscreen .controls-panel {
-            position: absolute !important;
-            bottom: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            width: 100% !important;
-            border-radius: 0 !important;
-            padding: 15px 20px !important;
-            background: rgba(0, 0, 0, 0.8) !important;
-            backdrop-filter: blur(5px);
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(100%);
-            transition: all 0.3s ease;
-            z-index: 40;
-        }
-        
-        /* Mostrar controles cuando tienen la clase 'show-controls' */
-        :-webkit-full-screen .controls-panel.show-controls {
-            opacity: 1 !important;
-            visibility: visible !important;
-            transform: translateY(0) !important;
-        }
-        
-        :-moz-full-screen .controls-panel.show-controls {
-            opacity: 1 !important;
-            visibility: visible !important;
-            transform: translateY(0) !important;
-        }
-        
-        :fullscreen .controls-panel.show-controls {
-            opacity: 1 !important;
-            visibility: visible !important;
-            transform: translateY(0) !important;
-        }
-        
-        /* Botón de salir de pantalla completa siempre visible */
-        :-webkit-full-screen .exit-fullscreen {
-            display: flex !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-            z-index: 50;
-        }
-        
-        :-moz-full-screen .exit-fullscreen {
-            display: flex !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-            z-index: 50;
-        }
-        
-        :fullscreen .exit-fullscreen {
-            display: flex !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-            z-index: 50;
-        }
-        
-        /* Corner box siempre visible */
-        :-webkit-full-screen .corner-box {
-            bottom: 10px !important;
-            right: 10px !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-            z-index: 45;
-        }
-        
-        :-moz-full-screen .corner-box {
-            bottom: 10px !important;
-            right: 10px !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-            z-index: 45;
-        }
-        
-        :fullscreen .corner-box {
-            bottom: 10px !important;
-            right: 10px !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-            z-index: 45;
-        }
-
-        /* === CORRECCIÓN DEFINITIVA PARA LANDSCAPE - PROPORCIÓN MANTENIDA === */
-        @media (max-width: 926px) and (orientation: landscape) {
-            
-            /* 🔹 PLAYER-CONTAINER: estructura principal en landscape */
-            :-webkit-full-screen .player-container,
-            :-moz-full-screen .player-container,
-            :fullscreen .player-container {
-                display: flex !important;
-                flex-direction: column !important;
-                width: 100% !important;
-                height: 100vh !important;
-                background: #000 !important;
-                justify-content: space-between !important;
-            }
-
-            /* 🔹 CONTENEDOR DE VIDEO: ocupa espacio disponible */
-            :-webkit-full-screen .video-container,
-            :-moz-full-screen .video-container,
-            :fullscreen .video-container {
-                flex: 1 !important;
-                display: flex !important;
-                justify-content: center !important;
-                align-items: center !important;
-                background: #000 !important;
-                width: 100% !important;
-                height: auto !important;
-                max-height: none !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                position: relative !important;
-                overflow: hidden !important;
-            }
-
-            /* 🔹 VIDEO DENTRO DEL CONTENEDOR: proporción 16:9 centrado */
-            :-webkit-full-screen .video-container div[id^="player-"],
-            :-moz-full-screen .video-container div[id^="player-"],
-            :fullscreen .video-container div[id^="player-"] {
-                width: auto !important;
-                height: auto !important;
-                max-width: 100% !important;
-                max-height: 100% !important;
-                object-fit: contain !important;
-                aspect-ratio: 16 / 9 !important;
-                flex-shrink: 0;
-            }
-
-            /* 🔹 CONTROLES: flotantes en la parte inferior */
-            :-webkit-full-screen .controls-panel,
-            :-moz-full-screen .controls-panel,
-            :fullscreen .controls-panel {
-                position: absolute !important;
-                bottom: 0 !important;
-                left: 0 !important;
-                right: 0 !important;
-                width: 100% !important;
-                height: auto !important;
-                min-height: 80px !important;
-                max-height: 80px !important;
-                padding: 10px 15px !important;
-                background: rgba(0, 0, 0, 0.8) !important;
-                backdrop-filter: blur(5px);
-                display: flex !important;
-                align-items: center !important;
-                justify-content: space-around !important;
-                opacity: 0;
-                visibility: hidden;
-                transform: translateY(100%);
-                transition: all 0.3s ease;
-                z-index: 40;
-            }
-
-            /* Mostrar controles cuando tienen la clase 'show-controls' */
-            :-webkit-full-screen .controls-panel.show-controls,
-            :-moz-full-screen .controls-panel.show-controls,
-            :fullscreen .controls-panel.show-controls {
-                opacity: 1 !important;
-                visibility: visible !important;
-                transform: translateY(0) !important;
-            }
-
-            /* Ajuste de botones */
-            :-webkit-full-screen .video-controls button,
-            :-moz-full-screen .video-controls button,
-            :fullscreen .video-controls button {
-                font-size: 14px !important;
-                padding: 8px 12px !important;
-                min-width: 90px;
-                margin: 0 5px !important;
-            }
-        }
-
-        /* === MEJORAS EN BOTONES DE CABECERAS === */
         .course-buttons, .module-buttons {
             display: flex;
             gap: 12px;
@@ -1025,7 +827,6 @@
             margin: 0;
         }
 
-        /* === NUEVOS ESTILOS PARA INFORMACIÓN DE CURSO === */
         .course-info-text {
             margin-top: 15px;
             padding: 12px;
@@ -1077,59 +878,84 @@
             text-decoration: underline;
         }
 
-        /* === RESPONSIVE PARA EL ACORDEÓN REORGANIZADO === */
-        @media (max-width: 768px) {
-            .lesson-header {
-                padding: 12px;
-                flex-direction: column;
-            }
-            
-            .lesson-number-container {
-                margin-bottom: 8px;
-            }
-            
-            .lesson-thumbnail {
-                width: 100%;
-                height: 150px;
-                margin-right: 0;
-                margin-bottom: 12px;
-            }
-            
-            .lesson-main-content {
-                width: 100%;
-            }
-            
-            .lesson-actions {
-                gap: 6px;
-            }
-            
-            .lesson-actions .btn {
-                font-size: 11px;
-                padding: 6px 10px;
-            }
+        .course-header, .module-header-expanded {
+            display: none;
         }
 
-        @media (max-width: 480px) {
-            .lesson-header {
-                padding: 10px;
-            }
-            
-            .lesson-thumbnail {
-                height: 120px;
-            }
-            
-            .lesson-actions {
-                gap: 4px;
-            }
-            
-            .lesson-actions .btn {
-                font-size: 10px;
-                padding: 5px 8px;
-            }
+        .course-title-section, .module-title-section {
+            text-align: center;
+            margin-bottom: 15px;
         }
 
-        /* === MODAL PARA ENCUESTAS === */
-        .survey-modal-overlay {
+        .course-title-section h1 {
+            color: var(--azul-oscuro);
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .module-title-section h2 {
+            color: var(--azul-oscuro);
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .course-content, .module-content {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .course-image-container, .module-image-container {
+            flex: 0 0 150px;
+        }
+
+        .course-header-image, .module-header-image {
+            width: 100%;
+            max-height: 120px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .course-info, .module-info {
+            flex: 1;
+        }
+
+        .course-description, .module-description {
+            color: var(--azul-profundo);
+            line-height: 1.5;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            background: var(--success);
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            opacity: 0;
+            transform: translateX(300px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            font-size: 13px;
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background: var(--error);
+        }
+
+        #universalManualModal {
             position: fixed;
             top: 0;
             left: 0;
@@ -1140,68 +966,46 @@
             display: none;
             justify-content: center;
             align-items: center;
-            padding: 20px;
         }
 
-        .survey-modal-content {
-            background: white;
-            border-radius: 15px;
-            padding: 0;
-            width: 100%;
-            max-width: 900px;
-            height: 90%;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        #universalManualModal .modal-content {
             position: relative;
+            width: 90%;
+            height: 90%;
+            max-width: 900px;
+            background: white;
+            border-radius: 8px;
             overflow: hidden;
         }
 
-        .survey-modal-header {
+        #universalManualModal .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 20px;
+            padding: 12px;
             background: var(--azul-oscuro);
             color: white;
         }
 
-        .survey-modal-title {
-            font-size: 18px;
-            font-weight: 700;
+        #universalManualModal .modal-header h3 {
             margin: 0;
+            font-size: 16px;
         }
 
-        .close-survey-modal {
+        #universalManualModal .close-modal {
             background: none;
             border: none;
             color: white;
-            font-size: 24px;
+            font-size: 20px;
             cursor: pointer;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: background 0.3s;
         }
 
-        .close-survey-modal:hover {
-            background: rgba(255,255,255,0.2);
-        }
-
-        .survey-iframe-container {
+        #universalManualModal iframe {
             width: 100%;
-            height: calc(100% - 60px);
+            height: calc(100% - 50px);
             border: none;
         }
 
-        .survey-iframe-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        /* === SISTEMA DE LOGIN OPTIMIZADO === */
         .login-container {
             display: flex;
             justify-content: center;
@@ -1293,7 +1097,6 @@
             color: var(--azul-oscuro);
         }
 
-        /* === MODALES PARA REGISTRO Y RECUPERACIÓN === */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -1351,230 +1154,316 @@
             color: var(--azul-oscuro);
             font-size: 13px;
         }
-
-        /* === CABECERAS DE CURSO Y MÓDULO === */
-        .course-header, .module-header-expanded {
-            display: none;
-        }
-
-        .course-title-section, .module-title-section {
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        .course-title-section h1 {
-            color: var(--azul-oscuro);
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .module-title-section h2 {
-            color: var(--azul-oscuro);
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .course-content, .module-content {
-            display: flex;
-            gap: 20px;
-            align-items: flex-start;
-        }
-
-        .course-image-container, .module-image-container {
-            flex: 0 0 150px;
-        }
-
-        .course-header-image, .module-header-image {
-            width: 100%;
-            max-height: 120px;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-
-        .course-info, .module-info {
-            flex: 1;
-        }
-
-        .course-description, .module-description {
-            color: var(--azul-profundo);
-            line-height: 1.5;
-            margin-bottom: 12px;
-            font-size: 14px;
-        }
-
-        /* === COMPONENTES DE INTERFAZ AVANZADOS === */
-        .notification {
-            position: fixed;
-            top: 15px;
-            right: 15px;
-            padding: 12px 16px;
-            border-radius: 8px;
-            background: var(--success);
-            color: white;
-            font-weight: bold;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            opacity: 0;
-            transform: translateX(300px);
-            transition: all 0.3s ease;
-            z-index: 1000;
-            font-size: 13px;
-        }
-
-        .notification.show {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .notification.error {
-            background: var(--error);
-        }
-
-        /* === MODAL UNIFICADO PARA MANUALES Y CALENDARIO === */
-        #universalManualModal {
+        /* === ESTILOS PARA SISTEMA DE ENCUESTAS === */
+        .survey-modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.95);
             z-index: 10000;
             display: none;
             justify-content: center;
             align-items: center;
+            padding: 20px;
         }
 
-        #universalManualModal .modal-content {
-            position: relative;
-            width: 90%;
-            height: 90%;
-            max-width: 900px;
+        .survey-modal-content {
             background: white;
-            border-radius: 8px;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
-        #universalManualModal .modal-header {
+        .survey-modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px;
+            padding: 15px 20px;
             background: var(--azul-oscuro);
             color: white;
+            flex-shrink: 0;
         }
 
-        #universalManualModal .modal-header h3 {
+        .survey-modal-title {
+            font-size: 18px;
+            font-weight: 700;
             margin: 0;
-            font-size: 16px;
         }
 
-        #universalManualModal .close-modal {
+        .close-survey-modal {
             background: none;
             border: none;
             color: white;
-            font-size: 20px;
+            font-size: 24px;
             cursor: pointer;
-        }
-
-        #universalManualModal iframe {
-            width: 100%;
-            height: calc(100% - 50px);
-            border: none;
-        }
-
-        /* === SISTEMA RESPONSIVO MEJORADO === */
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px 10px 5px;
-            }
-            
-            .header-container {
-                flex-direction: column;
-                text-align: center;
-                padding: 12px 15px;
-            }
-            
-            .school-brand, .user-welcome {
-                justify-content: center;
-                text-align: center;
-                min-width: auto;
-            }
-
-            .user-welcome {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .course-content, .module-content {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .course-image-container, .module-image-container {
-                flex: 0 0 auto;
-                width: 100%;
-                max-width: 200px;
-                margin: 0 auto;
-            }
-            
-            .grid-cursos, .grid-modulos {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-            
-            .player-container {
-                padding: 10px;
-                margin: 10px 0;
-            }
-            
-            .modal-content {
-                padding: 20px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .form-container {
-                width: 100%;
-                max-width: 300px;
-                padding: 20px;
-            }
-            
-            .btn {
-                width: 100%;
-                margin-right: 0;
-                justify-content: center;
-            }
-            
-            .modal-content {
-                padding: 15px;
-            }
-        }
-
-        /* === ESTILOS ADICIONALES PARA CONTENIDO EXPANDIDO === */
-        .expanded-module {
-            width: 100%;
-            padding: 0;
-            margin-bottom: 5px;
-        }
-
-        .module-header {
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 12px;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.3s;
         }
 
-        .module-progress-expanded {
-            margin: 15px 0;
+        .close-survey-modal:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .survey-body {
+            padding: 25px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .survey-info {
+            background: #f0f9ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--azul);
+        }
+
+        .survey-question {
+            background: var(--neutro);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--azul);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .question-number {
+            background: var(--azul);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .question-type-badge {
+            background: var(--naranja);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .question-text {
+            color: var(--azul-oscuro);
+            font-size: 16px;
+            font-weight: 600;
+            margin: 10px 0 15px 0;
+            line-height: 1.5;
+        }
+
+        .question-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
             padding: 12px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option-label:hover {
+            border-color: var(--azul);
+            background: #f0f9ff;
+        }
+
+        .option-label input[type="radio"] {
+            margin-right: 12px;
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+        }
+
+        .option-text {
+            flex: 1;
+            color: var(--azul-profundo);
+            font-size: 15px;
+        }
+
+        .question-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 15px;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+
+        .question-textarea:focus {
+            outline: none;
+            border-color: var(--azul);
+        }
+
+        .question-file-input {
+            display: none;
+        }
+
+        .file-upload-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: var(--azul);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .file-upload-btn:hover {
+            background: var(--azul-oscuro);
+        }
+
+        .file-info {
+            margin-top: 10px;
+            padding: 10px;
+            background: #e8f5e8;
+            border-radius: 6px;
+            color: var(--success);
+            font-size: 14px;
+            display: none;
+        }
+
+        .survey-actions {
+            padding: 15px 25px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .survey-resultado {
+            padding: 25px;
             text-align: center;
         }
 
-        .content-list-expanded {
-            margin-top: 15px;
-            margin-bottom: 5px;
+        .resultado-header {
+            background: linear-gradient(135deg, var(--azul), var(--naranja));
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+
+        .resultado-score {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .resultado-mensaje {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .revision-question {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .revision-question.correcta {
+            border-left: 5px solid var(--success);
+            background: #f0fdf4;
+        }
+
+        .revision-question.incorrecta {
+            border-left: 5px solid var(--error);
+            background: #fef2f2;
+        }
+
+        .revision-question.pendiente {
+            border-left: 5px solid var(--naranja);
+            background: #fffbeb;
+        }
+
+        .revision-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .revision-status.correcta {
+            background: var(--success);
+            color: white;
+        }
+
+        .revision-status.incorrecta {
+            background: var(--error);
+            color: white;
+        }
+
+        .revision-status.pendiente {
+            background: var(--naranja);
+            color: white;
+        }
+
+        .respuesta-alumno {
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+
+        .respuesta-correcta {
+            background: #f0fdf4;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+            border: 1px solid var(--success);
+        }
+
+        .puntaje-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: var(--azul-oscuro);
+            color: white;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: bold;
+            margin-left: 10px;
         }
 
         .notes-area {
@@ -1620,6 +1509,110 @@
             text-align: center;
             padding: 20px;
             color: var(--gray);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px 10px 5px;
+            }
+            
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+                padding: 12px 15px;
+            }
+            
+            .school-brand, .user-welcome {
+                justify-content: center;
+                text-align: center;
+                min-width: auto;
+            }
+
+            .user-welcome {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .course-content, .module-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .course-image-container, .module-image-container {
+                flex: 0 0 auto;
+                width: 100%;
+                max-width: 200px;
+                margin: 0 auto;
+            }
+            
+            .grid-cursos, .grid-modulos {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .player-container {
+                padding: 10px;
+                margin: 10px 0;
+            }
+            
+            .modal-content, .survey-modal-content {
+                padding: 20px;
+            }
+
+            .survey-body {
+                padding: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .form-container {
+                width: 100%;
+                max-width: 300px;
+                padding: 20px;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-right: 0;
+                justify-content: center;
+            }
+            
+            .modal-content {
+                padding: 15px;
+            }
+
+            .lesson-actions {
+                flex-direction: column;
+            }
+
+            .lesson-actions .btn {
+                width: 100%;
+            }
+        }
+
+        .expanded-module {
+            width: 100%;
+            padding: 0;
+            margin-bottom: 5px;
+        }
+
+        .module-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+        }
+
+        .module-progress-expanded {
+            margin: 15px 0;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .content-list-expanded {
+            margin-top: 15px;
+            margin-bottom: 5px;
         }
     </style>
 </head>
@@ -1707,8 +1700,22 @@
                 </div>
             </div>
 
+            <!-- Sección: Mis Cursos (arriba) -->
+            <h2 class="section-title">Mis Cursos</h2>
+            <p class="section-subtitle">Cursos en los que estás actualmente inscrito</p>
+            <div id="misCursosContainer" class="grid grid-cursos">
+                <div class="loading">Cargando mis cursos...</div>
+            </div>
+
+            <!-- Sección: Cursos Disponibles (abajo) -->
+            <h2 class="section-title">Cursos Disponibles</h2>
+            <p class="section-subtitle">Cursos gratuitos y generales a los que puedes inscribirte</p>
+            <div id="cursosDisponiblesContainer" class="grid grid-cursos">
+                <div class="loading">Cargando cursos disponibles...</div>
+            </div>
+
             <!-- Cabecera del Curso (se muestra al acceder a un curso) -->
-            <div id="courseHeader" class="course-header card">
+            <div id="courseHeader" class="course-header card" style="display: none;">
                 <div class="course-title-section">
                     <h1 id="courseTitle">Nombre del Curso</h1>
                 </div>
@@ -1719,26 +1726,37 @@
                     <div class="course-info">
                         <p id="courseDescription" class="course-description">Descripción del curso...</p>
                         
-                        <!-- Información del curso (calendario y mensaje) -->
-                        <div id="courseInfoText" class="course-info-text" style="display: none;">
-                            <!-- El contenido se agregará dinámicamente -->
-                        </div>
+                        <div id="courseInfoText" class="course-info-text" style="display: none;"></div>
                         
-                        <div id="courseButtons" class="course-buttons">
-                            <!-- Los botones se agregarán dinámicamente -->
-                        </div>
+                        <div id="courseButtons" class="course-buttons"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Contenido Principal -->
-            <h2 style="color: var(--azul-oscuro); margin-bottom: 12px;" id="mainTitle">Mis Cursos</h2>
-            <div id="cursosContainer" class="grid grid-cursos">
-                <div class="loading">Cargando cursos...</div>
+            <!-- Contenedor para módulos -->
+            <div id="modulesContainer"></div>
+        </div>
+    </div>
+
+    <!-- Modal para Vista Previa de Curso Disponible -->
+    <div id="cursoPreviewModal" class="curso-preview-container">
+        <div class="curso-preview-content card">
+            <div class="preview-header">
+                <h3 class="preview-title" id="previewCourseTitle">Curso Disponible</h3>
+                <button class="close-preview" onclick="closeCursoPreview()">✕</button>
             </div>
             
-            <div id="modulesContainer">
-                <!-- Los módulos se cargarán aquí dinámicamente -->
+            <img id="previewCourseImage" class="preview-image" src="" alt="Imagen del curso" onerror="this.style.display='none'">
+            
+            <div class="preview-description" id="previewCourseDescription">
+                Descripción del curso...
+            </div>
+            
+            <div class="curso-info-text" id="previewCourseInfo" style="display: none;"></div>
+            
+            <div class="preview-actions">
+                <button class="btn btn-success" onclick="inscribirEnCursoDisponible()">📝 Inscribirme</button>
+                <button class="btn btn-secondary" onclick="closeCursoPreview()">Cancelar</button>
             </div>
         </div>
     </div>
@@ -1758,17 +1776,20 @@
     <div id="universalSurveyModal" class="survey-modal-overlay">
         <div class="survey-modal-content">
             <div class="survey-modal-header">
-                <h3 class="survey-modal-title">Encuesta</h3>
-                <button class="close-survey-modal" onclick="closeSurveyViewer()">✕</button>
+                <h3 class="survey-modal-title" id="surveyModalTitle">Encuesta</h3>
+                <button class="close-survey-modal" onclick="closeSurveyModal()">✕</button>
             </div>
-            <div class="survey-iframe-container">
-                <iframe id="surveyModalFrame"></iframe>
+            <div class="survey-body" id="surveyBody">
+                <!-- Contenido dinámico de la encuesta -->
+            </div>
+            <div class="survey-actions" id="surveyActions">
+                <!-- Botones de acción -->
             </div>
         </div>
     </div>
 
     <script>
-        // === CONFIGURACIÓN GITHUB ===
+        // === CONFIGURACIÓN ===
         const CONFIG = {
             API_BASE_URL: 'https://escuuelaapi1.jorge-altagracia.workers.dev/'
         };
@@ -1780,30 +1801,35 @@
         let currentPlayers = {};
         let alumnoActual = null;
         let cursosCache = null;
+        let cursosDisponiblesCache = null;
         let currentCourseId = null;
         let currentGrupoId = null;
         let escuelaData = null;
         let currentCourseData = null;
         let dragging = false;
-        
-        // === NUEVAS VARIABLES PARA CONTROL DE CONTROLES ===
+        let currentPreviewCurso = null;
         let hideControlsTimers = {};
         let isFullscreen = false;
-        
-        // === VARIABLES PARA EL ACORDEÓN ===
         let currentOpenAccordion = null;
+
+        // === VARIABLES PARA SISTEMA DE ENCUESTAS ===
+        let todasEncuestas = [];
+        let todasPreguntas = [];
+        let currentEncuestaId = null;
+        let currentClaseId = null;
+        let preguntasEncuestaActual = [];
+        let respuestasEncuesta = {};
+        let archivosEncuesta = {};
 
         // === SISTEMA DE JSONP MEJORADO ===
         function callJSONP(action, data = {}) {
             return new Promise((resolve, reject) => {
                 const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
                 
-                // Construir URL con parámetros
                 const params = new URLSearchParams();
                 params.append('action', action);
                 params.append('callback', callbackName);
                 
-                // Agregar datos específicos
                 Object.keys(data).forEach(key => {
                     if (data[key] !== undefined && data[key] !== null) {
                         params.append(key, String(data[key]));
@@ -1817,9 +1843,7 @@
                 const script = document.createElement('script');
                 script.src = url;
                 
-                // Configurar callback global
                 window[callbackName] = function(response) {
-                    // Limpiar
                     delete window[callbackName];
                     if (script.parentNode) {
                         script.parentNode.removeChild(script);
@@ -1834,7 +1858,6 @@
                     }
                 };
                 
-                // Manejar errores
                 script.onerror = function() {
                     delete window[callbackName];
                     if (script.parentNode) {
@@ -1843,7 +1866,6 @@
                     reject(new Error('Error de red al conectar con el servidor'));
                 };
                 
-                // Timeout después de 30 segundos
                 const timeoutId = setTimeout(() => {
                     if (window[callbackName]) {
                         delete window[callbackName];
@@ -1854,7 +1876,6 @@
                     }
                 }, 30000);
                 
-                // Limpiar timeout cuando se recibe respuesta
                 const originalCallback = window[callbackName];
                 window[callbackName] = function(response) {
                     clearTimeout(timeoutId);
@@ -1891,19 +1912,16 @@
         function updateSchoolUI() {
             if (!escuelaData) return;
             
-            // Actualizar título en login
             const loginTitle = document.getElementById('schoolTitle');
             if (loginTitle && escuelaData['Nombre_Escuela ']) {
                 loginTitle.innerHTML = escuelaData['Nombre_Escuela '];
             }
             
-            // Actualizar nombre en cabecera del dashboard
             const headerSchoolName = document.getElementById('headerSchoolName');
             if (headerSchoolName && escuelaData['Nombre_Escuela ']) {
                 headerSchoolName.textContent = escuelaData['Nombre_Escuela '];
             }
             
-            // Actualizar logo si existe
             if (escuelaData['Logo_Escuela']) {
                 const logoImg = document.getElementById('schoolLogo');
                 logoImg.src = escuelaData['Logo_Escuela'];
@@ -1911,7 +1929,6 @@
                 logoImg.style.display = 'block';
             }
 
-            // Actualizar logo en login si existe
             if (escuelaData['Logo_Escuela']) {
                 const loginHeader = document.querySelector('.school-header');
                 if (loginHeader) {
@@ -1974,210 +1991,109 @@
             alumnoActual = response.alumno;
             document.getElementById("displayusername").innerHTML = currentUser.Nombre + " " + currentUser.Apellido;
             
-            // Mostrar dashboard
             document.getElementById("page1_id1").style.display = "none";
             document.getElementById("page4_id1").style.display = "block";
             document.getElementById("errorMessage").innerHTML = "";
             
-            // Cargar progreso del usuario
             loadUserProgress(currentUser.ID_Alumno);
-            loadCursos();
+            loadMisCursos();
+            loadCursosDisponibles();
+            cargarDatosEncuestas();
         }
 
-        // === NUEVAS FUNCIONES PARA REGISTRO Y RECUPERACIÓN ===
-        function showRegisterModal() {
-            document.getElementById('registerModal').style.display = 'flex';
-            clearRegisterForm();
-        }
-        
-        function closeRegisterModal() {
-            document.getElementById('registerModal').style.display = 'none';
-        }
-        
-        function showForgotPasswordModal() {
-            document.getElementById('forgotPasswordModal').style.display = 'flex';
-            document.getElementById('forgotPasswordErrorMessage').innerHTML = '';
-            document.getElementById('forgotPasswordEmail').value = '';
-        }
-        
-        function closeForgotPasswordModal() {
-            document.getElementById('forgotPasswordModal').style.display = 'none';
-        }
-        
-        function clearRegisterForm() {
-            document.getElementById('registerName').value = '';
-            document.getElementById('registerLastName').value = '';
-            document.getElementById('registerUser').value = '';
-            document.getElementById('registerPassword').value = '';
-            document.getElementById('registerEmail').value = '';
-            document.getElementById('registerPhone').value = '';
-            document.getElementById('registerErrorMessage').innerHTML = '';
-        }
-        
-        async function registerUser() {
-            const name = document.getElementById('registerName').value.trim();
-            const lastName = document.getElementById('registerLastName').value.trim();
-            const user = document.getElementById('registerUser').value.trim();
-            const password = document.getElementById('registerPassword').value.trim();
-            const email = document.getElementById('registerEmail').value.trim();
-            const phone = document.getElementById('registerPhone').value.trim();
-            
-            // Validaciones básicas
-            if (!name || !lastName || !user || !password || !email) {
-                document.getElementById('registerErrorMessage').innerHTML = "Todos los campos excepto teléfono son obligatorios";
-                return;
-            }
-            
-            if (password.length < 6) {
-                document.getElementById('registerErrorMessage').innerHTML = "La contraseña debe tener al menos 6 caracteres";
-                return;
-            }
-            
-            document.getElementById('registerErrorMessage').innerHTML = "🔄 Creando cuenta...";
-            
+        // === CARGAR DATOS DE ENCUESTAS ===
+        async function cargarDatosEncuestas() {
             try {
-                const response = await callJSONP('register', {
-                    nombre: name,
-                    apellido: lastName,
-                    usuario: user,
-                    contraseña: password,
-                    email: email,
-                    telefono: phone
-                });
+                console.log('📊 Cargando datos de encuestas...');
                 
-                if (response.success) {
-                    showNotification('✅ Cuenta creada exitosamente. Ahora puedes iniciar sesión.');
-                    closeRegisterModal();
-                    document.getElementById('username').value = user;
-                    document.getElementById('password').value = '';
-                } else {
-                    document.getElementById('registerErrorMessage').innerHTML = "❌ " + response.error;
+                const encuestasResult = await callJSONP('obtenerEncuestas', {});
+                if (encuestasResult.success) {
+                    todasEncuestas = encuestasResult.data || [];
+                    console.log('✅ Encuestas cargadas:', todasEncuestas.length);
                 }
-            } catch (error) {
-                document.getElementById('registerErrorMessage').innerHTML = "🔒 Error de conexión: " + error.message;
-            }
-        }
-        
-        async function sendPasswordReset() {
-            const email = document.getElementById('forgotPasswordEmail').value.trim();
-            
-            if (!email) {
-                document.getElementById('forgotPasswordErrorMessage').innerHTML = "Por favor ingresa tu correo electrónico";
-                return;
-            }
-            
-            document.getElementById('forgotPasswordErrorMessage').innerHTML = "🔄 Enviando enlace de recuperación...";
-            
-            try {
-                const response = await callJSONP('forgotPassword', { email });
                 
-                if (response.success) {
-                    showNotification('✅ Se ha enviado un enlace de recuperación a tu correo electrónico.');
-                    closeForgotPasswordModal();
-                } else {
-                    document.getElementById('forgotPasswordErrorMessage').innerHTML = "❌ " + response.error;
-                }
-            } catch (error) {
-                document.getElementById('forgotPasswordErrorMessage').innerHTML = "🔒 Error de conexión: " + error.message;
-            }
-        }
-
-        // === FUNCIÓN PARA CARGAR PROGRESO MEJORADA - CON CALIFICACIONES ===
-        async function loadUserProgress(alumnoId) {
-            try {
-                console.log('📊 Cargando progreso para alumno:', alumnoId);
-                
-                const result = await callJSONP('getUserProgress', { alumnoId });
-                
-                console.log('📥 Respuesta de getUserProgress:', result);
-                
-                userProgress = {};
-                
-                if (result.success && result.data && result.data.length > 0) {
-                    result.data.forEach(function(item) {
-                        if (item.ID_Clase) {
-                            userProgress[item.ID_Clase] = {
-                                completed: item.Completada === "Sí" || item.Completada === true,
-                                notes: item.Notas_Alumno || '',
-                                calificacion: item.Calificacion || 0, // Nueva propiedad para calificación
-                                lastUpdate: item.Fecha_Guardado || new Date()
-                            };
-                        }
-                    });
-                    
-                    console.log(`✅ Progreso cargado: ${Object.keys(userProgress).length} clases`);
-                    console.log('Detalle del progreso:', userProgress);
-                } else {
-                    console.log('ℹ️ No se encontró progreso previo para este alumno');
+                const preguntasResult = await callJSONP('obtenerPreguntas', {});
+                if (preguntasResult.success) {
+                    todasPreguntas = preguntasResult.data || [];
+                    console.log('✅ Preguntas cargadas:', todasPreguntas.length);
                 }
                 
             } catch (error) {
-                console.error("💥 Error cargando progreso:", error);
-                userProgress = {};
-                showNotification('⚠️ No se pudo cargar el progreso previo', 'error');
+                console.error('❌ Error cargando datos de encuestas:', error);
             }
         }
 
-        // === FUNCIÓN PARA RENDERIZAR CALIFICACIÓN CON ESTRELLAS ===
-        function renderCalificacionEstrellas(lessonId) {
-            // Verificar si existe calificación para esta lección
-            if (!userProgress[lessonId] || userProgress[lessonId].calificacion === undefined) {
-                return '<div class="calificacion-container"><div class="calificacion-texto">Sin calificar</div></div>';
-            }
+        // === SISTEMA DE CURSOS DISPONIBLES ===
+        async function loadMisCursos() {
+            const container = document.getElementById('misCursosContainer');
+            const cacheKey = `mis_cursos_${alumnoActual.ID_Alumno}`;
             
-            const calificacion = userProgress[lessonId].calificacion;
-            const porcentaje = Math.min(100, Math.max(0, calificacion)); // Asegurar que esté entre 0 y 100
-            
-            // Calcular cuántas estrellas deben estar activas (0-5)
-            const estrellasActivas = Math.round((porcentaje / 100) * 5);
-            
-            let estrellasHTML = '<div class="calificacion-container">';
-            estrellasHTML += '<div class="calificacion-estrellas">';
-            
-            // Generar 5 estrellas
-            for (let i = 1; i <= 5; i++) {
-                if (i <= estrellasActivas) {
-                    estrellasHTML += '<span class="estrella activa">★</span>';
-                } else {
-                    estrellasHTML += '<span class="estrella">★</span>';
-                }
-            }
-            
-            estrellasHTML += '</div>';
-            estrellasHTML += `<div class="calificacion-texto">Calificación: <span class="calificacion-valor">${porcentaje}/100</span></div>`;
-            estrellasHTML += '</div>';
-            
-            return estrellasHTML;
-        }
-
-        // === FUNCIONES DE CURSOS CON CACHE FRONTEND ===
-        async function loadCursos() {
-            const container = document.getElementById('cursosContainer');
-            const cacheKey = `cursos_${alumnoActual.ID_Alumno}`;
-            
-            // Verificar cache local
             const cached = sessionStorage.getItem(cacheKey);
             if (cached) {
-                console.log('Cargando cursos desde cache frontend');
-                displayCursos(JSON.parse(cached));
+                console.log('Cargando mis cursos desde cache frontend');
+                displayMisCursos(JSON.parse(cached));
                 return;
             }
             
-            container.innerHTML = '<div class="loading">Cargando cursos...</div>';
+            container.innerHTML = '<div class="loading">Cargando mis cursos...</div>';
             
             try {
                 const result = await callJSONP('getCursosAlumno', { alumnoId: alumnoActual.ID_Alumno });
-                // Guardar en cache local
                 sessionStorage.setItem(cacheKey, JSON.stringify(result.data));
-                displayCursos(result.data);
+                displayMisCursos(result.data);
             } catch (error) {
-                showCursosError(error);
+                showCursosError(error, container);
             }
         }
 
-        function displayCursos(cursos) {
-            cursosCache = cursos;
-            const container = document.getElementById('cursosContainer');
+        async function loadCursosDisponibles() {
+            const container = document.getElementById('cursosDisponiblesContainer');
+            const cacheKey = `cursos_disponibles_${alumnoActual.ID_Alumno}`;
+            
+            container.innerHTML = '<div class="loading">Cargando cursos disponibles...</div>';
+            
+            try {
+                const misCursosResult = await callJSONP('getCursosAlumno', { alumnoId: alumnoActual.ID_Alumno });
+                const misCursosIds = misCursosResult.data.map(curso => curso.ID_Curso);
+                
+                const todosCursosResult = await callJSONP('cursos', {});
+                
+                if (todosCursosResult && Array.isArray(todosCursosResult)) {
+                    const gruposResult = await callJSONP('grupos', {});
+                    
+                    const cursosDisponibles = todosCursosResult.filter(curso => {
+                        const grupo = gruposResult.find(g => g.ID_Curso === curso.ID_Curso);
+                        if (!grupo) return false;
+                        
+                        const esGeneralOGratis = grupo.Nombre_Grupo === 'General' || grupo.Nombre_Grupo === 'Gratis';
+                        const noEstaInscrito = !misCursosIds.includes(curso.ID_Curso);
+                        return esGeneralOGratis && noEstaInscrito;
+                    }).map(curso => {
+                        const grupo = gruposResult.find(g => g.ID_Curso === curso.ID_Curso);
+                        return {
+                            ...curso,
+                            ID_Grupo: grupo.ID_Grupo,
+                            Nombre_Grupo: grupo.Nombre_Grupo,
+                            Fecha_Inicio: grupo.Fecha_Inicio,
+                            Whatsapp: grupo.Whatsapp,
+                            Mensaje: grupo.Mensaje,
+                            Calendario: grupo.Calendario
+                        };
+                    });
+                    
+                    sessionStorage.setItem(cacheKey, JSON.stringify(cursosDisponibles));
+                    displayCursosDisponibles(cursosDisponibles);
+                } else {
+                    container.innerHTML = '<div class="no-content">No hay cursos disponibles en este momento.</div>';
+                }
+            } catch (error) {
+                console.error('Error cargando cursos disponibles:', error);
+                container.innerHTML = '<div class="no-content">Error al cargar cursos disponibles.</div>';
+            }
+        }
+
+        function displayMisCursos(cursos) {
+            const container = document.getElementById('misCursosContainer');
             
             if (!cursos || cursos.length === 0) {
                 container.innerHTML = `
@@ -2185,7 +2101,7 @@
                         <div style="font-size: 40px; margin-bottom: 12px;">🎓</div>
                         <h3 style="color: var(--azul-oscuro); margin-bottom: 6px;">No estás inscrito en ningún curso visible</h3>
                         <p style="color: var(--gray); margin-bottom: 12px;">
-                            Contacta al administrador para inscribirte en los cursos.
+                            Revisa la sección de cursos disponibles para inscribirte.
                         </p>
                     </div>
                 `;
@@ -2217,50 +2133,173 @@
             }).join('');
         }
 
-        function showCursosError(error) {
-            const container = document.getElementById('cursosContainer');
-            container.innerHTML = '<div class="error">Error al cargar los cursos: ' + error.message + '</div>';
+        function displayCursosDisponibles(cursos) {
+            const container = document.getElementById('cursosDisponiblesContainer');
+            cursosDisponiblesCache = cursos;
+            
+            if (!cursos || cursos.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 30px;">
+                        <div style="font-size: 40px; margin-bottom: 12px;">📚</div>
+                        <h3 style="color: var(--azul-oscuro); margin-bottom: 6px;">No hay cursos disponibles en este momento</h3>
+                        <p style="color: var(--gray); margin-bottom: 12px;">
+                            Próximamente se abrirán nuevos cursos.
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = cursos.map(curso => {
+                const hasImage = curso.Foto_Portada && curso.Foto_Portada.trim() !== '';
+                return `
+                <div class="curso-disponible-card card" onclick="verCursoDisponible('${curso.ID_Curso}', '${curso.ID_Grupo}')">
+                    <div class="curso-imagen">
+                        ${hasImage ? 
+                            `<img src="${curso.Foto_Portada}" 
+                                  alt="${curso.Nombre_Curso}" 
+                                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                                  onload="this.style.display='block'; this.nextElementSibling.style.display='none';">` : 
+                            ''
+                        }
+                        <div class="image-fallback" style="${hasImage ? 'display: none;' : ''}">📚</div>
+                    </div>
+                    <div class="curso-content">
+                        <h3 class="curso-disponible-titulo">${curso.Nombre_Curso}</h3>
+                        <p class="curso-grupo">Grupo: ${curso.Nombre_Grupo}</p>
+                        <p class="curso-grupo">Disponible para todos</p>
+                        <button class="btn btn-inscribirme" onclick="event.stopPropagation(); inscribirEnCursoDisponibleDesdeBoton('${curso.ID_Curso}', '${curso.ID_Grupo}')">📝 Inscribirme</button>
+                    </div>
+                </div>
+                `;
+            }).join('');
         }
 
+        function verCursoDisponible(cursoId, grupoId) {
+            const curso = cursosDisponiblesCache.find(c => c.ID_Curso === cursoId && c.ID_Grupo === grupoId);
+            if (!curso) return;
+            
+            currentPreviewCurso = curso;
+            
+            document.getElementById('previewCourseTitle').textContent = curso.Nombre_Curso;
+            document.getElementById('previewCourseDescription').textContent = curso.Descripción || curso.Descripcion || 'No hay descripción disponible para este curso.';
+            
+            const previewImage = document.getElementById('previewCourseImage');
+            if (curso.Foto_Portada) {
+                previewImage.src = curso.Foto_Portada;
+                previewImage.style.display = 'block';
+            } else {
+                previewImage.style.display = 'none';
+            }
+            
+            const infoContainer = document.getElementById('previewCourseInfo');
+            infoContainer.innerHTML = '';
+            
+            if (curso.Mensaje) {
+                infoContainer.innerHTML += `
+                    <div class="course-info-item">
+                        <div class="course-info-icon">📢</div>
+                        <div class="course-info-content">
+                            <div class="course-info-label">Mensaje Importante</div>
+                            <div class="course-info-value">${curso.Mensaje}</div>
+                        </div>
+                    </div>
+                `;
+                infoContainer.style.display = 'block';
+            } else {
+                infoContainer.style.display = 'none';
+            }
+            
+            document.getElementById('cursoPreviewModal').style.display = 'flex';
+        }
+
+        function closeCursoPreview() {
+            document.getElementById('cursoPreviewModal').style.display = 'none';
+            currentPreviewCurso = null;
+        }
+
+        async function inscribirEnCursoDisponible() {
+            if (!currentPreviewCurso) return;
+            
+            await inscribirEnCursoDisponibleDesdeBoton(currentPreviewCurso.ID_Curso, currentPreviewCurso.ID_Grupo);
+        }
+
+        async function inscribirEnCursoDisponibleDesdeBoton(cursoId, grupoId) {
+            if (!currentUser) {
+                showNotification('❌ Debes iniciar sesión para inscribirte', 'error');
+                return;
+            }
+            
+            try {
+                showNotification('🔄 Inscribiéndote al curso...');
+                
+                const inscripcionId = 'INS_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                const fechaInscripcion = new Date().toISOString().split('T')[0];
+                
+                const response = await callJSONP('inscribir', {
+                    ID_Inscripcion: inscripcionId,
+                    ID_Alumno: currentUser.ID_Alumno,
+                    ID_Curso: cursoId,
+                    ID_Grupo: grupoId,
+                    Fecha_Inscripcion: fechaInscripcion,
+                    Postulantes: 'SI'
+                });
+                
+                if (response.success) {
+                    showNotification('✅ ¡Te has inscrito correctamente al curso!');
+                    
+                    closeCursoPreview();
+                    
+                    sessionStorage.removeItem(`mis_cursos_${currentUser.ID_Alumno}`);
+                    sessionStorage.removeItem(`cursos_disponibles_${currentUser.ID_Alumno}`);
+                    loadMisCursos();
+                    loadCursosDisponibles();
+                    
+                } else {
+                    showNotification('❌ Error al inscribirse: ' + response.error, 'error');
+                }
+            } catch (error) {
+                showNotification('❌ Error de conexión: ' + error.message, 'error');
+            }
+        }
+
+        // === SISTEMA DE MÓDULOS Y CLASES COMPLETO ===
         async function accederAlCurso(cursoId, grupoId) {
             currentCourseId = cursoId;
             currentGrupoId = grupoId;
             
-            // Encontrar los datos del curso actual
-            currentCourseData = cursosCache.find(curso => 
+            const misCursosCache = JSON.parse(sessionStorage.getItem(`mis_cursos_${alumnoActual.ID_Alumno}`) || '[]');
+            currentCourseData = misCursosCache.find(curso => 
                 curso.ID_Curso === cursoId && curso.ID_Grupo === grupoId
             );
             
-            // Mostrar cabecera del curso
-            if (currentCourseData) {
-                document.getElementById('courseTitle').textContent = currentCourseData.Nombre_Curso;
-                document.getElementById('courseDescription').textContent = currentCourseData.Descripcion || 'No hay descripción disponible para este curso.';
-                
-                // Imagen de cabecera del curso
-                if (currentCourseData.Foto_Cabecera) {
-                    document.getElementById('courseHeaderImage').src = currentCourseData.Foto_Cabecera;
-                    document.getElementById('courseHeaderImage').style.display = 'block';
-                } else {
-                    document.getElementById('courseHeaderImage').style.display = 'none';
-                }
-                
-                // Actualizar información del curso (calendario y mensaje)
-                updateCourseInfo();
-                
-                // Actualizar botones del curso
-                updateCourseButtons();
-                
-                document.getElementById('courseHeader').style.display = 'block';
+            if (!currentCourseData) {
+                showNotification('❌ No tienes acceso a este curso', 'error');
+                return;
             }
             
-            // Ocultar cursos y mostrar módulos
-            document.getElementById('cursosContainer').style.display = 'none';
-            document.getElementById('mainTitle').textContent = 'Módulos del Curso';
+            document.getElementById('courseTitle').textContent = currentCourseData.Nombre_Curso;
+            document.getElementById('courseDescription').textContent = currentCourseData.Descripcion || 'No hay descripción disponible para este curso.';
+            
+            if (currentCourseData.Foto_Cabecera) {
+                document.getElementById('courseHeaderImage').src = currentCourseData.Foto_Cabecera;
+                document.getElementById('courseHeaderImage').style.display = 'block';
+            } else {
+                document.getElementById('courseHeaderImage').style.display = 'none';
+            }
+            
+            updateCourseInfo();
+            updateCourseButtons();
+            
+            document.getElementById('courseHeader').style.display = 'block';
+            
+            document.getElementById('misCursosContainer').style.display = 'none';
+            document.getElementById('cursosDisponiblesContainer').style.display = 'none';
+            document.querySelectorAll('.section-title, .section-subtitle').forEach(el => el.style.display = 'none');
             
             const container = document.getElementById('modulesContainer');
             container.innerHTML = '<button class="btn btn-secondary back-btn" onclick="volverACursos()">← Volver a Mis Cursos</button><div class="loading">Cargando módulos...</div>';
             
-            // Desplazar hacia el contenedor de módulos
             setTimeout(() => {
                 container.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 300);
@@ -2286,14 +2325,12 @@
             }
         }
 
-        // === NUEVA FUNCIÓN PARA MOSTRAR INFORMACIÓN DEL CURSO - MODIFICADA ===
         function updateCourseInfo() {
             const infoContainer = document.getElementById('courseInfoText');
             infoContainer.innerHTML = '';
             
             let hasInfo = false;
             
-            // Mostrar mensaje como texto
             if (currentCourseData.Mensaje) {
                 hasInfo = true;
                 const messageItem = document.createElement('div');
@@ -2308,16 +2345,13 @@
                 infoContainer.appendChild(messageItem);
             }
             
-            // Mostrar el contenedor solo si hay información
             infoContainer.style.display = hasInfo ? 'block' : 'none';
         }
 
-        // === FUNCIÓN ACTUALIZADA PARA BOTONES DEL CURSO - CON CALENDARIO ===
         function updateCourseButtons() {
             const buttonsContainer = document.getElementById('courseButtons');
             buttonsContainer.innerHTML = '';
             
-            // Botón manual del curso
             if (currentCourseData.Manual_c) {
                 const manualBtn = document.createElement('button');
                 manualBtn.className = 'btn btn-primary';
@@ -2328,7 +2362,6 @@
                 buttonsContainer.appendChild(manualBtn);
             }
             
-            // Botón calendario lectivo
             if (currentCourseData.Calendario) {
                 const calendarBtn = document.createElement('button');
                 calendarBtn.className = 'btn btn-secondary';
@@ -2339,7 +2372,6 @@
                 buttonsContainer.appendChild(calendarBtn);
             }
             
-            // Botón WhatsApp
             if (currentCourseData.Whatsapp) {
                 const whatsappBtn = document.createElement('button');
                 whatsappBtn.className = 'btn btn-success';
@@ -2351,8 +2383,13 @@
             }
         }
 
+        function showCourseManual(manualUrl) {
+            if (manualUrl) {
+                openManualViewer(manualUrl, 'Manual del Curso');
+            }
+        }
+
         function volverACursos() {
-            // Limpiar reproductores
             for (var lessonId in currentPlayers) {
                 if (currentPlayers[lessonId]) {
                     currentPlayers[lessonId].destroy();
@@ -2360,17 +2397,16 @@
             }
             currentPlayers = {};
             
-            // Ocultar cabecera del curso
             document.getElementById('courseHeader').style.display = 'none';
             
-            // Mostrar cursos nuevamente
             const container = document.getElementById('modulesContainer');
             container.innerHTML = '';
-            document.getElementById('cursosContainer').style.display = 'grid';
-            document.getElementById('mainTitle').textContent = 'Mis Cursos';
+            
+            document.getElementById('misCursosContainer').style.display = 'grid';
+            document.getElementById('cursosDisponiblesContainer').style.display = 'grid';
+            document.querySelectorAll('.section-title, .section-subtitle').forEach(el => el.style.display = 'block');
         }
-
-        // === SISTEMA DE MÓDULOS Y CLASES - MODIFICADO ===
+        // === SISTEMA COMPLETO DE MÓDULOS Y CLASES ===
         function displayModulos(modules, cursoId, grupoId) {
             const container = document.getElementById("modulesContainer");
             container.innerHTML = '<button class="btn btn-secondary back-btn" onclick="volverACursos()">← Volver a Mis Cursos</button>';
@@ -2424,7 +2460,6 @@
             
             var expandedContent = "<div class='expanded-module'>";
             
-            // Cabecera del módulo
             expandedContent += `
             <div class='module-header-expanded card'>
                 <div class='module-title-section'>
@@ -2433,7 +2468,7 @@
                 <div class='module-content'>
                     <div class='module-image-container'>
                         ${selectedModule['imagen_m'] && selectedModule['imagen_m'].trim() !== '' ? 
-                            `<img src="${selectedModule['imagen_m']}" class='module-header-image' alt='Imagen del módulo' onerror='this.style.display=\"none\"; this.nextElementSibling.style.display=\"flex\";' onload='this.style.display=\"block\"; this.nextElementSibling.style.display=\"none\";'>` : 
+                            `<img src="${selectedModule['imagen_m']}" class='module-header-image' alt='Imagen del módulo' onerror='this.style.display="none"; this.nextElementSibling.style.display="flex";' onload='this.style.display="block"; this.nextElementSibling.style.display="none";'>` : 
                             ''
                         }
                         <div style="width: 140px; height: 100px; background: linear-gradient(135deg, var(--azul), var(--naranja)); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; ${selectedModule['imagen_m'] && selectedModule['imagen_m'].trim() !== '' ? 'display: none;' : ''}">📚</div>
@@ -2450,7 +2485,6 @@
                 </div>
             </div>`;
             
-            // Resto del contenido del módulo (clases)
             expandedContent += "<div class='module-header'>";
             expandedContent += "<button class='btn btn-secondary back-button' onclick='collapseModule()'>← Mis Módulos</button>";
             expandedContent += "</div>";
@@ -2476,13 +2510,14 @@
                     var lessonId = content.ID_Clase;
                     var isCompleted = userProgress[lessonId] && userProgress[lessonId].completed;
                     
-                    // ✅ CORRECCIÓN APLICADA: Verificación segura para hasNotes
                     var hasNotes = userProgress[lessonId] && 
                                   userProgress[lessonId].notes && 
                                   typeof userProgress[lessonId].notes === 'string' && 
                                   userProgress[lessonId].notes.trim() !== '';
                     
-                    // === NUEVA ESTRUCTURA DE ACORDEÓN REORGANIZADA ===
+                    // Verificar si tiene ID_Encuesta
+                    var tieneEncuesta = content.ID_Encuesta && content.ID_Encuesta.trim() !== '';
+                    
                     expandedContent += `
                     <div class='lesson-accordion ${isCompleted ? 'completed' : ''}' data-lesson="${lessonId}">
                         <div class='lesson-header' onclick="toggleLessonAccordion('${lessonId}')">
@@ -2492,7 +2527,6 @@
                             </div>
                             <div class='lesson-thumbnail' onclick="event.stopPropagation(); toggleVideoPlayer('${lessonId}', '${content['URL Video']}')">`;
                     
-                    // Miniatura del video
                     var videoUrl = content['URL Video'] || '';
                     var videoId = extractVideoId(videoUrl);
                     if (videoId) {
@@ -2511,7 +2545,6 @@
                                 <div class='lesson-title'>${content['Nombre de la Clase'] || content.Nombre_Clase}</div>
                                 <div class='lesson-description'>${content['Descripción'] || 'No hay descripción disponible para esta clase.'}</div>
                                 
-                                <!-- CALIFICACIÓN CON ESTRELLAS -->
                                 ${renderCalificacionEstrellas(lessonId)}
                                 
                                 <div class='vista-button-container'>
@@ -2526,21 +2559,19 @@
                             <div class='lesson-actions'>
                                 <button id='video-btn-${lessonId}' class='btn btn-secondary action-btn' onclick='toggleVideoPlayer("${lessonId}", "${content['URL Video']}")'>🎬 Ver Video</button>`;
                     
-                    // Botón de manual si existe
                     if (content['URL Manual'] && content['URL Manual'].trim() !== '') {
                         expandedContent += `<button class='btn btn-secondary action-btn' onclick='showManual("${lessonId}", "${content['URL Manual']}")'>📄 Ver Manual</button>`;
                     }
                     
-                    // Botón de preguntas (antes encuesta) si existe
-                    if (content['URL Encuesta'] && content['URL Encuesta'].trim() !== '') {
-                        expandedContent += `<button class='btn btn-primary action-btn' onclick='openSurvey("${content['URL Encuesta']}")'>❓ Preguntas</button>`;
+                    // BOTÓN DE PREGUNTAS (ENCUESTA) - SOLO SI TIENE ID_Encuesta
+                    if (tieneEncuesta) {
+                        expandedContent += `<button class='btn btn-primary action-btn' onclick='abrirEncuesta("${content.ID_Encuesta}", "${lessonId}")'>❓ Preguntas</button>`;
                     }
                     
                     expandedContent += `<button id='notes-btn-${lessonId}' class='btn btn-primary action-btn' onclick='toggleNotes("${lessonId}")'>`;
                     expandedContent += hasNotes ? "📝 Ver notas (" + (userProgress[lessonId].notes.length > 0 ? "1" : "0") + ")" : "📝 Agregar notas";
                     expandedContent += `</button>`;
                     
-                    // Botón Siguiente Clase (excepto para la última clase)
                     if (j < selectedModule.Clases.length - 1) {
                         expandedContent += `<button class='btn btn-secondary action-btn' onclick='nextClass("${lessonId}", "${moduleId}")'>➡️ Siguiente Clase</button>`;
                     }
@@ -2549,7 +2580,7 @@
                         </div>
                     </div>`;
                     
-                    // === REPRODUCTOR DE VIDEO ===
+                    // Video player
                     if (content['URL Video'] && content['URL Video'].trim() !== '') {
                         expandedContent += `<div id='player-container-${lessonId}' class='player-container' style='display: none;'>
                             <div class='video-container' id='videoContainer-${lessonId}'>
@@ -2581,7 +2612,7 @@
                         </div>`;
                     }
                     
-                    // === CONTENEDOR PARA EL MANUAL ===
+                    // Manual
                     if (content['URL Manual'] && content['URL Manual'].trim() !== '') {
                         expandedContent += `<div id='manual-container-${lessonId}' class='manual-container card' style='display: none;'>
                             <div class='manual-header'>
@@ -2601,11 +2632,10 @@
                         </div>`;
                     }
                     
-                    // === ÁREA DE NOTAS ===
+                    // Notas
                     expandedContent += `<div id='notes-area-${lessonId}' class='notes-area card' style='display: none;'>
                         <h4>Notas para esta lección:</h4>
                         <textarea id='notes-text-${lessonId}' class='notes-textarea' placeholder='Escribe tus notas aquí...'>`;
-                    // ✅ CORRECCIÓN TAMBIÉN APLICADA AQUÍ
                     if (hasNotes) {
                         expandedContent += userProgress[lessonId].notes;
                     }
@@ -2627,53 +2657,9 @@
             
             document.getElementById('modulesContainer').appendChild(expandedContainer);
             
-            // Desplazar hacia el módulo expandido
             setTimeout(() => {
                 expandedContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 100);
-        }
-
-        // === NUEVA FUNCIÓN PARA EL BOTÓN VISTA ===
-        function toggleVista(lessonId, moduleId, moduleName, lessonName) {
-            const vistaBtn = document.getElementById('vista-btn-' + lessonId);
-            const isCurrentlyCompleted = vistaBtn.classList.contains('completed');
-            const newCompletedState = !isCurrentlyCompleted;
-            
-            // Actualizar visualmente el botón inmediatamente
-            if (newCompletedState) {
-                vistaBtn.classList.add('completed');
-                vistaBtn.textContent = 'Vista ✓';
-            } else {
-                vistaBtn.classList.remove('completed');
-                vistaBtn.textContent = 'Vista';
-            }
-            
-            // Llamar a la función existente para guardar el estado
-            markAsViewed(lessonId, moduleId, moduleName, lessonName, {checked: newCompletedState});
-        }
-
-        // === FUNCIÓN PARA CONTROLAR EL ACORDEÓN ===
-        function toggleLessonAccordion(lessonId) {
-            const accordion = document.querySelector(`.lesson-accordion[data-lesson="${lessonId}"]`);
-            
-            // Si ya está abierto, cerrarlo y pausar video
-            if (accordion.classList.contains('active')) {
-                accordion.classList.remove('active');
-                hideVideoPlayer(lessonId);
-                currentOpenAccordion = null;
-                return;
-            }
-            
-            // Cerrar el acordeón abierto actualmente
-            if (currentOpenAccordion && currentOpenAccordion !== accordion) {
-                const previousLessonId = currentOpenAccordion.getAttribute('data-lesson');
-                currentOpenAccordion.classList.remove('active');
-                hideVideoPlayer(previousLessonId);
-            }
-            
-            // Abrir el nuevo acordeón
-            accordion.classList.add('active');
-            currentOpenAccordion = accordion;
         }
 
         function collapseModule() {
@@ -2688,242 +2674,489 @@
             
             document.querySelector('#modulesContainer h3').style.display = 'block';
             
-            // Resetear el acordeón abierto
             currentOpenAccordion = null;
         }
 
-        // === NUEVA FUNCIÓN PARA ALTERNAR EL REPRODUCTOR DE VIDEO ===
+        function toggleLessonAccordion(lessonId) {
+            const accordion = document.querySelector(`.lesson-accordion[data-lesson="${lessonId}"]`);
+            
+            if (accordion.classList.contains('active')) {
+                accordion.classList.remove('active');
+                hideVideoPlayer(lessonId);
+                currentOpenAccordion = null;
+                return;
+            }
+            
+            if (currentOpenAccordion && currentOpenAccordion !== accordion) {
+                const previousLessonId = currentOpenAccordion.getAttribute('data-lesson');
+                currentOpenAccordion.classList.remove('active');
+                hideVideoPlayer(previousLessonId);
+            }
+            
+            accordion.classList.add('active');
+            currentOpenAccordion = accordion;
+        }
+
+        // === SISTEMA DE ENCUESTAS COMPLETO ===
+        async function abrirEncuesta(encuestaId, claseId) {
+            console.log('🎯 Abriendo encuesta:', encuestaId, 'para clase:', claseId);
+            
+            currentEncuestaId = encuestaId;
+            currentClaseId = claseId;
+            
+            // Verificar si ya completó la encuesta
+            try {
+                const verificacion = await callJSONP('verificarEncuestaCompletada', {
+                    alumnoId: alumnoActual.ID_Alumno,
+                    encuestaId: encuestaId
+                });
+                
+                if (verificacion.success && verificacion.completada) {
+                    console.log('✅ Encuesta ya completada, mostrando revisión');
+                    mostrarRevisionEncuesta(encuestaId, claseId);
+                    return;
+                }
+                
+            } catch (error) {
+                console.error('Error verificando encuesta:', error);
+            }
+            
+            // Cargar encuesta nueva
+            preguntasEncuestaActual = todasPreguntas.filter(p => p.ID_Encuesta === encuestaId);
+            
+            if (preguntasEncuestaActual.length === 0) {
+                showNotification('❌ No hay preguntas disponibles para esta encuesta', 'error');
+                return;
+            }
+            
+            // Ordenar preguntas
+            preguntasEncuestaActual.sort((a, b) => (a.Numero_Pregunta || 0) - (b.Numero_Pregunta || 0));
+            
+            // Limpiar respuestas y archivos
+            respuestasEncuesta = {};
+            archivosEncuesta = {};
+            
+            // Mostrar modal
+            mostrarEncuesta();
+        }
+
+        function mostrarEncuesta() {
+            const encuesta = todasEncuestas.find(e => e.ID_Encuesta === currentEncuestaId);
+            const nombreEncuesta = encuesta ? encuesta.Nombre_Encuesta : 'Encuesta';
+            
+            document.getElementById('surveyModalTitle').textContent = nombreEncuesta;
+            
+            let html = `
+                <div class="survey-info">
+                    <h3>${nombreEncuesta}</h3>
+                    <p>${encuesta ? encuesta.Descripcion : 'Responde todas las preguntas'}</p>
+                    <p><strong>Total de preguntas:</strong> ${preguntasEncuestaActual.length}</p>
+                </div>
+            `;
+            
+            preguntasEncuestaActual.forEach((pregunta, index) => {
+                html += renderizarPregunta(pregunta, index);
+            });
+            
+            document.getElementById('surveyBody').innerHTML = html;
+            
+            document.getElementById('surveyActions').innerHTML = `
+                <button class="btn btn-secondary" onclick="closeSurveyModal()">Cancelar</button>
+                <button class="btn btn-primary" onclick="enviarRespuestasEncuesta()">Enviar Respuestas</button>
+            `;
+            
+            document.getElementById('universalSurveyModal').style.display = 'flex';
+        }
+
+        function renderizarPregunta(pregunta, index) {
+            const tipo = (pregunta.Tipo_Pregunta || '').toLowerCase();
+            let tipoBadge = 'Opción Múltiple';
+            if (tipo === 'texto') tipoBadge = 'Texto';
+            if (tipo === 'archivo') tipoBadge = 'Archivo';
+            
+            let html = `
+                <div class="survey-question">
+                    <div class="question-header">
+                        <div class="question-number">${pregunta.Numero_Pregunta || (index + 1)}</div>
+                        <div class="question-type-badge">${tipoBadge}</div>
+                    </div>
+                    <div class="question-text">${pregunta.Enunciado_Pregunta || 'Sin enunciado'}</div>
+            `;
+            
+            if (tipo === 'multiple_choice' || tipo === 'opcion_multiple') {
+                html += '<div class="question-options">';
+                for (let i = 1; i <= 5; i++) {
+                    const opcion = pregunta[`Opcion_${i}`];
+                    if (opcion && opcion.trim() !== '') {
+                        html += `
+                            <label class="option-label">
+                                <input type="radio" name="pregunta_${pregunta.ID_Pregunta}" value="${opcion}" 
+                                       onchange="guardarRespuesta('${pregunta.ID_Pregunta}', '${opcion}')">
+                                <span class="option-text">${opcion}</span>
+                            </label>
+                        `;
+                    }
+                }
+                html += '</div>';
+                
+            } else if (tipo === 'texto') {
+                html += `
+                    <textarea class="question-textarea" id="texto_${pregunta.ID_Pregunta}" 
+                              placeholder="Escribe tu respuesta aquí..."
+                              onchange="guardarRespuesta('${pregunta.ID_Pregunta}', this.value)"></textarea>
+                `;
+                
+            } else if (tipo === 'archivo') {
+                html += `
+                    <input type="file" id="archivo_${pregunta.ID_Pregunta}" class="question-file-input" 
+                           accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                           onchange="manejarArchivoEncuesta('${pregunta.ID_Pregunta}', this)">
+                    <label for="archivo_${pregunta.ID_Pregunta}" class="file-upload-btn">
+                        📎 Seleccionar archivo
+                    </label>
+                    <div class="file-info" id="file-info-${pregunta.ID_Pregunta}"></div>
+                `;
+            }
+            
+            html += '</div>';
+            return html;
+        }
+
+        function guardarRespuesta(idPregunta, respuesta) {
+            respuestasEncuesta[idPregunta] = respuesta;
+            console.log('💾 Respuesta guardada:', idPregunta, '=', respuesta);
+        }
+
+        function manejarArchivoEncuesta(idPregunta, input) {
+            const file = input.files[0];
+            if (!file) return;
+            
+            const fileInfo = document.getElementById(`file-info-${idPregunta}`);
+            fileInfo.textContent = `📤 Preparando: ${file.name}...`;
+            fileInfo.style.display = 'block';
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                archivosEncuesta[idPregunta] = {
+                    base64: e.target.result,
+                    nombre: file.name
+                };
+                respuestasEncuesta[idPregunta] = `Archivo: ${file.name}`;
+                fileInfo.textContent = `✅ Listo: ${file.name}`;
+                console.log('📎 Archivo cargado:', idPregunta, file.name);
+            };
+            reader.onerror = function() {
+                fileInfo.textContent = '❌ Error al cargar archivo';
+                fileInfo.style.color = 'var(--error)';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function enviarRespuestasEncuesta() {
+            // Validar que todas las preguntas estén respondidas
+            const sinResponder = [];
+            preguntasEncuestaActual.forEach(pregunta => {
+                if (!respuestasEncuesta[pregunta.ID_Pregunta]) {
+                    sinResponder.push(pregunta.Numero_Pregunta || '?');
+                }
+            });
+            
+            if (sinResponder.length > 0) {
+                showNotification(`❌ Faltan respuestas en las preguntas: ${sinResponder.join(', ')}`, 'error');
+                return;
+            }
+            
+            showNotification('🔄 Enviando respuestas...');
+            
+            // Subir archivos si existen
+            for (const idPregunta in archivosEncuesta) {
+                const archivoData = archivosEncuesta[idPregunta];
+                try {
+                    showNotification(`📤 Subiendo archivo: ${archivoData.nombre}...`);
+                    
+                    const resultado = await callJSONP('subirArchivoDrive', {
+                        archivo: archivoData.base64,
+                        nombreArchivo: archivoData.nombre,
+                        idAlumno: alumnoActual.ID_Alumno,
+                        idPregunta: idPregunta
+                    });
+                    
+                    if (resultado.success) {
+                        archivosEncuesta[idPregunta].url = resultado.url;
+                    } else {
+                        showNotification(`❌ Error subiendo archivo: ${resultado.error}`, 'error');
+                        return;
+                    }
+                } catch (error) {
+                    showNotification(`❌ Error: ${error.message}`, 'error');
+                    return;
+                }
+            }
+            
+            // Preparar datos para guardar
+            const respuestasArray = preguntasEncuestaActual.map(pregunta => {
+                const respuestaAlumno = respuestasEncuesta[pregunta.ID_Pregunta] || '';
+                const urlArchivo = archivosEncuesta[pregunta.ID_Pregunta] ? archivosEncuesta[pregunta.ID_Pregunta].url : '';
+                
+                return {
+                    ID_Pregunta: pregunta.ID_Pregunta,
+                    Respuesta_Alumno: respuestaAlumno,
+                    Respuesta_Correcta: pregunta.Respuesta_Correcta,
+                    Tipo_Pregunta: pregunta.Tipo_Pregunta,
+                    Puntaje_Pregunta: parseFloat(pregunta.Puntaje_Pregunta || 1),
+                    URL_Archivo: urlArchivo
+                };
+            });
+            
+            const datosGuardar = {
+                idAlumno: alumnoActual.ID_Alumno,
+                idClase: currentClaseId,
+                idEncuesta: currentEncuestaId,
+                respuestas: respuestasArray
+            };
+            
+            try {
+                const resultado = await callJSONP('guardarRespuestasAlumno', {
+                    data: JSON.stringify(datosGuardar)
+                });
+                
+                if (resultado.success) {
+                    const calificacion = resultado.calificacion || 0;
+                    
+                    // Actualizar progreso local
+                    if (!userProgress[currentClaseId]) {
+                        userProgress[currentClaseId] = {};
+                    }
+                    userProgress[currentClaseId].calificacion = calificacion;
+                    userProgress[currentClaseId].completed = true;
+                    
+                    // Recargar progreso
+                    await loadUserProgress(alumnoActual.ID_Alumno);
+                    
+                    mostrarResultadoEncuesta(resultado);
+                } else {
+                    showNotification('❌ Error al guardar: ' + resultado.error, 'error');
+                }
+                
+            } catch (error) {
+                showNotification('❌ Error: ' + error.message, 'error');
+            }
+        }
+
+        function mostrarResultadoEncuesta(resultado) {
+            const calificacion = resultado.calificacion || 0;
+            const puntajeObtenido = resultado.puntaje_obtenido || 0;
+            const puntajeMaximo = resultado.puntaje_maximo || 1;
+            
+            let mensaje = '';
+            if (calificacion >= 90) mensaje = '¡Excelente trabajo! 🎉';
+            else if (calificacion >= 70) mensaje = '¡Muy bien! 👏';
+            else if (calificacion >= 50) mensaje = 'Buen intento 👍';
+            else mensaje = 'Sigue practicando 💪';
+            
+            const html = `
+                <div class="survey-resultado">
+                    <div class="resultado-header">
+                        <h2>🎉 ¡Encuesta Completada!</h2>
+                        <div class="resultado-score">${calificacion}%</div>
+                        <div class="resultado-mensaje">${mensaje}</div>
+                    </div>
+                    <p style="text-align: center; color: var(--gray); margin: 20px 0;">
+                        Has obtenido <strong>${puntajeObtenido}</strong> de <strong>${puntajeMaximo}</strong> puntos.
+                    </p>
+                    <p style="text-align: center; color: var(--gray); font-size: 14px;">
+                        ${puntajeObtenido < puntajeMaximo ? 'Las preguntas de texto y archivo serán calificadas manualmente por el instructor.' : ''}
+                    </p>
+                </div>
+            `;
+            
+            document.getElementById('surveyBody').innerHTML = html;
+            document.getElementById('surveyActions').innerHTML = `
+                <button class="btn btn-primary" onclick="cerrarYActualizarEncuesta()" style="width: 100%;">Cerrar</button>
+            `;
+            
+            showNotification('✅ Respuestas guardadas correctamente');
+        }
+
+        async function mostrarRevisionEncuesta(encuestaId, claseId) {
+            showNotification('🔄 Cargando revisión...');
+            
+            try {
+                const resultado = await callJSONP('obtenerRespuestasAlumno', {
+                    alumnoId: alumnoActual.ID_Alumno,
+                    encuestaId: encuestaId
+                });
+                
+                if (resultado.success && resultado.data) {
+                    renderizarRevisionEncuesta(resultado.data);
+                } else {
+                    showNotification('❌ Error cargando revisión', 'error');
+                }
+                
+            } catch (error) {
+                showNotification('❌ Error: ' + error.message, 'error');
+            }
+        }
+
+        function renderizarRevisionEncuesta(respuestas) {
+            const encuesta = todasEncuestas.find(e => e.ID_Encuesta === currentEncuestaId);
+            
+            let correctas = 0;
+            let incorrectas = 0;
+            let pendientes = 0;
+            let puntajeTotal = 0;
+            let puntajeMaximo = 0;
+            
+            respuestas.forEach(r => {
+                puntajeTotal += parseFloat(r.Puntaje_Obtenido) || 0;
+                puntajeMaximo += parseFloat(r.Puntaje_Pregunta) || 0;
+                
+                if (r.Estado === 'CALIFICADO') {
+                    if (r.Es_Correcta) correctas++;
+                    else incorrectas++;
+                } else {
+                    pendientes++;
+                }
+            });
+            
+            const porcentaje = puntajeMaximo > 0 ? Math.round((puntajeTotal / puntajeMaximo) * 100) : 0;
+            
+            let html = `
+                <div class="survey-resultado">
+                    <div class="resultado-header">
+                        <h3>${encuesta ? encuesta.Nombre_Encuesta : 'Encuesta Completada'}</h3>
+                        <div class="resultado-score">${porcentaje}%</div>
+                        <div style="display: flex; justify-content: space-around; margin-top: 20px; color: white;">
+                            <div>
+                                <div style="font-size: 24px; font-weight: bold;">${correctas}</div>
+                                <div>Correctas</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 24px; font-weight: bold;">${incorrectas}</div>
+                                <div>Incorrectas</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 24px; font-weight: bold;">${pendientes}</div>
+                                <div>Pendientes</div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 15px;">Puntaje: ${puntajeTotal} / ${puntajeMaximo}</div>
+                    </div>
+                    
+                    <div style="margin-top: 20px;">
+            `;
+            
+            respuestas.forEach(r => {
+                const statusClass = r.Estado === 'CALIFICADO' ? (r.Es_Correcta ? 'correcta' : 'incorrecta') : 'pendiente';
+                const statusText = r.Estado === 'CALIFICADO' ? (r.Es_Correcta ? '✅ Correcta' : '❌ Incorrecta') : '⏳ Pendiente';
+                
+                html += `
+                    <div class="revision-question ${statusClass}">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <strong>${r.Numero_Pregunta}. ${r.Enunciado}</strong>
+                            <div>
+                                <span class="revision-status ${statusClass}">${statusText}</span>
+                                <span class="puntaje-badge">${r.Puntaje_Obtenido} / ${r.Puntaje_Pregunta} pts</span>
+                            </div>
+                        </div>
+                `;
+                
+                if (r.Opciones && r.Opciones.length > 0) {
+                    html += '<div style="margin: 10px 0;"><strong>Opciones:</strong><ul style="margin: 5px 0; padding-left: 20px;">';
+                    r.Opciones.forEach(op => {
+                        const isCorrecta = op === r.Respuesta_Correcta;
+                        const isAlumno = op === r.Respuesta_Alumno;
+                        let style = '';
+                        if (isCorrecta) style = 'color: var(--success); font-weight: bold;';
+                        if (isAlumno && !isCorrecta) style = 'color: var(--error); font-weight: bold;';
+                        
+                        html += `<li style="${style}">${op}${isCorrecta ? ' (Correcta)' : ''}${isAlumno ? ' (Tu respuesta)' : ''}</li>`;
+                    });
+                    html += '</ul></div>';
+                }
+                
+                html += `<div class="respuesta-alumno"><strong>Tu respuesta:</strong> ${r.Respuesta_Alumno}`;
+                if (r.URL_Archivo) {
+                    html += ` <a href="${r.URL_Archivo}" target="_blank" style="color: var(--azul); text-decoration: none;">📎 Ver archivo</a>`;
+                }
+                html += '</div>';
+                
+                if (r.Tipo_Pregunta === 'MULTIPLE_CHOICE' && r.Respuesta_Correcta) {
+                    html += `<div class="respuesta-correcta"><strong>Respuesta correcta:</strong> ${r.Respuesta_Correcta}</div>`;
+                }
+                
+                if (r.Comentario_Maestro) {
+                    html += `<div style="background: #e3f2fd; padding: 10px; border-radius: 5px; margin-top: 10px; border-left: 3px solid var(--azul);">
+                        <strong>💬 Comentario del Maestro:</strong><br>${r.Comentario_Maestro}
+                    </div>`;
+                }
+                
+                html += '</div>';
+            });
+            
+            html += '</div></div>';
+            
+            document.getElementById('surveyBody').innerHTML = html;
+            document.getElementById('surveyActions').innerHTML = `
+                <button class="btn btn-primary" onclick="closeSurveyModal()" style="width: 100%;">Cerrar</button>
+            `;
+            
+            document.getElementById('surveyModalTitle').textContent = 'Revisión de Encuesta';
+            document.getElementById('universalSurveyModal').style.display = 'flex';
+        }
+
+        function closeSurveyModal() {
+            document.getElementById('universalSurveyModal').style.display = 'none';
+            currentEncuestaId = null;
+            currentClaseId = null;
+            preguntasEncuestaActual = [];
+            respuestasEncuesta = {};
+            archivosEncuesta = {};
+        }
+
+        function cerrarYActualizarEncuesta() {
+            closeSurveyModal();
+            
+            // Actualizar las estrellas en la interfaz
+            if (currentClaseId && userProgress[currentClaseId]) {
+                const calificacion = userProgress[currentClaseId].calificacion || 0;
+                const calificacionContainer = document.querySelector(`[data-lesson="${currentClaseId}"] .calificacion-container`);
+                
+                if (calificacionContainer) {
+                    calificacionContainer.innerHTML = renderCalificacionEstrellasHTML(calificacion);
+                }
+            }
+            
+            showNotification('✅ Encuesta completada y guardada');
+        }
+
+        function renderCalificacionEstrellasHTML(calificacion) {
+            const porcentaje = Math.min(100, Math.max(0, calificacion));
+            const estrellasActivas = Math.round((porcentaje / 100) * 5);
+            
+            let html = '<div class="calificacion-estrellas">';
+            for (let i = 1; i <= 5; i++) {
+                html += `<span class="estrella ${i <= estrellasActivas ? 'activa' : ''}">★</span>`;
+            }
+            html += '</div>';
+            html += `<div class="calificacion-texto">Calificación: <span class="calificacion-valor">${porcentaje}/100</span></div>`;
+            
+            return html;
+        }
+        // === SISTEMA DE VIDEO COMPLETO ===
         function toggleVideoPlayer(lessonId, videoUrl) {
             const playerContainer = document.getElementById('player-container-' + lessonId);
             const videoBtn = document.getElementById('video-btn-' + lessonId);
             
             if (playerContainer.style.display === 'none' || !playerContainer.style.display) {
-                // Mostrar el video
                 showVideoPlayer(lessonId, videoUrl);
                 videoBtn.textContent = '❌ Cerrar Video';
             } else {
-                // Ocultar el video
                 hideVideoPlayer(lessonId);
                 videoBtn.textContent = '🎬 Ver Video';
             }
         }
 
-        // === FUNCIÓN CORREGIDA PARA GUARDAR PROGRESO ===
-        async function saveProgressToDatabase(lessonId, completed, notes) {
-            try {
-                console.log('💾 Intentando guardar progreso:', {
-                    alumno: alumnoActual.ID_Alumno,
-                    clase: lessonId,
-                    completada: completed,
-                    notasLength: notes ? notes.length : 0
-                });
-                
-                const params = {
-                    action: 'saveProgress',
-                    ID_Alumno: alumnoActual.ID_Alumno,
-                    ID_Clase: lessonId,
-                    Fecha_Guardado: new Date().toISOString().split('T')[0],
-                    Completada: completed ? "TRUE" : "FALSE",
-                    Notas_Alumno: notes || ''
-                };
-                
-                console.log('📤 Parámetros enviados:', params);
-                
-                const response = await callJSONP('saveProgress', params);
-                
-                console.log('📥 Respuesta recibida:', response);
-                
-                if (!response.success) {
-                    throw new Error(response.error || 'Error al guardar el progreso');
-                }
-                
-                return response;
-                
-            } catch (error) {
-                console.error('💥 Error guardando progreso:', error);
-                throw error;
-            }
-        }
-
-        // === SISTEMA DE PROGRESO MEJORADO Y CORREGIDO ===
-        async function markAsViewed(lessonId, moduleId, moduleName, lessonName, checkbox) {
-            const completed = checkbox.checked;
-            const notes = userProgress[lessonId] ? userProgress[lessonId].notes : '';
-            
-            console.log('📌 Marcando clase como vista:', {
-                lessonId,
-                moduleId,
-                completed,
-                hasNotes: !!notes
-            });
-            
-            const contentItem = document.querySelector(`.lesson-accordion[data-lesson="${lessonId}"]`);
-            if (completed) {
-                contentItem.classList.add('completed');
-            } else {
-                contentItem.classList.remove('completed');
-            }
-            
-            // Actualizar el botón Vista
-            const vistaBtn = document.getElementById('vista-btn-' + lessonId);
-            if (vistaBtn) {
-                if (completed) {
-                    vistaBtn.classList.add('completed');
-                    vistaBtn.textContent = 'Vista ✓';
-                } else {
-                    vistaBtn.classList.remove('completed');
-                    vistaBtn.textContent = 'Vista';
-                }
-            }
-            
-            try {
-                // Guardar progreso en la base de datos
-                const saveResult = await saveProgressToDatabase(lessonId, completed, notes);
-                
-                console.log('✅ Progreso guardado exitosamente:', saveResult);
-                
-                // Actualizar progreso local
-                if (!userProgress[lessonId]) {
-                    userProgress[lessonId] = {};
-                }
-                
-                userProgress[lessonId].completed = completed;
-                userProgress[lessonId].notes = notes;
-                userProgress[lessonId].lastUpdate = new Date();
-                
-                // Actualizar cache local
-                updateLocalCache();
-                
-                // Mostrar notificación
-                showNotification(completed ? '✅ Lección completada' : '📝 Progreso actualizado');
-                
-                // Actualizar progreso del módulo
-                updateModuleProgress(moduleId);
-                
-            } catch (error) {
-                console.error('❌ Error al guardar:', error);
-                showNotification('❌ Error al guardar: ' + error.message, 'error');
-                
-                // Revertir el estado
-                checkbox.checked = !completed;
-                
-                if (completed) {
-                    contentItem.classList.remove('completed');
-                    if (vistaBtn) {
-                        vistaBtn.classList.remove('completed');
-                        vistaBtn.textContent = 'Vista';
-                    }
-                } else {
-                    contentItem.classList.add('completed');
-                    if (vistaBtn) {
-                        vistaBtn.classList.add('completed');
-                        vistaBtn.textContent = 'Vista ✓';
-                    }
-                }
-            }
-        }
-
-        // Función para actualizar el progreso del módulo
-        function updateModuleProgress(moduleId) {
-            const selectedModule = userModules.find(m => m.ID_Módulo === moduleId);
-            if (!selectedModule) return;
-            
-            let completedCount = 0;
-            selectedModule.Clases.forEach(content => {
-                if (userProgress[content.ID_Clase] && userProgress[content.ID_Clase].completed) {
-                    completedCount++;
-                }
-            });
-            
-            const totalCount = selectedModule.Clases.length;
-            const progressPercentage = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
-            
-            // Actualizar la barra de progreso en la vista expandida
-            const progressBar = document.querySelector('.module-progress-expanded .progress-bar');
-            const progressText = document.querySelector('.module-progress-expanded .progress-text');
-            
-            if (progressBar) {
-                progressBar.style.width = progressPercentage + '%';
-            }
-            
-            if (progressText) {
-                progressText.textContent = completedCount + "/" + totalCount + " lecciones (" + progressPercentage + "%)";
-            }
-            
-            // Actualizar la tarjeta del módulo
-            const moduleCard = document.querySelector(`[onclick="expandModule('${moduleId}')"]`);
-            if (moduleCard) {
-                const cardProgressBar = moduleCard.querySelector('.progress-bar');
-                const cardProgressText = moduleCard.querySelector('.progress-text');
-                
-                if (cardProgressBar) {
-                    cardProgressBar.style.width = progressPercentage + '%';
-                }
-                
-                if (cardProgressText) {
-                    cardProgressText.textContent = progressPercentage + '% completado';
-                }
-            }
-        }
-
-        // === FUNCIÓN GUARDAR NOTAS MEJORADA ===
-        async function saveNotes(lessonId, moduleName, lessonName) {
-            const notesText = document.getElementById('notes-text-' + lessonId).value;
-            const saveButton = document.getElementById('save-notes-btn-' + lessonId);
-            
-            console.log('💾 Guardando notas para clase:', lessonId, 'Longitud:', notesText.length);
-            
-            saveButton.textContent = 'Guardando...';
-            saveButton.disabled = true;
-            
-            try {
-                // Obtener estado de completado actual
-                const isCompleted = userProgress[lessonId] ? userProgress[lessonId].completed : false;
-                
-                console.log('Estado actual de la clase:', {
-                    lessonId,
-                    isCompleted,
-                    notesLength: notesText.length
-                });
-                
-                // Guardar notas en la base de datos
-                const saveResult = await saveProgressToDatabase(lessonId, isCompleted, notesText);
-                
-                console.log('✅ Notas guardadas exitosamente:', saveResult);
-                
-                // Actualizar progreso local
-                if (!userProgress[lessonId]) {
-                    userProgress[lessonId] = {};
-                }
-                userProgress[lessonId].notes = notesText;
-                userProgress[lessonId].lastUpdate = new Date();
-                
-                // Actualizar cache local
-                updateLocalCache();
-                
-                showNotification('✅ Notas guardadas correctamente');
-                saveButton.textContent = 'Guardado ✓';
-                
-                // Actualizar el botón de notas
-                const notesButton = document.getElementById('notes-btn-' + lessonId);
-                if (notesButton) {
-                    notesButton.textContent = '📝 Ver notas (' + (notesText.length > 0 ? "1" : "0") + ')';
-                }
-                
-                setTimeout(() => {
-                    saveButton.textContent = 'Guardar notas';
-                    saveButton.disabled = false;
-                }, 2000);
-                
-            } catch (error) {
-                console.error('❌ Error guardando notas:', error);
-                showNotification('❌ Error: ' + error.message, 'error');
-                saveButton.textContent = 'Guardar notas';
-                saveButton.disabled = false;
-            }
-        }
-
-        // === SISTEMA DE VIDEO MEJORADO Y CORREGIDO ===
         function showVideoPlayer(lessonId, videoUrl) {
             var videoId = extractVideoId(videoUrl);
             if (!videoId) {
@@ -2938,7 +3171,6 @@
             document.querySelectorAll('.player-container').forEach(container => {
                 if (container.id !== 'player-container-' + lessonId) {
                     container.style.display = 'none';
-                    // Restaurar el texto del botón de otros videos
                     const otherLessonId = container.id.replace('player-container-', '');
                     const otherVideoBtn = document.getElementById('video-btn-' + otherLessonId);
                     if (otherVideoBtn) {
@@ -2949,7 +3181,6 @@
             
             playerContainer.style.display = 'block';
             
-            // Desplazar la página para mostrar el reproductor
             playerContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
             
             if (!currentPlayers[lessonId] || currentPlayers[lessonId].getVideoData === undefined) {
@@ -2970,7 +3201,6 @@
                 currentPlayers[lessonId].pauseVideo();
             }
             
-            // Restaurar el texto del botón
             const videoBtn = document.getElementById('video-btn-' + lessonId);
             if (videoBtn) {
                 videoBtn.textContent = '🎬 Ver Video';
@@ -3042,15 +3272,6 @@
             }
         }
 
-        // === FUNCIÓN PARA ACTUALIZAR TIEMPO EN BARRA DE PROGRESO ===
-        function formatTime(seconds) {
-            if (!seconds || isNaN(seconds)) return "0:00";
-            
-            var mins = Math.floor(seconds / 60);
-            var secs = Math.floor(seconds % 60);
-            return mins + ":" + (secs < 10 ? "0" : "") + secs;
-        }
-
         function updateProgress(lessonId) {
             var player = currentPlayers[lessonId];
             if (!player || !player.getCurrentTime || dragging) return;
@@ -3072,47 +3293,19 @@
                 thumbElement.style.left = (percent / 100 * progressBarElement.offsetWidth) + "px";
             }
             
-            // ACTUALIZAR DISPLAY DE TIEMPO
             if (timeDisplay && duration) {
                 timeDisplay.textContent = formatTime(currentTime) + " / " + formatTime(duration);
             }
         }
 
-        // === NUEVAS FUNCIONES PARA CONTROL DE CONTROLES EN PANTALLA COMPLETA ===
-        function showControls(lessonId) {
-            const controlsPanel = document.querySelector(`#player-container-${lessonId} .controls-panel`);
-            if (controlsPanel) {
-                controlsPanel.classList.add('show-controls');
-            }
+        function formatTime(seconds) {
+            if (!seconds || isNaN(seconds)) return "0:00";
             
-            // Cancelar temporizador anterior
-            if (hideControlsTimers[lessonId]) {
-                clearTimeout(hideControlsTimers[lessonId]);
-            }
-            
-            // Establecer nuevo temporizador para ocultar controles después de 3 segundos
-            hideControlsTimers[lessonId] = setTimeout(() => {
-                hideControls(lessonId);
-            }, 3000);
-        }
-        
-        function hideControls(lessonId) {
-            const controlsPanel = document.querySelector(`#player-container-${lessonId} .controls-panel`);
-            if (controlsPanel) {
-                controlsPanel.classList.remove('show-controls');
-            }
-        }
-        
-        function toggleControls(lessonId) {
-            const controlsPanel = document.querySelector(`#player-container-${lessonId} .controls-panel`);
-            if (controlsPanel && controlsPanel.classList.contains('show-controls')) {
-                hideControls(lessonId);
-            } else {
-                showControls(lessonId);
-            }
+            var mins = Math.floor(seconds / 60);
+            var secs = Math.floor(seconds % 60);
+            return mins + ":" + (secs < 10 ? "0" : "") + secs;
         }
 
-        // === FUNCIÓN SETUP CUSTOM CONTROLS MEJORADA Y CORREGIDA ===
         function setupCustomControls(lessonId) {
             var overlay = document.getElementById("overlay-" + lessonId);
             var playPauseBtn = document.getElementById("playPauseBtn-" + lessonId);
@@ -3122,7 +3315,6 @@
             var progressBar = document.getElementById("progressBar-" + lessonId);
             var thumb = document.getElementById("thumb-" + lessonId);
 
-            // Configurar overlay para mostrar controles al tocar
             if (overlay) {
                 overlay.onclick = function(e) { 
                     if (!e.target.closest('.video-controls') && !e.target.closest('.exit-fullscreen')) {
@@ -3139,7 +3331,6 @@
             if (fullscreenBtn) fullscreenBtn.onclick = function() { goFullScreen(lessonId); };
             if (exitFullscreenBtn) exitFullscreenBtn.onclick = function() { exitFullScreen(lessonId); };
 
-            // Sistema de arrastre para la barra de progreso
             if (thumb) {
                 thumb.addEventListener("mousedown", function(e) { 
                     e.preventDefault();
@@ -3163,7 +3354,6 @@
                 });
             }
 
-            // Eventos globales de arrastre
             document.addEventListener("mousemove", function(e) { 
                 dragMove(e, lessonId);
             });
@@ -3180,7 +3370,6 @@
                 endDrag(e);
             });
 
-            // Eventos de pantalla completa
             document.addEventListener('fullscreenchange', function() { 
                 fullscreenChange(lessonId);
             });
@@ -3191,7 +3380,6 @@
                 fullscreenChange(lessonId);
             });
             
-            // Redimensionamiento
             window.addEventListener('resize', function() {
                 if (currentPlayers[lessonId]) {
                     adjustPlayerSize(lessonId);
@@ -3309,22 +3497,344 @@
                 exitBtn.style.display = isFullscreen ? "flex" : "none";
             }
             
-            // En pantalla completa, ocultar controles inicialmente
             if (isFullscreen) {
                 hideControls(lessonId);
             } else {
-                // Al salir de pantalla completa, mostrar controles
                 showControls(lessonId);
             }
         }
 
-        // === SISTEMA UNIFICADO DE MANUALES Y CALENDARIO ===
-        function showCourseManual(manualUrl) {
-            if (manualUrl) {
-                openManualViewer(manualUrl, 'Manual del Curso');
+        function showControls(lessonId) {
+            const controlsPanel = document.querySelector(`#player-container-${lessonId} .controls-panel`);
+            if (controlsPanel) {
+                controlsPanel.classList.add('show-controls');
+            }
+            
+            if (hideControlsTimers[lessonId]) {
+                clearTimeout(hideControlsTimers[lessonId]);
+            }
+            
+            hideControlsTimers[lessonId] = setTimeout(() => {
+                hideControls(lessonId);
+            }, 3000);
+        }
+        
+        function hideControls(lessonId) {
+            const controlsPanel = document.querySelector(`#player-container-${lessonId} .controls-panel`);
+            if (controlsPanel) {
+                controlsPanel.classList.remove('show-controls');
+            }
+        }
+        
+        function toggleControls(lessonId) {
+            const controlsPanel = document.querySelector(`#player-container-${lessonId} .controls-panel`);
+            if (controlsPanel && controlsPanel.classList.contains('show-controls')) {
+                hideControls(lessonId);
+            } else {
+                showControls(lessonId);
             }
         }
 
+        // === SISTEMA DE PROGRESO Y CALIFICACIONES ===
+        async function loadUserProgress(alumnoId) {
+            try {
+                console.log('📊 Cargando progreso para alumno:', alumnoId);
+                
+                const result = await callJSONP('getUserProgress', { alumnoId });
+                
+                console.log('📥 Respuesta de getUserProgress:', result);
+                
+                userProgress = {};
+                
+                if (result.success && result.data && result.data.length > 0) {
+                    result.data.forEach(function(item) {
+                        if (item.ID_Clase) {
+                            userProgress[item.ID_Clase] = {
+                                completed: item.Completada === "Sí" || item.Completada === true,
+                                notes: item.Notas_Alumno || '',
+                                calificacion: item.Calificacion || 0,
+                                lastUpdate: item.Fecha_Guardado || new Date()
+                            };
+                        }
+                    });
+                    
+                    console.log(`✅ Progreso cargado: ${Object.keys(userProgress).length} clases`);
+                } else {
+                    console.log('ℹ️ No se encontró progreso previo para este alumno');
+                }
+                
+            } catch (error) {
+                console.error("💥 Error cargando progreso:", error);
+                userProgress = {};
+            }
+        }
+
+        function renderCalificacionEstrellas(lessonId) {
+            if (!userProgress[lessonId] || userProgress[lessonId].calificacion === undefined) {
+                return '<div class="calificacion-container"><div class="calificacion-texto">Sin calificar</div></div>';
+            }
+            
+            const calificacion = userProgress[lessonId].calificacion;
+            const porcentaje = Math.min(100, Math.max(0, calificacion));
+            const estrellasActivas = Math.round((porcentaje / 100) * 5);
+            
+            let estrellasHTML = '<div class="calificacion-container">';
+            estrellasHTML += '<div class="calificacion-estrellas">';
+            
+            for (let i = 1; i <= 5; i++) {
+                if (i <= estrellasActivas) {
+                    estrellasHTML += '<span class="estrella activa">★</span>';
+                } else {
+                    estrellasHTML += '<span class="estrella">★</span>';
+                }
+            }
+            
+            estrellasHTML += '</div>';
+            estrellasHTML += `<div class="calificacion-texto">Calificación: <span class="calificacion-valor">${porcentaje}/100</span></div>`;
+            estrellasHTML += '</div>';
+            
+            return estrellasHTML;
+        }
+
+        function toggleVista(lessonId, moduleId, moduleName, lessonName) {
+            const vistaBtn = document.getElementById('vista-btn-' + lessonId);
+            const isCurrentlyCompleted = vistaBtn.classList.contains('completed');
+            const newCompletedState = !isCurrentlyCompleted;
+            
+            if (newCompletedState) {
+                vistaBtn.classList.add('completed');
+                vistaBtn.textContent = 'Vista ✓';
+            } else {
+                vistaBtn.classList.remove('completed');
+                vistaBtn.textContent = 'Vista';
+            }
+            
+            markAsViewed(lessonId, moduleId, moduleName, lessonName, {checked: newCompletedState});
+        }
+
+        async function markAsViewed(lessonId, moduleId, moduleName, lessonName, checkbox) {
+            const completed = checkbox.checked;
+            const notes = userProgress[lessonId] ? userProgress[lessonId].notes : '';
+            
+            console.log('📌 Marcando clase como vista:', {
+                lessonId,
+                moduleId,
+                completed,
+                hasNotes: !!notes
+            });
+            
+            const contentItem = document.querySelector(`.lesson-accordion[data-lesson="${lessonId}"]`);
+            if (completed) {
+                contentItem.classList.add('completed');
+            } else {
+                contentItem.classList.remove('completed');
+            }
+            
+            const vistaBtn = document.getElementById('vista-btn-' + lessonId);
+            if (vistaBtn) {
+                if (completed) {
+                    vistaBtn.classList.add('completed');
+                    vistaBtn.textContent = 'Vista ✓';
+                } else {
+                    vistaBtn.classList.remove('completed');
+                    vistaBtn.textContent = 'Vista';
+                }
+            }
+            
+            try {
+                const saveResult = await saveProgressToDatabase(lessonId, completed, notes);
+                
+                console.log('✅ Progreso guardado exitosamente:', saveResult);
+                
+                if (!userProgress[lessonId]) {
+                    userProgress[lessonId] = {};
+                }
+                
+                userProgress[lessonId].completed = completed;
+                userProgress[lessonId].notes = notes;
+                userProgress[lessonId].lastUpdate = new Date();
+                
+                updateLocalCache();
+                
+                showNotification(completed ? '✅ Lección completada' : '📝 Progreso actualizado');
+                
+                updateModuleProgress(moduleId);
+                
+            } catch (error) {
+                console.error('❌ Error al guardar:', error);
+                showNotification('❌ Error al guardar: ' + error.message, 'error');
+                
+                checkbox.checked = !completed;
+                
+                if (completed) {
+                    contentItem.classList.remove('completed');
+                    if (vistaBtn) {
+                        vistaBtn.classList.remove('completed');
+                        vistaBtn.textContent = 'Vista';
+                    }
+                } else {
+                    contentItem.classList.add('completed');
+                    if (vistaBtn) {
+                        vistaBtn.classList.add('completed');
+                        vistaBtn.textContent = 'Vista ✓';
+                    }
+                }
+            }
+        }
+
+        async function saveProgressToDatabase(lessonId, completed, notes) {
+            try {
+                console.log('💾 Intentando guardar progreso:', {
+                    alumno: alumnoActual.ID_Alumno,
+                    clase: lessonId,
+                    completada: completed,
+                    notasLength: notes ? notes.length : 0
+                });
+                
+                const params = {
+                    action: 'saveProgress',
+                    ID_Alumno: alumnoActual.ID_Alumno,
+                    ID_Clase: lessonId,
+                    Fecha_Guardado: new Date().toISOString().split('T')[0],
+                    Completada: completed ? "TRUE" : "FALSE",
+                    Notas_Alumno: notes || ''
+                };
+                
+                console.log('📤 Parámetros enviados:', params);
+                
+                const response = await callJSONP('saveProgress', params);
+                
+                console.log('📥 Respuesta recibida:', response);
+                
+                if (!response.success) {
+                    throw new Error(response.error || 'Error al guardar el progreso');
+                }
+                
+                return response;
+                
+            } catch (error) {
+                console.error('💥 Error guardando progreso:', error);
+                throw error;
+            }
+        }
+
+        function updateModuleProgress(moduleId) {
+            const selectedModule = userModules.find(m => m.ID_Módulo === moduleId);
+            if (!selectedModule) return;
+            
+            let completedCount = 0;
+            selectedModule.Clases.forEach(content => {
+                if (userProgress[content.ID_Clase] && userProgress[content.ID_Clase].completed) {
+                    completedCount++;
+                }
+            });
+            
+            const totalCount = selectedModule.Clases.length;
+            const progressPercentage = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+            
+            const progressBar = document.querySelector('.module-progress-expanded .progress-bar');
+            const progressText = document.querySelector('.module-progress-expanded .progress-text');
+            
+            if (progressBar) {
+                progressBar.style.width = progressPercentage + '%';
+            }
+            
+            if (progressText) {
+                progressText.textContent = completedCount + "/" + totalCount + " lecciones (" + progressPercentage + "%)";
+            }
+            
+            const moduleCard = document.querySelector(`[onclick="expandModule('${moduleId}')"]`);
+            if (moduleCard) {
+                const cardProgressBar = moduleCard.querySelector('.progress-bar');
+                const cardProgressText = moduleCard.querySelector('.progress-text');
+                
+                if (cardProgressBar) {
+                    cardProgressBar.style.width = progressPercentage + '%';
+                }
+                
+                if (cardProgressText) {
+                    cardProgressText.textContent = progressPercentage + '% completado';
+                }
+            }
+        }
+
+        function updateLocalCache() {
+            if (alumnoActual) {
+                sessionStorage.removeItem(`cursos_${alumnoActual.ID_Alumno}`);
+                if (currentCourseId && currentGrupoId) {
+                    sessionStorage.removeItem(`modulos_${alumnoActual.ID_Alumno}_${currentCourseId}_${currentGrupoId}`);
+                }
+            }
+        }
+
+        // === SISTEMA DE NOTAS ===
+        function toggleNotes(lessonId) {
+            var notesArea = document.getElementById('notes-area-' + lessonId);
+            
+            if (notesArea.style.display === 'none' || !notesArea.style.display) {
+                notesArea.style.display = 'block';
+                
+                var notesTextarea = document.getElementById('notes-text-' + lessonId);
+                if (notesTextarea.value === '' && userProgress[lessonId] && userProgress[lessonId].notes) {
+                    notesTextarea.value = userProgress[lessonId].notes;
+                }
+            } else {
+                notesArea.style.display = 'none';
+            }
+        }
+
+        async function saveNotes(lessonId, moduleName, lessonName) {
+            const notesText = document.getElementById('notes-text-' + lessonId).value;
+            const saveButton = document.getElementById('save-notes-btn-' + lessonId);
+            
+            console.log('💾 Guardando notas para clase:', lessonId, 'Longitud:', notesText.length);
+            
+            saveButton.textContent = 'Guardando...';
+            saveButton.disabled = true;
+            
+            try {
+                const isCompleted = userProgress[lessonId] ? userProgress[lessonId].completed : false;
+                
+                console.log('Estado actual de la clase:', {
+                    lessonId,
+                    isCompleted,
+                    notesLength: notesText.length
+                });
+                
+                const saveResult = await saveProgressToDatabase(lessonId, isCompleted, notesText);
+                
+                console.log('✅ Notas guardadas exitosamente:', saveResult);
+                
+                if (!userProgress[lessonId]) {
+                    userProgress[lessonId] = {};
+                }
+                userProgress[lessonId].notes = notesText;
+                userProgress[lessonId].lastUpdate = new Date();
+                
+                updateLocalCache();
+                
+                showNotification('✅ Notas guardadas correctamente');
+                saveButton.textContent = 'Guardado ✓';
+                
+                const notesButton = document.getElementById('notes-btn-' + lessonId);
+                if (notesButton) {
+                    notesButton.textContent = '📝 Ver notas (' + (notesText.length > 0 ? "1" : "0") + ')';
+                }
+                
+                setTimeout(() => {
+                    saveButton.textContent = 'Guardar notas';
+                    saveButton.disabled = false;
+                }, 2000);
+                
+            } catch (error) {
+                console.error('❌ Error guardando notas:', error);
+                showNotification('❌ Error: ' + error.message, 'error');
+                saveButton.textContent = 'Guardar notas';
+                saveButton.disabled = false;
+            }
+        }
+
+        // === SISTEMA DE MANUALES ===
         function showModuleManual(manualUrl) {
             if (manualUrl) {
                 openManualViewer(manualUrl, 'Manual del Módulo');
@@ -3353,47 +3863,39 @@
             }
         }
 
-        // === NUEVAS FUNCIONES PARA ENCUESTAS ===
-        function openSurvey(surveyUrl) {
-            const modal = document.getElementById('universalSurveyModal');
-            const frame = document.getElementById('surveyModalFrame');
+        function showManual(lessonId, manualUrl) {
+            var manualContainer = document.getElementById('manual-container-' + lessonId);
             
-            if (modal && frame) {
-                frame.src = surveyUrl;
-                modal.style.display = 'flex';
+            if (manualContainer.style.display === 'none' || !manualContainer.style.display) {
+                manualContainer.style.display = 'block';
+                
+                var welcomeMessage = document.getElementById('welcome-message-' + lessonId);
+                var pdfFrame = document.getElementById('pdf-frame-' + lessonId);
+                
+                if (welcomeMessage) welcomeMessage.style.display = 'none';
+                if (pdfFrame) {
+                    pdfFrame.style.display = 'block';
+                    var viewerUrl = convertToGoogleDriveViewer(manualUrl);
+                    pdfFrame.src = viewerUrl;
+                }
+            } else {
+                hideManual(lessonId);
             }
         }
 
-        function closeSurveyViewer() {
-            const modal = document.getElementById('universalSurveyModal');
-            const frame = document.getElementById('surveyModalFrame');
-            if (modal && frame) {
-                modal.style.display = 'none';
-                frame.src = '';
+        function hideManual(lessonId) {
+            var manualContainer = document.getElementById('manual-container-' + lessonId);
+            
+            manualContainer.style.display = 'none';
+            
+            var welcomeMessage = document.getElementById('welcome-message-' + lessonId);
+            var pdfFrame = document.getElementById('pdf-frame-' + lessonId);
+            
+            if (welcomeMessage) welcomeMessage.style.display = 'block';
+            if (pdfFrame) {
+                pdfFrame.style.display = 'none';
+                pdfFrame.src = '';
             }
-        }
-
-        // Cerrar modal con ESC
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeManualViewer();
-                closeSurveyViewer();
-                closeRegisterModal();
-                closeForgotPasswordModal();
-            }
-        });
-
-        function convertToGoogleDriveViewer(url) {
-            var fileId = extractGoogleDriveFileId(url);
-            if (fileId) {
-                return 'https://drive.google.com/file/d/' + fileId + '/preview';
-            }
-            return url;
-        }
-
-        function extractGoogleDriveFileId(url) {
-            var match = url.match(/[-\w]{25,}/);
-            return match ? match[0] : null;
         }
 
         function downloadManual(lessonId, manualUrl) {
@@ -3419,20 +3921,17 @@
             }
         }
 
-        // === SISTEMA DE NOTAS ===
-        function toggleNotes(lessonId) {
-            var notesArea = document.getElementById('notes-area-' + lessonId);
-            
-            if (notesArea.style.display === 'none' || !notesArea.style.display) {
-                notesArea.style.display = 'block';
-                
-                var notesTextarea = document.getElementById('notes-text-' + lessonId);
-                if (notesTextarea.value === '' && userProgress[lessonId] && userProgress[lessonId].notes) {
-                    notesTextarea.value = userProgress[lessonId].notes;
-                }
-            } else {
-                notesArea.style.display = 'none';
+        function convertToGoogleDriveViewer(url) {
+            var fileId = extractGoogleDriveFileId(url);
+            if (fileId) {
+                return 'https://drive.google.com/file/d/' + fileId + '/preview';
             }
+            return url;
+        }
+
+        function extractGoogleDriveFileId(url) {
+            var match = url.match(/[-\w]{25,}/);
+            return match ? match[0] : null;
         }
 
         // === FUNCIÓN CLASE SIGUIENTE ===
@@ -3485,28 +3984,106 @@
             showNotification("Avanzando a la siguiente clase: " + nextLesson['Nombre de la Clase'], "success");
         }
 
-        // === FUNCIONES UTILITARIAS ===
-        function updateLocalCache() {
-            // Invalidar cache local cuando hay cambios
-            if (alumnoActual) {
-                sessionStorage.removeItem(`cursos_${alumnoActual.ID_Alumno}`);
-                if (currentCourseId && currentGrupoId) {
-                    sessionStorage.removeItem(`modulos_${alumnoActual.ID_Alumno}_${currentCourseId}_${currentGrupoId}`);
+        // === FUNCIONES DE REGISTRO Y RECUPERACIÓN ===
+        function showRegisterModal() {
+            document.getElementById('registerModal').style.display = 'flex';
+            clearRegisterForm();
+        }
+        
+        function closeRegisterModal() {
+            document.getElementById('registerModal').style.display = 'none';
+        }
+        
+        function showForgotPasswordModal() {
+            document.getElementById('forgotPasswordModal').style.display = 'flex';
+            document.getElementById('forgotPasswordErrorMessage').innerHTML = '';
+            document.getElementById('forgotPasswordEmail').value = '';
+        }
+        
+        function closeForgotPasswordModal() {
+            document.getElementById('forgotPasswordModal').style.display = 'none';
+        }
+        
+        function clearRegisterForm() {
+            document.getElementById('registerName').value = '';
+            document.getElementById('registerLastName').value = '';
+            document.getElementById('registerUser').value = '';
+            document.getElementById('registerPassword').value = '';
+            document.getElementById('registerEmail').value = '';
+            document.getElementById('registerPhone').value = '';
+            document.getElementById('registerErrorMessage').innerHTML = '';
+        }
+        
+        async function registerUser() {
+            const name = document.getElementById('registerName').value.trim();
+            const lastName = document.getElementById('registerLastName').value.trim();
+            const user = document.getElementById('registerUser').value.trim();
+            const password = document.getElementById('registerPassword').value.trim();
+            const email = document.getElementById('registerEmail').value.trim();
+            const phone = document.getElementById('registerPhone').value.trim();
+            
+            if (!name || !lastName || !user || !password || !email) {
+                document.getElementById('registerErrorMessage').innerHTML = "Todos los campos excepto teléfono son obligatorios";
+                return;
+            }
+            
+            if (password.length < 6) {
+                document.getElementById('registerErrorMessage').innerHTML = "La contraseña debe tener al menos 6 caracteres";
+                return;
+            }
+            
+            document.getElementById('registerErrorMessage').innerHTML = "🔄 Creando cuenta...";
+            
+            try {
+                const response = await callJSONP('register', {
+                    nombre: name,
+                    apellido: lastName,
+                    usuario: user,
+                    contraseña: password,
+                    email: email,
+                    telefono: phone
+                });
+                
+                if (response.success) {
+                    showNotification('✅ Cuenta creada exitosamente. Ahora puedes iniciar sesión.');
+                    closeRegisterModal();
+                    document.getElementById('username').value = user;
+                    document.getElementById('password').value = '';
+                } else {
+                    document.getElementById('registerErrorMessage').innerHTML = "❌ " + response.error;
                 }
+            } catch (error) {
+                document.getElementById('registerErrorMessage').innerHTML = "🔒 Error de conexión: " + error.message;
+            }
+        }
+        
+        async function sendPasswordReset() {
+            const email = document.getElementById('forgotPasswordEmail').value.trim();
+            
+            if (!email) {
+                document.getElementById('forgotPasswordErrorMessage').innerHTML = "Por favor ingresa tu correo electrónico";
+                return;
+            }
+            
+            document.getElementById('forgotPasswordErrorMessage').innerHTML = "🔄 Enviando enlace de recuperación...";
+            
+            try {
+                const response = await callJSONP('forgotPassword', { email });
+                
+                if (response.success) {
+                    showNotification('✅ Se ha enviado un enlace de recuperación a tu correo electrónico.');
+                    closeForgotPasswordModal();
+                } else {
+                    document.getElementById('forgotPasswordErrorMessage').innerHTML = "❌ " + response.error;
+                }
+            } catch (error) {
+                document.getElementById('forgotPasswordErrorMessage').innerHTML = "🔒 Error de conexión: " + error.message;
             }
         }
 
-        function showNotification(message, type = 'success') {
-            const notification = document.createElement('div');
-            notification.className = 'notification ' + type;
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => notification.classList.add('show'), 10);
-            setTimeout(() => {
-                notification.classList.remove('show');
-                setTimeout(() => document.body.removeChild(notification), 300);
-            }, 3000);
+        // === FUNCIONES UTILITARIAS ===
+        function showCursosError(error, container) {
+            container.innerHTML = '<div class="error">Error al cargar los cursos: ' + error.message + '</div>';
         }
 
         function formatFecha(fechaString) {
@@ -3519,23 +4096,29 @@
             }
         }
 
-        function clearErrors() {
-            document.getElementById("errorMessage").innerHTML = "";
-        }
-        
-        function clearForms() {
-            document.getElementById("username").value = "";
-            document.getElementById("password").value = "";
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = 'notification ' + (type === 'error' ? 'error' : '');
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.classList.add('show'), 10);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
         }
 
         function logout() {
-            // Limpiar todo
             for (var lessonId in currentPlayers) {
                 if (currentPlayers[lessonId]) {
                     currentPlayers[lessonId].destroy();
                 }
             }
-            
             currentPlayers = {};
             currentUser = null;
             userProgress = {};
@@ -3543,6 +4126,7 @@
             alumnoActual = null;
             currentCourseData = null;
             currentOpenAccordion = null;
+            currentPreviewCurso = null;
             
             sessionStorage.clear();
             
@@ -3553,95 +4137,27 @@
             clearForms();
         }
 
-        // Funciones auxiliares para manuales
-        function showManual(lessonId, manualUrl) {
-            var manualContainer = document.getElementById('manual-container-' + lessonId);
-            
-            if (manualContainer.style.display === 'none' || !manualContainer.style.display) {
-                manualContainer.style.display = 'block';
-                
-                var welcomeMessage = document.getElementById('welcome-message-' + lessonId);
-                var pdfFrame = document.getElementById('pdf-frame-' + lessonId);
-                
-                if (welcomeMessage) welcomeMessage.style.display = 'none';
-                if (pdfFrame) {
-                    pdfFrame.style.display = 'block';
-                    var viewerUrl = convertToGoogleDriveViewer(manualUrl);
-                    pdfFrame.src = viewerUrl;
-                }
-            } else {
-                hideManual(lessonId);
-            }
+        function clearErrors() {
+            document.getElementById("errorMessage").innerHTML = "";
+        }
+        
+        function clearForms() {
+            document.getElementById("username").value = "";
+            document.getElementById("password").value = "";
         }
 
-        function hideManual(lessonId) {
-            var manualContainer = document.getElementById('manual-container-' + lessonId);
-            
-            manualContainer.style.display = 'none';
-            
-            var welcomeMessage = document.getElementById('welcome-message-' + lessonId);
-            var pdfFrame = document.getElementById('pdf-frame-' + lessonId);
-            
-            if (welcomeMessage) welcomeMessage.style.display = 'block';
-            if (pdfFrame) {
-                pdfFrame.style.display = 'none';
-                pdfFrame.src = '';
+        // Cerrar modales con ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeManualViewer();
+                closeSurveyModal();
+                closeRegisterModal();
+                closeForgotPasswordModal();
+                closeCursoPreview();
             }
-        }
+        });
 
-        // === FUNCIÓN DE DEPURACIÓN ===
-        async function testConnection() {
-            try {
-                console.log('🧪 Probando conexión...');
-                const response = await callJSONP('escuela', {});
-                console.log('✅ Conexión exitosa:', response);
-                return response;
-            } catch (error) {
-                console.error('❌ Error de conexión:', error);
-                return {success: false, error: error.message};
-            }
-        }
-
-        // === 🧪 FUNCIONES DE DEPURACIÓN ===
-        window.debugProgress = function() {
-            console.log('=== DEBUG: ESTADO DEL PROGRESO ===');
-            console.log('Usuario actual:', alumnoActual);
-            console.log('Progreso cargado:', userProgress);
-            console.log('Total de clases con progreso:', Object.keys(userProgress).length);
-            console.log('Curso actual:', currentCourseId);
-            console.log('Grupo actual:', currentGrupoId);
-            console.log('Módulos cargados:', userModules.length);
-            console.log('===================================');
-            
-            return {
-                usuario: alumnoActual,
-                progreso: userProgress,
-                totalClasesConProgreso: Object.keys(userProgress).length,
-                cursoActual: currentCourseId,
-                grupoActual: currentGrupoId,
-                totalModulos: userModules.length
-            };
-        };
-
-        window.testSaveProgress = async function(lessonId) {
-            console.log('🧪 Probando guardado de progreso para clase:', lessonId);
-            
-            try {
-                const result = await saveProgressToDatabase(lessonId, true, 'Nota de prueba desde el frontend');
-                console.log('✅ Resultado:', result);
-                return result;
-            } catch (error) {
-                console.error('❌ Error:', error);
-                return { success: false, error: error.message };
-            }
-        };
-
-        console.log('🔧 Funciones de debug disponibles:');
-        console.log('  - window.debugProgress() : Ver estado actual');
-        console.log('  - window.testSaveProgress("ID_CLASE") : Probar guardado');
-
-        // Hacer la función accesible desde la consola
-        window.testConnection = testConnection;
+        console.log('✅ Sistema completo cargado correctamente');
     </script>
 </body>
 </html>
