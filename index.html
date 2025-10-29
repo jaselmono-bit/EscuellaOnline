@@ -1899,32 +1899,43 @@
             });
         }
 
-        // ✅ FUNCIÓN PARA SUBIR ARCHIVOS POR POST
-        async function subirArchivoPOST(archivo, nombreArchivo, idAlumno, idPregunta) {
+        // ✅ FUNCIÓN CORREGIDA PARA SUBIR ARCHIVOS A GITHUB VÍA CLOUDFLARE
+        async function subirArchivoGitHub(archivoBase64, nombreArchivo, idAlumno, idPregunta) {
             try {
-                console.log('📤 Subiendo archivo por POST:', nombreArchivo);
+                console.log('📤 Iniciando subida a GitHub:', nombreArchivo);
                 
-                const response = await fetch(CONFIG.API_BASE_URL, {
+                const response = await fetch(CONFIG.API_BASE_URL + 'upload-github', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        action: 'subirArchivoDrive',
-                        archivo: archivo,
+                        archivo: archivoBase64,
                         nombreArchivo: nombreArchivo,
                         idAlumno: idAlumno,
                         idPregunta: idPregunta
                     })
                 });
                 
+                console.log('📡 Status de respuesta:', response.status);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('❌ Error HTTP:', response.status, errorText);
+                    throw new Error(`HTTP ${response.status}: ${errorText}`);
+                }
+                
                 const data = await response.json();
-                console.log('📥 Respuesta de subida:', data);
+                console.log('📥 Respuesta de GitHub:', data);
+                
+                if (!data.success) {
+                    throw new Error(data.error || 'Error desconocido al subir archivo');
+                }
                 
                 return data;
                 
             } catch (error) {
-                console.error('❌ Error en subirArchivoPOST:', error);
+                console.error('❌ Error en subirArchivoGitHub:', error);
                 throw error;
             }
         }
@@ -2089,6 +2100,7 @@
             }
         }
 
+        // **FUNCIÓN MODIFICADA Y CORREGIDA** para incluir cursos con condición "Gratis" o "Promo"
         async function loadCursosDisponibles() {
             const container = document.getElementById('cursosDisponiblesContainer');
             const cacheKey = `cursos_disponibles_${alumnoActual.ID_Alumno}`;
@@ -2096,41 +2108,86 @@
             container.innerHTML = '<div class="loading">Cargando cursos disponibles...</div>';
             
             try {
+                // Obtener cursos en los que el alumno ya está inscrito
                 const misCursosResult = await callJSONP('getCursosAlumno', { alumnoId: alumnoActual.ID_Alumno });
                 const misCursosIds = misCursosResult.data.map(curso => curso.ID_Curso);
+                console.log('📚 Cursos del alumno:', misCursosIds);
                 
+                // Obtener todos los cursos
                 const todosCursosResult = await callJSONP('cursos', {});
+                console.log('📋 Todos los cursos:', todosCursosResult);
                 
-                if (todosCursosResult && Array.isArray(todosCursosResult)) {
+                if (todosCursosResult && todosCursosResult.data && Array.isArray(todosCursosResult.data)) {
+                    // Obtener grupos para información adicional
                     const gruposResult = await callJSONP('grupos', {});
+                    console.log('👥 Grupos:', gruposResult);
                     
-                    const cursosDisponibles = todosCursosResult.filter(curso => {
-                        const grupo = gruposResult.find(g => g.ID_Curso === curso.ID_Curso);
-                        if (!grupo) return false;
+                    // Obtener datos de portada
+                    const portadasResult = await callJSONP('portada', {});
+                    console.log('🖼️ Portadas:', portadasResult);
+                    
+                    const cursosDisponibles = todosCursosResult.data.filter(curso => {
+                        // Si el alumno ya está inscrito, excluir el curso
+                        if (misCursosIds.includes(curso.ID_Curso)) {
+                            console.log(`❌ Excluyendo curso ${curso.ID_Curso} - Ya inscrito`);
+                            return false;
+                        }
+                        
+                        // Incluir cursos con condición "Gratis" o "Promo"
+                        const condicion = curso.Condicion || '';
+                        console.log(`🔍 Curso ${curso.ID_Curso} - Condición: "${condicion}"`);
+                        
+                        if (condicion === 'Gratis' || condicion === 'Promo') {
+                            console.log(`✅ Incluyendo curso ${curso.ID_Curso} - Condición especial: ${condicion}`);
+                            return true;
+                        }
+                        
+                        // También incluir cursos de grupos "General" o "Gratis" (comportamiento original)
+                        const grupo = gruposResult.data ? 
+                            gruposResult.data.find(g => g.ID_Curso === curso.ID_Curso) : 
+                            null;
+                        
+                        if (!grupo) {
+                            console.log(`❌ Excluyendo curso ${curso.ID_Curso} - Sin grupo`);
+                            return false;
+                        }
                         
                         const esGeneralOGratis = grupo.Nombre_Grupo === 'General' || grupo.Nombre_Grupo === 'Gratis';
-                        const noEstaInscrito = !misCursosIds.includes(curso.ID_Curso);
-                        return esGeneralOGratis && noEstaInscrito;
+                        console.log(`📊 Curso ${curso.ID_Curso} - Grupo: ${grupo.Nombre_Grupo}, EsGeneralOGratis: ${esGeneralOGratis}`);
+                        
+                        return esGeneralOGratis;
                     }).map(curso => {
-                        const grupo = gruposResult.find(g => g.ID_Curso === curso.ID_Curso);
+                        const grupo = gruposResult.data ? 
+                            gruposResult.data.find(g => g.ID_Curso === curso.ID_Curso) : 
+                            null;
+                        
+                        const portada = portadasResult.data ? 
+                            portadasResult.data.find(p => p.ID_Curso === curso.ID_Curso) : 
+                            null;
+                        
                         return {
                             ...curso,
-                            ID_Grupo: grupo.ID_Grupo,
-                            Nombre_Grupo: grupo.Nombre_Grupo,
-                            Fecha_Inicio: grupo.Fecha_Inicio,
-                            Whatsapp: grupo.Whatsapp,
-                            Mensaje: grupo.Mensaje,
-                            Calendario: grupo.Calendario
+                            ID_Grupo: grupo ? grupo.ID_Grupo : null,
+                            Nombre_Grupo: grupo ? grupo.Nombre_Grupo : 'General',
+                            Fecha_Inicio: grupo ? grupo.Fecha_Inicio : null,
+                            Whatsapp: grupo ? grupo.Whatsapp : null,
+                            Mensaje: grupo ? grupo.Mensaje : null,
+                            Calendario: grupo ? grupo.Calendario : null,
+                            // Usar imagen de portada si está disponible
+                            Foto_Portada: portada && portada.Imagen ? portada.Imagen : (curso.Foto_Portada || curso['Foto de Portada']),
+                            Condicion: curso.Condicion || ''
                         };
                     });
                     
+                    console.log('🎯 Cursos disponibles finales:', cursosDisponibles);
                     sessionStorage.setItem(cacheKey, JSON.stringify(cursosDisponibles));
                     displayCursosDisponibles(cursosDisponibles);
                 } else {
+                    console.log('❌ No hay datos de cursos');
                     container.innerHTML = '<div class="no-content">No hay cursos disponibles en este momento.</div>';
                 }
             } catch (error) {
-                console.error('Error cargando cursos disponibles:', error);
+                console.error('❌ Error cargando cursos disponibles:', error);
                 container.innerHTML = '<div class="no-content">Error al cargar cursos disponibles.</div>';
             }
         }
@@ -2176,6 +2233,7 @@
             }).join('');
         }
 
+        // **FUNCIÓN MODIFICADA** para mostrar la condición del curso
         function displayCursosDisponibles(cursos) {
             const container = document.getElementById('cursosDisponiblesContainer');
             cursosDisponiblesCache = cursos;
@@ -2195,22 +2253,38 @@
             
             container.innerHTML = cursos.map(curso => {
                 const hasImage = curso.Foto_Portada && curso.Foto_Portada.trim() !== '';
+                const condicion = curso.Condicion || '';
+                const nombreCurso = curso.Nombre_Curso || curso['Nombre del Curso'];
+                let badgeColor = 'var(--success)';
+                let badgeText = 'Disponible';
+                
+                if (condicion === 'Promo') {
+                    badgeColor = 'var(--naranja)';
+                    badgeText = '🔥 Promoción';
+                } else if (condicion === 'Gratis') {
+                    badgeColor = 'var(--success)';
+                    badgeText = '🎁 Gratuito';
+                }
+                
                 return `
                 <div class="curso-disponible-card card" onclick="verCursoDisponible('${curso.ID_Curso}', '${curso.ID_Grupo}')">
                     <div class="curso-imagen">
                         ${hasImage ? 
                             `<img src="${curso.Foto_Portada}" 
-                                  alt="${curso.Nombre_Curso}" 
+                                  alt="${nombreCurso}" 
                                   onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
                                   onload="this.style.display='block'; this.nextElementSibling.style.display='none';">` : 
                             ''
                         }
                         <div class="image-fallback" style="${hasImage ? 'display: none;' : ''}">📚</div>
+                        <div style="position: absolute; top: 10px; right: 10px; background: ${badgeColor}; color: white; padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: bold;">
+                            ${badgeText}
+                        </div>
                     </div>
                     <div class="curso-content">
-                        <h3 class="curso-disponible-titulo">${curso.Nombre_Curso}</h3>
+                        <h3 class="curso-disponible-titulo">${nombreCurso}</h3>
                         <p class="curso-grupo">Grupo: ${curso.Nombre_Grupo}</p>
-                        <p class="curso-grupo">Disponible para todos</p>
+                        <p class="curso-grupo">${condicion === 'Promo' ? '🔥 Promoción especial' : (condicion === 'Gratis' ? '🎁 Curso gratuito' : 'Disponible para todos')}</p>
                         <button class="btn btn-inscribirme" onclick="event.stopPropagation(); inscribirEnCursoDisponibleDesdeBoton('${curso.ID_Curso}', '${curso.ID_Grupo}')">📝 Inscribirme</button>
                     </div>
                 </div>
@@ -2218,13 +2292,14 @@
             }).join('');
         }
 
+        // **FUNCIÓN MODIFICADA** para mostrar la condición en el preview
         function verCursoDisponible(cursoId, grupoId) {
             const curso = cursosDisponiblesCache.find(c => c.ID_Curso === cursoId && c.ID_Grupo === grupoId);
             if (!curso) return;
             
             currentPreviewCurso = curso;
             
-            document.getElementById('previewCourseTitle').textContent = curso.Nombre_Curso;
+            document.getElementById('previewCourseTitle').textContent = curso.Nombre_Curso || curso['Nombre del Curso'];
             document.getElementById('previewCourseDescription').textContent = curso.Descripción || curso.Descripcion || 'No hay descripción disponible para este curso.';
             
             const previewImage = document.getElementById('previewCourseImage');
@@ -2238,6 +2313,22 @@
             const infoContainer = document.getElementById('previewCourseInfo');
             infoContainer.innerHTML = '';
             
+            // Mostrar condición especial
+            const condicion = curso.Condicion || '';
+            if (condicion === 'Promo' || condicion === 'Gratis') {
+                infoContainer.innerHTML += `
+                    <div class="course-info-item">
+                        <div class="course-info-icon">${condicion === 'Promo' ? '🔥' : '🎁'}</div>
+                        <div class="course-info-content">
+                            <div class="course-info-label">Condición Especial</div>
+                            <div class="course-info-value">
+                                ${condicion === 'Promo' ? '🔥 Curso en Promoción - Acceso inmediato' : '🎁 Curso completamente Gratuito'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
             if (curso.Mensaje) {
                 infoContainer.innerHTML += `
                     <div class="course-info-item">
@@ -2248,10 +2339,9 @@
                         </div>
                     </div>
                 `;
-                infoContainer.style.display = 'block';
-            } else {
-                infoContainer.style.display = 'none';
             }
+            
+            infoContainer.style.display = 'block';
             
             document.getElementById('cursoPreviewModal').style.display = 'flex';
         }
@@ -2407,6 +2497,8 @@
         }
 
         // === SISTEMA DE ENCUESTAS COMPLETO CON ARCHIVOS ===
+
+        // **FUNCIÓN MODIFICADA** para verificar si la encuesta ya fue completada
         async function abrirEncuesta(encuestaId, claseId) {
             console.log('🎯 Abriendo encuesta:', encuestaId, 'para clase:', claseId);
             
@@ -2442,6 +2534,23 @@
             archivosEncuesta = {};
             
             mostrarEncuesta();
+        }
+
+        // **NUEVA FUNCIÓN** para actualizar el botón de encuesta
+        function actualizarEstadoBotonEncuesta(claseId, completada = true) {
+            const botonEncuesta = document.querySelector(`[onclick*="abrirEncuesta"][onclick*="${claseId}"]`);
+            if (botonEncuesta) {
+                if (completada) {
+                    botonEncuesta.innerHTML = '✅ Completada';
+                    botonEncuesta.classList.remove('btn-primary');
+                    botonEncuesta.classList.add('btn-secondary');
+                    botonEncuesta.style.opacity = '0.7';
+                    // Reemplazar la función onclick para evitar que se abra de nuevo
+                    botonEncuesta.onclick = function() {
+                        mostrarRevisionEncuesta(currentEncuestaId, claseId);
+                    };
+                }
+            }
         }
 
         function mostrarEncuesta() {
@@ -2636,7 +2745,7 @@
             verificarCompletitud();
         }
 
-        // ✅ FUNCIÓN MEJORADA PARA ENVIAR RESPUESTAS CON ARCHIVOS
+        // ✅ FUNCIÓN CORREGIDA PARA ENVIAR RESPUESTAS CON ARCHIVOS
         async function enviarRespuestasEncuesta() {
             const sinResponder = [];
             preguntasEncuestaActual.forEach(pregunta => {
@@ -2654,36 +2763,47 @@
             showNotification('🔄 Procesando respuestas...');
             
             try {
-                // ✅ PASO 1: Subir archivos por POST
+                // ✅ PASO 1: Subir archivos a GitHub (CON MANEJO ROBUSTO DE ERRORES)
                 for (const idPregunta in archivosEncuesta) {
                     const archivoData = archivosEncuesta[idPregunta];
                     
                     showNotification(`📤 Subiendo: ${archivoData.nombre}...`);
                     
-                    // Usar POST para archivos
-                    const resultado = await subirArchivoPOST(
-                        archivoData.base64,
-                        archivoData.nombre,
-                        alumnoActual.ID_Alumno,
-                        idPregunta
-                    );
-                    
-                    if (resultado.success) {
-                        archivosEncuesta[idPregunta].url = resultado.url;
-                        archivosEncuesta[idPregunta].urlDirecto = resultado.urlDirecto;
+                    try {
+                        // ✅ Usar GitHub en lugar de Drive
+                        const resultado = await subirArchivoGitHub(
+                            archivoData.base64,
+                            archivoData.nombre,
+                            alumnoActual.ID_Alumno,
+                            idPregunta
+                        );
                         
-                        // ✅ Guardar el link como respuesta
-                        respuestasEncuesta[idPregunta] = resultado.url;
-                        
-                        console.log('✅ Archivo subido:', archivoData.nombre);
-                        console.log('🔗 URL:', resultado.url);
-                    } else {
-                        showNotification(`❌ Error subiendo ${archivoData.nombre}: ${resultado.error}`, 'error');
-                        return;
+                        if (resultado.success) {
+                            archivosEncuesta[idPregunta].url = resultado.url;
+                            archivosEncuesta[idPregunta].urlViewer = resultado.urlViewer;
+                            
+                            // ✅ GUARDAR EL LINK COMO RESPUESTA (ESTO SÍ SE EJECUTA)
+                            respuestasEncuesta[idPregunta] = resultado.url;
+                            
+                            console.log('✅ Archivo subido a GitHub:', archivoData.nombre);
+                            console.log('🔗 URL:', resultado.url);
+                            console.log('📊 Tamaño:', resultado.size);
+                        } else {
+                            // ⚠️ MANEJO GRACCIOSO - NO CANCELAR TODA LA ENCUESTA
+                            console.warn('⚠️ Falló subida a GitHub, guardando referencia local');
+                            respuestasEncuesta[idPregunta] = `ARCHIVO_NO_SUBIDO:${archivoData.nombre}`;
+                            showNotification(`⚠️ El archivo ${archivoData.nombre} no se pudo subir, pero guardaremos tu respuesta`, 'warning');
+                            // ❌ NO USAR 'return' aquí - CONTINUAR CON EL PROCESO
+                        }
+                    } catch (error) {
+                        // ⚠️ MANEJO DE EXCEPCIONES - CONTINUAR CON EL PROCESO
+                        console.error('❌ Error en subida individual:', error);
+                        respuestasEncuesta[idPregunta] = `ERROR_SUBIDA:${archivoData.nombre}`;
+                        showNotification(`⚠️ Error con ${archivoData.nombre}, pero continuamos...`, 'warning');
                     }
                 }
                 
-                // ✅ PASO 2: Preparar respuestas
+                // ✅ PASO 2: Preparar respuestas (ESTE BLOQUE AHORA SÍ SE EJECUTA SIEMPRE)
                 const respuestasArray = preguntasEncuestaActual.map(pregunta => {
                     const tipoOriginal = pregunta.Tipo_Pregunta || '';
                     const respuestaAlumno = respuestasEncuesta[pregunta.ID_Pregunta] || '';
@@ -2692,21 +2812,23 @@
                     
                     return {
                         ID_Pregunta: pregunta.ID_Pregunta,
-                        Respuesta_Alumno: respuestaAlumno, // Ahora contiene el link si es archivo
+                        Respuesta_Alumno: respuestaAlumno, // ✅ Ahora contiene el link si es archivo
                         Respuesta_Correcta: pregunta.Respuesta_Correcta || '',
-                        Tipo_Pregunta: tipoOriginal, // MULTIPLE_CHOICE, TEXTO_ABIERTO, ARCHIVO
+                        Tipo_Pregunta: tipoOriginal,
                         Puntaje_Pregunta: parseFloat(pregunta.Puntaje_Pregunta || 1),
-                        URL_Archivo: urlArchivo
+                        URL_Archivo: urlArchivo // ✅ URL de GitHub se guarda aquí también
                     };
                 });
                 
-                // ✅ PASO 3: Guardar respuestas (JSONP)
+                // ✅ PASO 3: Guardar respuestas (JSONP) - ESTO SÍ SE EJECUTA
                 const datosGuardar = {
                     idAlumno: alumnoActual.ID_Alumno,
                     idClase: currentClaseId,
                     idEncuesta: currentEncuestaId,
                     respuestas: respuestasArray
                 };
+                
+                console.log('💾 Enviando respuestas al backend:', datosGuardar);
                 
                 showNotification('💾 Guardando respuestas...');
                 
@@ -2725,7 +2847,7 @@
                     
                     mostrarResultadoEncuesta(resultado);
                 } else {
-                    showNotification('❌ Error al guardar: ' + resultado.error, 'error');
+                    showNotification('❌ Error al guardar respuestas: ' + resultado.error, 'error');
                 }
                 
             } catch (error) {
@@ -2905,6 +3027,7 @@
             archivosEncuesta = {};
         }
 
+        // **FUNCIÓN MODIFICADA** para actualizar el botón al cerrar
         function cerrarYActualizarEncuesta() {
             closeSurveyModal();
             
@@ -2915,10 +3038,44 @@
                 if (calificacionContainer) {
                     calificacionContainer.innerHTML = renderCalificacionEstrellasHTML(calificacion);
                 }
+                
+                // Actualizar el botón de encuesta
+                actualizarEstadoBotonEncuesta(currentClaseId, true);
             }
             
             showNotification('✅ Encuesta completada y guardada');
         }
+
+        // **NUEVA FUNCIÓN** para verificar y actualizar botones de encuesta al cargar
+        async function verificarYActualizarBotonesEncuesta() {
+            if (!alumnoActual) return;
+            
+            try {
+                // Verificar encuestas completadas para todas las clases visibles
+                const botonesEncuesta = document.querySelectorAll('[onclick*="abrirEncuesta"]');
+                
+                for (const boton of botonesEncuesta) {
+                    // Extraer ID de encuesta y clase del onclick
+                    const match = boton.getAttribute('onclick').match(/abrirEncuesta\("([^"]+)",\s*"([^"]+)"\)/);
+                    if (match) {
+                        const encuestaId = match[1];
+                        const claseId = match[2];
+                        
+                        const verificacion = await callJSONP('verificarEncuestaCompletada', {
+                            alumnoId: alumnoActual.ID_Alumno,
+                            encuestaId: encuestaId
+                        });
+                        
+                        if (verificacion.success && verificacion.completada) {
+                            actualizarEstadoBotonEncuesta(claseId, true);
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error verificando estado de encuestas:', error);
+            }
+        }
+
         // === SISTEMA DE MÓDULOS Y CLASES ===
         async function accederAlCurso(cursoId, grupoId) {
             currentCourseId = cursoId;
@@ -3173,6 +3330,9 @@
                     
                     var tieneEncuesta = content.ID_Encuesta && content.ID_Encuesta.trim() !== '';
                     
+                    // Verificar si la encuesta ya está completada para mostrar el estado inicial
+                    var encuestaCompletada = userProgress[lessonId] && userProgress[lessonId].calificacion !== undefined;
+                    
                     expandedContent += `
                     <div class='lesson-accordion ${isCompleted ? 'completed' : ''}' data-lesson="${lessonId}">
                         <div class='lesson-header' onclick="toggleLessonAccordion('${lessonId}')">
@@ -3219,7 +3379,11 @@
                     }
                     
                     if (tieneEncuesta) {
-                        expandedContent += `<button class='btn btn-primary action-btn' onclick='abrirEncuesta("${content.ID_Encuesta}", "${lessonId}")'>🎯 Pruébate</button>`;
+                        if (encuestaCompletada) {
+                            expandedContent += `<button class='btn btn-secondary action-btn' onclick='mostrarRevisionEncuesta("${content.ID_Encuesta}", "${lessonId}")' style="opacity: 0.7;">✅ Completada</button>`;
+                        } else {
+                            expandedContent += `<button class='btn btn-primary action-btn' onclick='abrirEncuesta("${content.ID_Encuesta}", "${lessonId}")'>🎯 Pruébate</button>`;
+                        }
                     }
                     
                     expandedContent += `<button id='notes-btn-${lessonId}' class='btn btn-primary action-btn' onclick='toggleNotes("${lessonId}")'>📝 Mis Notas</button>`;
@@ -3305,6 +3469,9 @@
             expandedContainer.innerHTML = expandedContent;
             
             document.getElementById('modulesContainer').appendChild(expandedContainer);
+            
+            // Verificar y actualizar el estado de los botones de encuesta
+            setTimeout(verificarYActualizarBotonesEncuesta, 1000);
             
             setTimeout(() => {
                 expandedContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
