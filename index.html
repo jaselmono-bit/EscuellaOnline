@@ -593,7 +593,6 @@
             font-weight: 700;
         }
 
-        /* NUEVO: Estilo para certificado con 5 estrellas */
         .certificado-estrellas {
             display: flex;
             gap: 4px;
@@ -608,7 +607,6 @@
             margin-top: 4px;
         }
 
-        /* NUEVO: Botones compactos en acordeón cerrado */
         .lesson-quick-actions {
             display: flex;
             gap: 6px;
@@ -888,7 +886,6 @@
             margin: 0;
         }
 
-        /* NUEVO: Botones compactos en cabecera de curso */
         .course-buttons-compact {
             display: flex;
             gap: 8px;
@@ -1284,7 +1281,7 @@
             color: var(--azul-oscuro);
             font-size: 13px;
         }
-        /* === ESTILOS PARA SISTEMA DE ENCUESTAS === */
+        
         .survey-modal-overlay {
             position: fixed;
             top: 0;
@@ -1641,6 +1638,403 @@
             color: var(--gray);
         }
 
+        /* === ESTILOS PARA PORTADA DE CURSO PROMO === */
+        .portada-promo-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 10000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .portada-promo-content {
+            background: white;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .portada-header {
+            position: sticky;
+            top: 0;
+            background: linear-gradient(135deg, var(--naranja), #f97316);
+            color: white;
+            padding: 20px 25px;
+            border-radius: 15px 15px 0 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .portada-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0;
+            flex: 1;
+        }
+
+        .close-portada {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .close-portada:hover {
+            background: rgba(255,255,255,0.3);
+            transform: rotate(90deg);
+        }
+
+        .portada-body {
+            padding: 30px;
+        }
+
+        .portada-section {
+            margin-bottom: 30px;
+        }
+
+        .portada-section-title {
+            color: var(--azul-oscuro);
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 3px solid var(--naranja);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .portada-description {
+            color: var(--azul-profundo);
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: var(--neutro);
+            border-radius: 10px;
+            border-left: 4px solid var(--azul);
+        }
+
+        .portada-video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 */
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .portada-video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .portada-video-thumbnail {
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .portada-video-thumbnail img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .portada-play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .portada-video-thumbnail:hover .portada-play-overlay {
+            background: rgba(0,0,0,0.6);
+        }
+
+        .portada-play-button {
+            width: 80px;
+            height: 80px;
+            background: var(--naranja);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+        }
+
+        .portada-video-thumbnail:hover .portada-play-button {
+            transform: scale(1.1);
+            background: #f97316;
+        }
+
+        .portada-temario-card {
+            background: var(--neutro);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid var(--naranja);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .portada-temario-card:hover {
+            background: #e0f2fe;
+            transform: translateX(5px);
+            box-shadow: var(--sombra);
+        }
+
+        .portada-temario-icon {
+            font-size: 40px;
+            flex-shrink: 0;
+        }
+
+        .portada-temario-info {
+            flex: 1;
+        }
+
+        .portada-temario-title {
+            font-weight: 700;
+            color: var(--azul-oscuro);
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .portada-temario-subtitle {
+            color: var(--gray);
+            font-size: 13px;
+        }
+
+        .portada-solicitud-section {
+            background: linear-gradient(135deg, #f0f9ff, #fef3c7);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid var(--naranja);
+        }
+
+        .portada-solicitud-title {
+            color: var(--azul-oscuro);
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .portada-solicitud-text {
+            color: var(--gray);
+            font-size: 14px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .portada-btn-solicitud {
+            background: linear-gradient(to right, var(--naranja), #f97316);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
+        }
+
+        .portada-btn-solicitud:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(251, 191, 36, 0.6);
+        }
+
+        .portada-btn-solicitud:disabled {
+            background: var(--gray);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .solicitud-pendiente-card {
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .solicitud-pendiente-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        .solicitud-pendiente-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .solicitud-pendiente-text {
+            font-size: 16px;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        .portada-whatsapp-btn {
+            background: linear-gradient(to right, #25D366, #128C7E);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            text-decoration: none;
+        }
+
+        .portada-whatsapp-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+        }
+
+        /* Modal para video */
+        .video-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 11000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .video-modal-content {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .video-modal-header {
+            background: rgba(0,0,0,0.8);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .video-modal-title {
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .close-video-modal {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .close-video-modal:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .video-modal-body {
+            position: relative;
+            padding-bottom: 56.25%;
+        }
+
+        .video-modal-body iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .expanded-module {
+            width: 100%;
+            padding: 0;
+            margin-bottom: 5px;
+        }
+
+        .module-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+        }
+
+        .module-progress-expanded {
+            margin: 15px 0;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .content-list-expanded {
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 10px 10px 5px;
@@ -1693,6 +2087,30 @@
             .survey-body {
                 padding: 15px;
             }
+
+            .portada-promo-content {
+                max-width: 100%;
+                max-height: 100vh;
+                border-radius: 0;
+            }
+
+            .portada-header {
+                border-radius: 0;
+            }
+
+            .portada-title {
+                font-size: 18px;
+            }
+
+            .portada-body {
+                padding: 20px;
+            }
+
+            .portada-btn-solicitud {
+                width: 100%;
+                padding: 12px 20px;
+                font-size: 16px;
+            }
         }
         
         @media (max-width: 480px) {
@@ -1719,30 +2137,6 @@
             .lesson-actions .btn {
                 width: 100%;
             }
-        }
-
-        .expanded-module {
-            width: 100%;
-            padding: 0;
-            margin-bottom: 5px;
-        }
-
-        .module-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 12px;
-        }
-
-        .module-progress-expanded {
-            margin: 15px 0;
-            padding: 12px;
-            text-align: center;
-        }
-
-        .content-list-expanded {
-            margin-top: 15px;
-            margin-bottom: 5px;
         }
     </style>
 </head>
@@ -1858,7 +2252,6 @@
                     
                     <div id="courseInfoText" class="course-info-text" style="display: none;"></div>
                     
-                    <!-- MODIFICADO: Botones compactos -->
                     <div id="courseButtonsContainer" class="course-buttons-compact"></div>
                 </div>
             </div>
@@ -1918,6 +2311,74 @@
         </div>
     </div>
 </div>
+
+<!-- Modal de Portada PROMO -->
+<div id="portadaPromoModal" class="portada-promo-overlay">
+    <div class="portada-promo-content">
+        <div class="portada-header">
+            <h2 class="portada-title" id="portadaPromoTitle">Curso Promocional</h2>
+            <button class="close-portada" onclick="closePortadaPromo()">✕</button>
+        </div>
+        
+        <div class="portada-body">
+            <!-- Descripción -->
+            <div class="portada-section" id="portadaDescripcionSection">
+                <h3 class="portada-section-title">📖 Descripción del Curso</h3>
+                <div class="portada-description" id="portadaPromoDescription"></div>
+            </div>
+
+            <!-- Video -->
+            <div class="portada-section" id="portadaVideoSection" style="display: none;">
+                <h3 class="portada-section-title">🎥 Video de Presentación</h3>
+                <div class="portada-video-thumbnail" id="portadaVideoThumbnail" onclick="abrirVideoPortada()">
+                    <img id="portadaVideoThumbImg" src="" alt="Video">
+                    <div class="portada-play-overlay">
+                        <div class="portada-play-button">▶</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Temario -->
+            <div class="portada-section" id="portadaTemarioSection" style="display: none;">
+                <h3 class="portada-section-title">📚 Temario del Curso</h3>
+                <div class="portada-temario-card" onclick="abrirTemarioPortada()">
+                    <div class="portada-temario-icon">📄</div>
+                    <div class="portada-temario-info">
+                        <div class="portada-temario-title">Ver Temario Completo</div>
+                        <div class="portada-temario-subtitle">Click para abrir el PDF con todo el contenido del curso</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WhatsApp (si existe) -->
+            <div class="portada-section" id="portadaWhatsappSection" style="display: none; text-align: center;">
+                <h3 class="portada-section-title">💬 Contacto</h3>
+                <a id="portadaWhatsappLink" href="#" target="_blank" class="portada-whatsapp-btn">
+                    📱 Consultar por WhatsApp
+                </a>
+            </div>
+
+            <!-- Sección de Solicitud -->
+            <div class="portada-section">
+                <div id="portadaSolicitudContainer"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Video de Portada -->
+<div id="videoPortadaModal" class="video-modal-overlay">
+    <div class="video-modal-content">
+        <div class="video-modal-header">
+            <h3 class="video-modal-title" id="videoPortadaTitle">Video de Presentación</h3>
+            <button class="close-video-modal" onclick="closeVideoPortada()">✕</button>
+        </div>
+        <div class="video-modal-body">
+            <iframe id="videoPortadaFrame" src="" allowfullscreen></iframe>
+        </div>
+    </div>
+</div>
+
 <script>
     // === CONFIGURACIÓN ===
     const CONFIG = {
@@ -1941,6 +2402,12 @@
     let hideControlsTimers = {};
     let isFullscreen = false;
     let currentOpenAccordion = null;
+    
+    // Variables globales para portada PROMO
+    let currentPortadaData = null;
+    let currentPortadaVideo = null;
+    let currentPortadaTemario = null;
+    let solicitudesPendientes = [];
 
     // === VARIABLES PARA SISTEMA DE ENCUESTAS ===
     let todasEncuestas = [];
@@ -2378,17 +2845,26 @@
             const nombreCurso = curso.Nombre_Curso || curso['Nombre del Curso'];
             let badgeColor = 'var(--success)';
             let badgeText = 'Disponible';
+            let onClickFunction = '';
+            let buttonText = '';
             
             if (condicion === 'Promo') {
                 badgeColor = 'var(--naranja)';
                 badgeText = '🔥 Promoción';
+                onClickFunction = `verCursoPromo('${curso.ID_Curso}', '${curso.ID_Grupo}')`;
+                buttonText = '👁️ Ver Curso';
             } else if (condicion === 'Gratis') {
                 badgeColor = 'var(--success)';
                 badgeText = '🎁 Gratuito';
+                onClickFunction = `verCursoDisponible('${curso.ID_Curso}', '${curso.ID_Grupo}')`;
+                buttonText = '📝 Inscribirme';
+            } else {
+                onClickFunction = `verCursoDisponible('${curso.ID_Curso}', '${curso.ID_Grupo}')`;
+                buttonText = '👁️ Ver Curso';
             }
             
             return `
-            <div class="curso-disponible-card card" onclick="verCursoDisponible('${curso.ID_Curso}', '${curso.ID_Grupo}')">
+            <div class="curso-disponible-card card" onclick="${onClickFunction}">
                 <div class="curso-imagen">
                     ${hasImage ? 
                         `<img src="${curso.Foto_Portada}" 
@@ -2406,11 +2882,259 @@
                     <h3 class="curso-disponible-titulo">${nombreCurso}</h3>
                     <p class="curso-grupo">Grupo: ${curso.Nombre_Grupo}</p>
                     <p class="curso-grupo">${condicion === 'Promo' ? '🔥 Promoción especial' : (condicion === 'Gratis' ? '🎁 Curso gratuito' : 'Disponible para todos')}</p>
-                    <button class="btn btn-inscribirme" onclick="event.stopPropagation(); inscribirEnCursoDisponibleDesdeBoton('${curso.ID_Curso}', '${curso.ID_Grupo}')">📝 Inscribirme</button>
+                    <button class="btn ${condicion === 'Gratis' ? 'btn-inscribirme' : 'btn-primary'}" onclick="event.stopPropagation(); ${onClickFunction}">${buttonText}</button>
                 </div>
             </div>
             `;
         }).join('');
+    }
+
+    // ✅ FUNCIÓN MEJORADA: Ver portada completa de curso PROMO
+    async function verCursoPromo(cursoId, grupoId) {
+        const curso = cursosDisponiblesCache.find(c => c.ID_Curso === cursoId && c.ID_Grupo === grupoId);
+        if (!curso) return;
+        
+        currentPreviewCurso = curso;
+        
+        try {
+            showNotification('🔄 Cargando información del curso...');
+            
+            // Obtener datos de la portada
+            const portadaResult = await callJSONP('portada', {});
+            
+            if (!portadaResult.success || !portadaResult.data) {
+                showNotification('❌ Error al cargar la portada del curso', 'error');
+                return;
+            }
+            
+            // Buscar la portada de este curso
+            const portada = portadaResult.data.find(p => 
+                p.ID_Curso === cursoId && p.ID_Grupo === grupoId
+            );
+            
+            if (!portada) {
+                showNotification('❌ No se encontró información de portada para este curso', 'error');
+                return;
+            }
+            
+            currentPortadaData = portada;
+            currentPortadaVideo = portada['URL Video'] || portada.URL_Video;
+            currentPortadaTemario = portada.Temario;
+            
+            // Verificar si el alumno ya tiene una solicitud pendiente
+            const solicitudExistente = await verificarSolicitudExistente(cursoId, grupoId);
+            
+            // Renderizar portada
+            renderizarPortadaPromo(curso, portada, solicitudExistente);
+            
+            // Mostrar modal
+            document.getElementById('portadaPromoModal').style.display = 'flex';
+            
+        } catch (error) {
+            console.error('Error cargando portada:', error);
+            showNotification('❌ Error: ' + error.message, 'error');
+        }
+    }
+
+    // ✅ Verificar si el alumno ya envió solicitud para este curso
+    async function verificarSolicitudExistente(cursoId, grupoId) {
+        try {
+            const inscripcionesResult = await callJSONP('inscripciones', {});
+            
+            if (!inscripcionesResult.success || !inscripcionesResult.data) {
+                return false;
+            }
+            
+            // Buscar si existe una solicitud (Postulantes) para este alumno
+            const solicitud = inscripcionesResult.data.find(insc => {
+                const postulante = insc.Postulantes || '';
+                const idCurso = insc.ID_Curso;
+                const idGrupo = insc.ID_Grupo;
+                
+                return postulante === currentUser.ID_Alumno && 
+                       idCurso === cursoId && 
+                       idGrupo === grupoId;
+            });
+            
+            return !!solicitud;
+            
+        } catch (error) {
+            console.error('Error verificando solicitud:', error);
+            return false;
+        }
+    }
+
+    // ✅ Renderizar portada completa
+    function renderizarPortadaPromo(curso, portada, tieneSolicitud) {
+        // Título
+        document.getElementById('portadaPromoTitle').textContent = curso.Nombre_Curso || curso['Nombre del Curso'];
+        
+        // Descripción
+        const descripcionPortada = portada.Descripción || portada.Descripcion || '';
+        const descripcionCurso = curso.Descripción || curso.Descripcion || '';
+        const descripcionFinal = descripcionPortada || descripcionCurso || 'Este es un curso promocional. ¡Inscríbete ahora!';
+        
+        document.getElementById('portadaPromoDescription').innerHTML = descripcionFinal;
+        
+        // Video
+        const videoSection = document.getElementById('portadaVideoSection');
+        if (currentPortadaVideo && currentPortadaVideo.trim() !== '') {
+            const videoId = extractVideoId(currentPortadaVideo);
+            if (videoId) {
+                const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+                document.getElementById('portadaVideoThumbImg').src = thumbnailUrl;
+                videoSection.style.display = 'block';
+            } else {
+                videoSection.style.display = 'none';
+            }
+        } else {
+            videoSection.style.display = 'none';
+        }
+        
+        // Temario
+        const temarioSection = document.getElementById('portadaTemarioSection');
+        if (currentPortadaTemario && currentPortadaTemario.trim() !== '') {
+            temarioSection.style.display = 'block';
+        } else {
+            temarioSection.style.display = 'none';
+        }
+        
+        // WhatsApp
+        const whatsappSection = document.getElementById('portadaWhatsappSection');
+        const whatsappLink = portada.Whatsapp;
+        if (whatsappLink && whatsappLink.trim() !== '') {
+            document.getElementById('portadaWhatsappLink').href = whatsappLink;
+            whatsappSection.style.display = 'block';
+        } else {
+            whatsappSection.style.display = 'none';
+        }
+        
+        // Sección de Solicitud
+        const solicitudContainer = document.getElementById('portadaSolicitudContainer');
+        
+        if (tieneSolicitud) {
+            // Ya tiene solicitud pendiente
+            solicitudContainer.innerHTML = `
+                <div class="solicitud-pendiente-card">
+                    <div class="solicitud-pendiente-icon">✅</div>
+                    <div class="solicitud-pendiente-title">¡Solicitud Recibida!</div>
+                    <div class="solicitud-pendiente-text">
+                        Hemos recibido tu solicitud para este curso.<br>
+                        Pronto recibirás noticias sobre tu aprobación.<br><br>
+                        <strong>¡Gracias por tu interés!</strong>
+                    </div>
+                </div>
+            `;
+        } else {
+            // Puede enviar solicitud
+            solicitudContainer.innerHTML = `
+                <div class="portada-solicitud-section">
+                    <div class="portada-solicitud-title">🔥 ¡Curso en Promoción!</div>
+                    <div class="portada-solicitud-text">
+                        Este curso está en promoción especial.<br>
+                        Envía tu solicitud y espera la aprobación del administrador para acceder a todo el contenido.
+                    </div>
+                    <button class="portada-btn-solicitud" onclick="enviarSolicitudDesdePortada()">
+                        📨 Enviar Solicitud de Inscripción
+                    </button>
+                </div>
+            `;
+        }
+    }
+
+    // ✅ Abrir video de portada en modal
+    function abrirVideoPortada() {
+        if (!currentPortadaVideo) return;
+        
+        const videoId = extractVideoId(currentPortadaVideo);
+        if (!videoId) {
+            showNotification('❌ URL de video inválida', 'error');
+            return;
+        }
+        
+        const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+        
+        document.getElementById('videoPortadaFrame').src = embedUrl;
+        document.getElementById('videoPortadaTitle').textContent = 'Video de Presentación';
+        document.getElementById('videoPortadaModal').style.display = 'flex';
+    }
+
+    function closeVideoPortada() {
+        document.getElementById('videoPortadaModal').style.display = 'none';
+        document.getElementById('videoPortadaFrame').src = '';
+    }
+
+    // ✅ Abrir temario en modal de manuales
+    function abrirTemarioPortada() {
+        if (!currentPortadaTemario) {
+            showNotification('❌ No hay temario disponible', 'error');
+            return;
+        }
+        
+        openManualViewer(currentPortadaTemario, '📚 Temario del Curso');
+    }
+
+    // ✅ Enviar solicitud desde la portada
+    async function enviarSolicitudDesdePortada() {
+        if (!currentPreviewCurso) return;
+        
+        if (!currentUser) {
+            showNotification('❌ Debes iniciar sesión para enviar una solicitud', 'error');
+            return;
+        }
+        
+        // Confirmar
+        if (!confirm('¿Deseas enviar tu solicitud de inscripción a este curso?\n\nRecibirás acceso una vez que sea aprobada por el administrador.')) {
+            return;
+        }
+        
+        try {
+            showNotification('🔄 Enviando solicitud...');
+            
+            const inscripcionId = 'SOL_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            const fechaInscripcion = new Date().toISOString().split('T')[0];
+            
+            const response = await callJSONP('inscribirPromo', {
+                ID_Inscripcion: inscripcionId,
+                ID_Curso: currentPreviewCurso.ID_Curso,
+                ID_Grupo: currentPreviewCurso.ID_Grupo,
+                ID_Alumno_Postulante: currentUser.ID_Alumno,
+                Fecha_Inscripcion: fechaInscripcion,
+                Tipo: 'PROMO'
+            });
+            
+            if (response.success) {
+                showNotification('✅ ¡Solicitud enviada correctamente!');
+                
+                // Actualizar la portada para mostrar el mensaje de "solicitud recibida"
+                renderizarPortadaPromo(currentPreviewCurso, currentPortadaData, true);
+                
+                // Limpiar caché
+                sessionStorage.removeItem(`cursos_disponibles_${currentUser.ID_Alumno}`);
+                
+                // Mostrar alerta de confirmación
+                setTimeout(() => {
+                    alert('✅ ¡Solicitud Enviada!\n\n' +
+                          'Hemos recibido tu solicitud de inscripción.\n\n' +
+                          'Recibirás acceso al curso una vez que el administrador apruebe tu solicitud.\n\n' +
+                          '¡Pronto tendrás noticias!');
+                }, 500);
+                
+            } else {
+                showNotification('❌ Error al enviar solicitud: ' + response.error, 'error');
+            }
+        } catch (error) {
+            showNotification('❌ Error de conexión: ' + error.message, 'error');
+        }
+    }
+
+    // ✅ Cerrar modal de portada
+    function closePortadaPromo() {
+        document.getElementById('portadaPromoModal').style.display = 'none';
+        currentPortadaData = null;
+        currentPortadaVideo = null;
+        currentPortadaTemario = null;
+        currentPreviewCurso = null;
     }
 
     function verCursoDisponible(cursoId, grupoId) {
@@ -3511,6 +4235,14 @@
         container.innerHTML += modulesList;
     }
 
+    function verCertificado(certificadoUrl) {
+        if (certificadoUrl && certificadoUrl.trim() !== '') {
+            openManualViewer(certificadoUrl, 'Tu Certificado 🏆');
+        } else {
+            showNotification('❌ No hay certificado disponible', 'error');
+        }
+    }
+
     function expandModule(moduleId) {
         document.querySelectorAll('.module-card').forEach(card => {
             card.style.display = 'none';
@@ -3768,14 +4500,6 @@
         setTimeout(() => {
             expandedContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 100);
-    }
-
-    function verCertificado(certificadoUrl) {
-        if (certificadoUrl && certificadoUrl.trim() !== '') {
-            openManualViewer(certificadoUrl, 'Tu Certificado 🏆');
-        } else {
-            showNotification('❌ No hay certificado disponible', 'error');
-        }
     }
 
     function collapseModule() {
@@ -4478,6 +5202,8 @@
             closeRegisterModal();
             closeForgotPasswordModal();
             closeCursoPreview();
+            closePortadaPromo();
+            closeVideoPortada();
         }
     });
 
@@ -4512,11 +5238,14 @@
         }
     });
 
-    console.log('✅ Sistema completo cargado correctamente - Versión 3.2 Corregida');
-    console.log('🔧 Correcciones aplicadas:');
-    console.log('   ✓ Manejo correcto de calificación 0 vs vacío');
-    console.log('   ✓ Verificación mejorada con hasOwnProperty y > 0');
-    console.log('   ✓ Frontend robusto contra envío de 0 desde backend');
+    console.log('✅ Sistema completo cargado correctamente - Versión 4.0 con Sistema PROMO');
+    console.log('🔥 Nuevas características implementadas:');
+    console.log('   ✅ Sistema de cursos PROMO con portada completa');
+    console.log('   ✅ Videos de presentación en modal');
+    console.log('   ✅ Temarios en PDF');
+    console.log('   ✅ Envío de solicitudes de inscripción');
+    console.log('   ✅ Verificación de solicitudes existentes');
+    console.log('   ✅ Interfaz de portada moderna y atractiva');
 </script>
 </body>
 </html>
