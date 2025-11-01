@@ -639,7 +639,7 @@
         }
 
         .quick-action-btn.encuesta {
-            background: var(--naranja);
+            background: var(--azul);
         }
 
         .quick-action-btn .btn-text {
@@ -800,6 +800,7 @@
             border-radius: 0 0 10px 10px;
             margin-top: 0;
             transition: opacity 0.3s ease;
+            opacity: 1;
         }
 
         .progress-row {
@@ -2454,8 +2455,9 @@
         <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
     </symbol>
     
-    <symbol id="icon-calendar" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+    <symbol id="icon-calendar" viewBox="0 0 96 96">
+        <path d="M805 431 873 431 873 363 805 363ZM807 365 871 365 871 373 807 373ZM807 375 871 375 871 429 807 429Z" transform="translate(-791 -349)"/>
+        <path d="M823 391 813 391 813 423 845 423 845 413 865 413 865 381 823 381ZM823 421 815 421 815 413 823 413ZM823 411 815 411 815 403 823 403ZM823 401 815 401 815 393 823 393ZM855 383 863 383 863 391 855 391ZM855 393 863 393 863 401 855 401ZM855 403 863 403 863 411 855 411ZM845 383 853 383 853 391 845 391ZM845 393 853 393 853 401 845 401ZM845 403 853 403 853 411 845 411ZM835 383 843 383 843 391 835 391ZM835 393 843 393 843 401 835 401ZM835 403 843 403 843 411 835 411ZM835 413 843 413 843 421 835 421ZM825 383 833 383 833 391 825 391ZM825 393 833 393 833 401 825 401ZM825 403 833 403 833 411 825 411ZM825 413 833 413 833 421 825 421Z" transform="translate(-791 -349)"/>
     </symbol>
 </svg>
 
@@ -4480,7 +4482,7 @@
                     expandedContent += `<div id='player-container-${lessonId}' class='player-container' style='display: none;'>
                         <div class='video-container' id='videoContainer-${lessonId}'>
                             <div id='player-${lessonId}'></div>
-                            <div class='overlay' id='overlay-${lessonId}'></div>
+                            <div class='overlay' id='overlay-${lessonId}' onclick='togglePlayPause("${lessonId}")'></div>
                             <div class='corner-box'>`;
                     if (escuelaData && escuelaData.Logo_Escuela) {
                         expandedContent += `<img src='${escuelaData.Logo_Escuela}' alt='Logo' class='school-logo-mini'>`;
@@ -4488,9 +4490,9 @@
                         expandedContent += "🎓";
                     }
                     expandedContent += `</div>
-                            <div class='exit-fullscreen' id='exitFullscreenBtn-${lessonId}'>✖</div>
+                            <div class='exit-fullscreen' id='exitFullscreenBtn-${lessonId}' onclick='exitFullScreen("${lessonId}")'>✖</div>
                         </div>
-                        <div class='controls-panel'>
+                        <div class='controls-panel' id='controls-panel-${lessonId}'>
                             <div class='progress-row'>
                                 <div class='progress-container-player' id='progressBar-${lessonId}'>
                                     <div class='progress-player' id='progress-${lessonId}'></div>
@@ -4933,11 +4935,40 @@
         } else if (container.webkitRequestFullscreen) {
             container.webkitRequestFullscreen();
         }
+        
+        // Mostrar el botón de cerrar
+        var exitBtn = document.getElementById('exitFullscreenBtn-' + lessonId);
+        if (exitBtn) {
+            exitBtn.style.display = 'block';
+        }
+        
+        // Agregar event listener para cuando se salga de pantalla completa
+        document.addEventListener('fullscreenchange', function exitHandler() {
+            if (!document.fullscreenElement) {
+                if (exitBtn) {
+                    exitBtn.style.display = 'none';
+                }
+                document.removeEventListener('fullscreenchange', exitHandler);
+            }
+        });
+    }
+
+    function exitFullScreen(lessonId) {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        }
+
+        var exitBtn = document.getElementById('exitFullscreenBtn-' + lessonId);
+        if (exitBtn) {
+            exitBtn.style.display = 'none';
+        }
     }
 
     function updateProgress(lessonId) {
         var player = currentPlayers[lessonId];
-        if (!player || !player.getCurrentTime || dragging) return;
+        if (!player || !player.getCurrentTime || !player.getDuration) return;
         var currentTime = player.getCurrentTime();
         var duration = player.getDuration();
         var percent = (currentTime / duration) * 100;
@@ -4945,6 +4976,26 @@
         if (progressElement) {
             progressElement.style.width = percent + "%";
         }
+        
+        // Actualizar el thumb
+        var thumbElement = document.getElementById("thumb-" + lessonId);
+        if (thumbElement) {
+            thumbElement.style.left = percent + "%";
+        }
+        
+        // Actualizar el tiempo
+        var timeDisplay = document.getElementById("timeDisplay-" + lessonId);
+        if (timeDisplay) {
+            var currentTimeFormatted = formatTime(currentTime);
+            var durationFormatted = formatTime(duration);
+            timeDisplay.textContent = currentTimeFormatted + " / " + durationFormatted;
+        }
+    }
+
+    function formatTime(seconds) {
+        var minutes = Math.floor(seconds / 60);
+        var remainingSeconds = Math.floor(seconds % 60);
+        return minutes + ":" + (remainingSeconds < 10 ? "0" : "") + remainingSeconds;
     }
 
     // === SISTEMA DE NOTAS ===
