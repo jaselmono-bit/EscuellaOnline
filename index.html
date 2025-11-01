@@ -1714,19 +1714,17 @@
         .portada-video-container {
             position: relative;
             width: 100%;
-            padding-bottom: 56.25%; /* 16:9 */
             background: #000;
             border-radius: 10px;
             overflow: hidden;
             margin-bottom: 20px;
+            border: 1px solid var(--azul);
         }
 
         .portada-video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
-            height: 100%;
+            height: auto;
+            aspect-ratio: 16 / 9;
             border: none;
         }
 
@@ -2392,6 +2390,25 @@
                 <h3 class="portada-section-title">🎥 Video de Presentación</h3>
                 <div class="portada-video-container" id="portadaVideoContainer">
                     <div id="portadaPlayer"></div>
+                    <div class='overlay' id='overlay-portada' onclick='togglePlayPause("portada")'></div>
+                    <div class='corner-box'>
+                        <div id="defaultLogoPortada">🎓</div>
+                    </div>
+                    <div class='exit-fullscreen' id='exitFullscreenBtn-portada' onclick='exitFullScreen("portada")'>✖</div>
+                </div>
+                <div class='controls-panel' id='controls-panel-portada'>
+                    <div class='progress-row'>
+                        <div class='progress-container-player' id='progressBar-portada'>
+                            <div class='progress-player' id='progress-portada'></div>
+                            <div class='thumb' id='thumb-portada'></div>
+                        </div>
+                        <div class='time-display' id='timeDisplay-portada'>0:00 / 0:00</div>
+                    </div>
+                    <div class='video-controls'>
+                        <button id='playPauseBtn-portada'><svg class="icon icon-play" aria-hidden="true"><use xlink:href="#icon-play"></use></svg> Play</button>
+                        <button id='restartBtn-portada'>⏮ Reiniciar</button>
+                        <button id='fullscreenBtn-portada'>⛶ Pantalla completa</button>
+                    </div>
                 </div>
             </div>
 
@@ -3132,7 +3149,7 @@
         currentPlayers['portada'] = new YT.Player('portadaPlayer', {
             videoId: videoId,
             playerVars: { 
-                controls: 1, 
+                controls: 0, 
                 modestbranding: 1, 
                 rel: 0, 
                 iv_load_policy: 3,
@@ -3141,11 +3158,16 @@
             events: {
                 onReady: function() { 
                     console.log('✅ Reproductor de portada listo');
-                    // Ajustar tamaño del reproductor
-                    adjustPortadaPlayerSize();
-                }
+                    onPlayerReady('portada');
+                    // Configurar controles personalizados para portada
+                    setupCustomControls('portada');
+                },
+                onStateChange: function(event) { onPlayerStateChange('portada', event); }
             }
         });
+
+        // Iniciar el intervalo para actualizar el progreso
+        setInterval(function() { updateProgress('portada'); }, 500);
     }
 
     function adjustPortadaPlayerSize() {
@@ -4764,17 +4786,17 @@
         }
     }
 
-    // === SISTEMA DE VIDEO ===
+    // === SISTEMA DE VIDEO CORREGIDO ===
     function toggleVideoPlayer(lessonId, videoUrl) {
         const playerContainer = document.getElementById('player-container-' + lessonId);
         const videoBtn = document.getElementById('video-btn-' + lessonId);
         
         if (playerContainer.style.display === 'none' || !playerContainer.style.display) {
             showVideoPlayer(lessonId, videoUrl);
-            if (videoBtn) videoBtn.textContent = '<svg class="icon icon-pause" aria-hidden="true"><use xlink:href="#icon-pause"></use></svg> Cerrar Video';
+            if (videoBtn) videoBtn.innerHTML = '<svg class="icon icon-pause" aria-hidden="true"><use xlink:href="#icon-pause"></use></svg> Cerrar Video';
         } else {
             hideVideoPlayer(lessonId);
-            if (videoBtn) videoBtn.textContent = '<svg class="icon icon-play" aria-hidden="true"><use xlink:href="#icon-play"></use></svg> Ver Clase';
+            if (videoBtn) videoBtn.innerHTML = '<svg class="icon icon-play" aria-hidden="true"><use xlink:href="#icon-play"></use></svg> Ver Clase';
         }
     }
 
@@ -4795,7 +4817,7 @@
                 const otherLessonId = container.id.replace('player-container-', '');
                 const otherVideoBtn = document.getElementById('video-btn-' + otherLessonId);
                 if (otherVideoBtn) {
-                    otherVideoBtn.textContent = '<svg class="icon icon-play" aria-hidden="true"><use xlink:href="#icon-play"></use></svg> Ver Clase';
+                    otherVideoBtn.innerHTML = '<svg class="icon icon-play" aria-hidden="true"><use xlink:href="#icon-play"></use></svg> Ver Clase';
                 }
             }
         });
@@ -4826,7 +4848,7 @@
         
         const videoBtn = document.getElementById('video-btn-' + lessonId);
         if (videoBtn) {
-            videoBtn.textContent = '<svg class="icon icon-play" aria-hidden="true"><use xlink:href="#icon-play"></use></svg> Ver Clase';
+            videoBtn.innerHTML = '<svg class="icon icon-play" aria-hidden="true"><use xlink:href="#icon-play"></use></svg> Ver Clase';
         }
     }
 
@@ -4895,7 +4917,10 @@
         var playPauseBtn = document.getElementById("playPauseBtn-" + lessonId);
         var restartBtn = document.getElementById("restartBtn-" + lessonId);
         var fullscreenBtn = document.getElementById("fullscreenBtn-" + lessonId);
+        var progressBar = document.getElementById("progressBar-" + lessonId);
+        var thumb = document.getElementById("thumb-" + lessonId);
 
+        // Configurar controles de reproducción
         if (overlay) {
             overlay.onclick = function(e) { 
                 if (!e.target.closest('.video-controls') && !e.target.closest('.exit-fullscreen')) {
@@ -4907,6 +4932,150 @@
         if (playPauseBtn) playPauseBtn.onclick = function() { togglePlayPause(lessonId); };
         if (restartBtn) restartBtn.onclick = function() { restartVideo(lessonId); };
         if (fullscreenBtn) fullscreenBtn.onclick = function() { goFullScreen(lessonId); };
+
+        // Configurar barra de progreso
+        if (progressBar) {
+            progressBar.addEventListener('click', function(e) { seekVideo(lessonId, e); });
+            
+            // Para móvil: touch events
+            progressBar.addEventListener('touchstart', function(e) { startDragging(lessonId, e); });
+            progressBar.addEventListener('touchmove', function(e) { dragVideo(lessonId, e); });
+            progressBar.addEventListener('touchend', function() { stopDragging(lessonId); });
+            
+            // Para desktop: mouse events
+            progressBar.addEventListener('mousedown', function(e) { startDragging(lessonId, e); });
+            document.addEventListener('mousemove', function(e) { 
+                if (dragging && dragging.lessonId === lessonId) {
+                    dragVideo(lessonId, e); 
+                }
+            });
+            document.addEventListener('mouseup', function() { 
+                if (dragging && dragging.lessonId === lessonId) {
+                    stopDragging(lessonId); 
+                }
+            });
+        }
+
+        // Configurar thumb para arrastrar
+        if (thumb) {
+            thumb.addEventListener('mousedown', function(e) { startDragging(lessonId, e); });
+            thumb.addEventListener('touchstart', function(e) { startDragging(lessonId, e); });
+        }
+
+        // Sistema de ocultar controles en móvil
+        setupHideControls(lessonId);
+    }
+
+    function setupHideControls(lessonId) {
+        const controlsPanel = document.getElementById('controls-panel-' + lessonId);
+        const videoContainer = document.getElementById('videoContainer-' + lessonId);
+        
+        if (!controlsPanel || !videoContainer) return;
+        
+        let hideTimer;
+        
+        function resetHideTimer() {
+            clearTimeout(hideTimer);
+            controlsPanel.style.opacity = '1';
+            
+            hideTimer = setTimeout(() => {
+                controlsPanel.style.opacity = '0';
+            }, 3000);
+        }
+        
+        function showControls() {
+            clearTimeout(hideTimer);
+            controlsPanel.style.opacity = '1';
+        }
+        
+        // Inicialmente ocultar después de 3 segundos
+        resetHideTimer();
+        
+        // Event listeners para mostrar controles
+        videoContainer.addEventListener('touchstart', showControls);
+        videoContainer.addEventListener('mousemove', showControls);
+        videoContainer.addEventListener('click', showControls);
+        
+        // Event listeners para resetear el temporizador
+        const controlElements = controlsPanel.querySelectorAll('button, .progress-container-player');
+        controlElements.forEach(function(el) {
+            el.addEventListener('touchstart', resetHideTimer);
+            el.addEventListener('mousedown', resetHideTimer);
+        });
+    }
+
+    function seekVideo(lessonId, event) {
+        if (dragging && dragging.lessonId === lessonId) return;
+        
+        var player = currentPlayers[lessonId];
+        if (!player) return;
+
+        var progressBar = document.getElementById('progressBar-' + lessonId);
+        var rect = progressBar.getBoundingClientRect();
+        var clientX = event.clientX || (event.touches && event.touches[0].clientX);
+        var percent = (clientX - rect.left) / rect.width;
+        percent = Math.max(0, Math.min(1, percent));
+        
+        var newTime = player.getDuration() * percent;
+        player.seekTo(newTime, true);
+        
+        // Actualizar la barra de progreso inmediatamente
+        updateProgressBar(lessonId, percent);
+    }
+
+    function startDragging(lessonId, event) {
+        event.preventDefault();
+        dragging = { lessonId: lessonId, active: true };
+        
+        var player = currentPlayers[lessonId];
+        if (!player) return;
+
+        dragVideo(lessonId, event);
+    }
+
+    function dragVideo(lessonId, event) {
+        if (!dragging || dragging.lessonId !== lessonId || !dragging.active) return;
+        
+        var player = currentPlayers[lessonId];
+        if (!player) return;
+
+        var progressBar = document.getElementById('progressBar-' + lessonId);
+        var rect = progressBar.getBoundingClientRect();
+        var clientX = event.clientX || (event.touches && event.touches[0].clientX);
+        var percent = (clientX - rect.left) / rect.width;
+        percent = Math.max(0, Math.min(1, percent));
+        
+        var newTime = player.getDuration() * percent;
+        
+        // Solo actualizar la barra visualmente, no seekear hasta que se suelte
+        updateProgressBar(lessonId, percent);
+        
+        // Guardar el tiempo para cuando se suelte
+        dragging.seekTime = newTime;
+    }
+
+    function stopDragging(lessonId) {
+        if (!dragging || dragging.lessonId !== lessonId) return;
+        
+        var player = currentPlayers[lessonId];
+        if (player && dragging.seekTime !== undefined) {
+            player.seekTo(dragging.seekTime, true);
+        }
+        
+        dragging = false;
+    }
+
+    function updateProgressBar(lessonId, percent) {
+        var progressElement = document.getElementById("progress-" + lessonId);
+        var thumbElement = document.getElementById("thumb-" + lessonId);
+        
+        if (progressElement) {
+            progressElement.style.width = (percent * 100) + "%";
+        }
+        
+        if (thumbElement) {
+            thumbElement.style.left = (percent * 100) + "%";
+        }
     }
 
     function togglePlayPause(lessonId) {
@@ -4930,10 +5099,15 @@
     function goFullScreen(lessonId) {
         var container = document.getElementById("player-container-" + lessonId);
         if (!container) return;
+        
         if (container.requestFullscreen) {
             container.requestFullscreen();
         } else if (container.webkitRequestFullscreen) {
             container.webkitRequestFullscreen();
+        } else if (container.mozRequestFullScreen) {
+            container.mozRequestFullScreen();
+        } else if (container.msRequestFullscreen) {
+            container.msRequestFullscreen();
         }
         
         // Mostrar el botón de cerrar
@@ -4942,12 +5116,16 @@
             exitBtn.style.display = 'block';
         }
         
+        isFullscreen = true;
+        
         // Agregar event listener para cuando se salga de pantalla completa
         document.addEventListener('fullscreenchange', function exitHandler() {
-            if (!document.fullscreenElement) {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement && 
+                !document.mozFullScreenElement && !document.msFullscreenElement) {
                 if (exitBtn) {
                     exitBtn.style.display = 'none';
                 }
+                isFullscreen = false;
                 document.removeEventListener('fullscreenchange', exitHandler);
             }
         });
@@ -4958,30 +5136,32 @@
             document.exitFullscreen();
         } else if (document.webkitExitFullscreen) {
             document.webkitExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
         }
 
         var exitBtn = document.getElementById('exitFullscreenBtn-' + lessonId);
         if (exitBtn) {
             exitBtn.style.display = 'none';
         }
+        
+        isFullscreen = false;
     }
 
     function updateProgress(lessonId) {
         var player = currentPlayers[lessonId];
         if (!player || !player.getCurrentTime || !player.getDuration) return;
+        
+        // Si estamos arrastrando, no actualizar la barra
+        if (dragging && dragging.lessonId === lessonId && dragging.active) return;
+        
         var currentTime = player.getCurrentTime();
         var duration = player.getDuration();
-        var percent = (currentTime / duration) * 100;
-        var progressElement = document.getElementById("progress-" + lessonId);
-        if (progressElement) {
-            progressElement.style.width = percent + "%";
-        }
+        var percent = (currentTime / duration);
         
-        // Actualizar el thumb
-        var thumbElement = document.getElementById("thumb-" + lessonId);
-        if (thumbElement) {
-            thumbElement.style.left = percent + "%";
-        }
+        updateProgressBar(lessonId, percent);
         
         // Actualizar el tiempo
         var timeDisplay = document.getElementById("timeDisplay-" + lessonId);
@@ -5347,12 +5527,12 @@
         });
     });
 
-    console.log('✅ Sistema completo cargado correctamente - Versión 4.2 con Encabezado Mejorado');
-    console.log('🔥 Nuevas características implementadas:');
-    console.log('   ✅ Encabezado del curso simplificado sin botón "más"');
-    console.log('   ✅ Botones Manual, WhatsApp y Calendario en lugar de iconos repetidos');
-    console.log('   ✅ Colores azules con fondo blanco para botones y reproductor');
-    console.log('   ✅ Estilo consistente en todo el sistema');
+    console.log('✅ Sistema completo cargado correctamente - Versión 4.3 con Reproductor Corregido');
+    console.log('🔥 Nuevas correcciones implementadas:');
+    console.log('   ✅ Barra de progreso funcional con arrastre');
+    console.log('   ✅ Controles que se ocultan automáticamente en móvil');
+    console.log('   ✅ Botón "Ver Clase" cambia a "Cerrar Video"');
+    console.log('   ✅ Reproductor de portada con mismos controles que las clases');
 </script>
 </body>
 </html>
