@@ -708,24 +708,26 @@
         .player-container {
             width: 100%;
             max-width: 800px;
-            background: #000;
+            background: var(--blanco);
             border-radius: 15px;
             padding: 15px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.3);
             position: relative;
             margin: 12px 0;
             display: none;
+            border: 2px solid var(--azul);
         }
 
         .video-container {
             position: relative;
             width: 100%;
-            background: #000;
+            background: var(--blanco);
             border-radius: 10px 10px 0 0;
             overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
+            border: 1px solid var(--azul);
         }
 
         .video-container div[id^="player-"] {
@@ -751,7 +753,7 @@
             right: 10px;
             width: 100px;
             height: 40px;
-            background: rgba(0,0,0,0.95);
+            background: rgba(255,255,255,0.95);
             border-radius: 6px;
             display: flex;
             justify-content: center;
@@ -760,9 +762,10 @@
             z-index: 20;
             pointer-events: none;
             cursor: default;
-            color: #fff;
+            color: var(--azul);
             backdrop-filter: blur(5px);
             padding: 5px;
+            border: 1px solid var(--azul);
         }
 
         .corner-box img {
@@ -777,7 +780,7 @@
             right: 10px;
             width: 50px;
             height: 50px;
-            background: rgba(255,255,255,0.9);
+            background: var(--blanco);
             border-radius: 8px;
             display: flex;
             justify-content: center;
@@ -786,12 +789,13 @@
             z-index: 30;
             cursor: pointer;
             display: none;
-            color: #000;
+            color: var(--azul);
             font-weight: bold;
+            border: 1px solid var(--azul);
         }
 
         .controls-panel {
-            background: #000;
+            background: var(--blanco);
             padding: 15px;
             border-radius: 0 0 10px 10px;
             margin-top: 0;
@@ -808,7 +812,7 @@
         .progress-container-player {
             flex: 1;
             height: 20px;
-            background: #444;
+            background: var(--neutro);
             border-radius: 10px;
             position: relative;
             cursor: pointer;
@@ -817,7 +821,7 @@
 
         .progress-player {
             height: 100%;
-            background: #ff0000;
+            background: var(--azul);
             border-radius: 10px;
             width: 0%;
             transform-origin: left center;
@@ -832,16 +836,17 @@
             transform: translate(-50%, -50%);
             width: 20px;
             height: 20px;
-            background: #fff;
+            background: var(--blanco);
             border-radius: 50%;
             cursor: pointer;
             z-index: 25;
             box-shadow: 0 2px 4px rgba(0,0,0,0.3);
             left: 0px;
+            border: 2px solid var(--azul);
         }
 
         .time-display {
-            color: #fff;
+            color: var(--azul-oscuro);
             font-size: 14px;
             font-weight: bold;
             min-width: 100px;
@@ -858,8 +863,8 @@
         }
 
         .video-controls button {
-            background: #ff0000;
-            color: #fff;
+            background: var(--azul);
+            color: var(--blanco);
             border: none;
             padding: 10px 20px;
             border-radius: 8px;
@@ -869,10 +874,11 @@
             transition: background 0.3s;
             flex: 1;
             max-width: 200px;
+            border: 1px solid var(--azul);
         }
 
         .video-controls button:hover {
-            background: #cc0000;
+            background: var(--azul-oscuro);
         }
 
         .course-buttons, .module-buttons {
@@ -886,72 +892,40 @@
             margin: 0;
         }
 
-        .course-buttons-compact {
+        /* === NUEVO ESTILO PARA BOTONES DEL ENCABEZADO DEL CURSO === */
+        .course-header-buttons {
             display: flex;
-            gap: 8px;
-            align-items: center;
+            gap: 12px;
             margin-top: 15px;
+            flex-wrap: wrap;
         }
 
-        .course-toggle-btn {
-            background: var(--azul);
-            color: white;
-            border: none;
-            padding: 8px 16px;
+        .course-header-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: var(--blanco);
+            color: var(--azul);
+            border: 2px solid var(--azul);
             border-radius: 20px;
-            font-size: 13px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
+            text-decoration: none;
+            font-size: 14px;
         }
 
-        .course-toggle-btn:hover {
-            background: var(--azul-oscuro);
+        .course-header-btn:hover {
+            background: var(--azul);
+            color: var(--blanco);
             transform: scale(1.05);
         }
 
-        .course-emoji-btns {
-            display: flex;
-            gap: 6px;
-        }
-
-        .course-emoji-btn {
-            background: var(--azul);
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 50%;
-            font-size: 18px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .course-emoji-btn:hover {
-            transform: scale(1.1);
-            background: var(--azul-oscuro);
-        }
-
-        .course-emoji-btn.whatsapp {
-            background: #25D366;
-        }
-
-        .course-full-buttons {
-            display: none;
-            flex-direction: column;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        .course-full-buttons.show {
-            display: flex;
+        .course-header-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
         }
 
         .course-info-text {
@@ -2035,6 +2009,70 @@
             margin-bottom: 5px;
         }
 
+        /* === ICONOS SVG === */
+        .icon {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+            flex-shrink: 0;
+        }
+
+        .icon-play {
+            width: 18px;
+            height: 18px;
+        }
+
+        .icon-pause {
+            width: 18px;
+            height: 18px;
+        }
+
+        .icon-book {
+            width: 18px;
+            height: 18px;
+        }
+
+        .icon-phone {
+            width: 18px;
+            height: 18px;
+        }
+
+        .icon-target {
+            width: 18px;
+            height: 18px;
+        }
+
+        .icon-trophy {
+            width: 18px;
+            height: 18px;
+        }
+
+        .icon-notes {
+            width: 18px;
+            height: 18px;
+        }
+
+        .icon-calendar {
+            width: 18px;
+            height: 18px;
+        }
+
+        .icon-manual {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* === MEJORAS PARA BOTONES EN ACORDEÓN === */
+        @media (min-width: 769px) {
+            .lesson-quick-actions {
+                display: flex;
+            }
+            
+            .lesson-accordion.active .lesson-actions {
+                display: none;
+            }
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 10px 10px 5px;
@@ -2110,6 +2148,27 @@
                 width: 100%;
                 padding: 12px 20px;
                 font-size: 16px;
+            }
+
+            /* En móvil, ocultamos los botones pequeños en el acordeón retraído */
+            .lesson-quick-actions {
+                display: none;
+            }
+            
+            /* En móvil, mostramos los botones grandes en el acordeón expandido */
+            .lesson-accordion.active .lesson-actions {
+                display: flex;
+            }
+            
+            /* En móvil, los botones del encabezado del curso se muestran en columna */
+            .course-header-buttons {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .course-header-btn {
+                width: 100%;
+                justify-content: center;
             }
         }
         
@@ -2252,7 +2311,7 @@
                     
                     <div id="courseInfoText" class="course-info-text" style="display: none;"></div>
                     
-                    <div id="courseButtonsContainer" class="course-buttons-compact"></div>
+                    <div id="courseButtonsContainer" class="course-header-buttons"></div>
                 </div>
             </div>
         </div>
@@ -2330,11 +2389,8 @@
             <!-- Video -->
             <div class="portada-section" id="portadaVideoSection" style="display: none;">
                 <h3 class="portada-section-title">🎥 Video de Presentación</h3>
-                <div class="portada-video-thumbnail" id="portadaVideoThumbnail" onclick="abrirVideoPortada()">
-                    <img id="portadaVideoThumbImg" src="" alt="Video">
-                    <div class="portada-play-overlay">
-                        <div class="portada-play-button">▶</div>
-                    </div>
+                <div class="portada-video-container" id="portadaVideoContainer">
+                    <div id="portadaPlayer"></div>
                 </div>
             </div>
 
@@ -2366,18 +2422,42 @@
     </div>
 </div>
 
-<!-- Modal para Video de Portada -->
-<div id="videoPortadaModal" class="video-modal-overlay">
-    <div class="video-modal-content">
-        <div class="video-modal-header">
-            <h3 class="video-modal-title" id="videoPortadaTitle">Video de Presentación</h3>
-            <button class="close-video-modal" onclick="closeVideoPortada()">✕</button>
-        </div>
-        <div class="video-modal-body">
-            <iframe id="videoPortadaFrame" src="" allowfullscreen></iframe>
-        </div>
-    </div>
-</div>
+<!-- SVG Icons (definiciones para reutilizar) -->
+<svg style="display: none;">
+    <symbol id="icon-play" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+    </symbol>
+    
+    <symbol id="icon-pause" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5" />
+    </symbol>
+    
+    <symbol id="icon-book" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+    </symbol>
+    
+    <symbol id="icon-phone" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
+    </symbol>
+    
+    <symbol id="icon-target" viewBox="0 0 24 24">
+        <path d="M670.5 329.5 669.5 320.5 658.5 331.5 659.1 336.7 643.1 352.7C641.7 352 640.1 351.5 638.4 351.5 632.9 351.5 628.4 356 628.4 361.5 628.4 367 632.9 371.5 638.4 371.5 643.9 371.5 648.4 367 648.4 361.5 648.4 359.8 648 358.3 647.3 356.9L663.3 340.9 668.5 341.5 679.5 330.5 670.5 329.5Z"/>
+        <path d="M671.3 344.3 670 345.7 668.1 345.5 666 345.2C668.8 350 670.5 355.5 670.5 361.5 670.5 379.1 656.1 393.5 638.5 393.5 620.9 393.5 606.5 379.1 606.5 361.5 606.5 343.9 620.9 329.5 638.5 329.5 644.4 329.5 650 331.1 654.8 334L654.6 332 654.3 330 655.7 328.6 656.4 327.9C651 325.1 645 323.5 638.5 323.5 617.5 323.5 600.5 340.5 600.5 361.5 600.5 382.5 617.5 399.5 638.5 399.5 659.5 399.5 676.5 382.5 676.5 361.5 676.5 355 674.9 349 672 343.7L671.3 344.3Z"/>
+        <path d="M655.2 354.7C656.1 356.8 656.5 359.1 656.5 361.5 656.5 371.4 648.4 379.5 638.5 379.5 628.6 379.5 620.5 371.4 620.5 361.5 620.5 351.6 628.6 343.5 638.5 343.5 640.9 343.5 643.2 344 645.3 344.8L649.8 340.3C646.4 338.5 642.6 337.5 638.5 337.5 625.3 337.5 614.5 348.3 614.5 361.5 614.5 374.7 625.3 385.5 638.5 385.5 651.7 385.5 662.5 374.7 662.5 361.5 662.5 357.4 661.5 353.6 659.7 350.2L655.2 354.7Z"/>
+    </symbol>
+    
+    <symbol id="icon-trophy" viewBox="0 0 24 24">
+        <path d="M664.9 358.5C661.4 362.1 658.1 364.4 650.9 365.2 652.8 363.3 655 361.4 656.9 359.1 657.7 358.2 659.2 356.2 659.2 356.1 660.9 353.3 661.9 350.1 661.9 346.6L661.9 333.6 668.9 333.6 668.9 348.8C669 349 669.2 354 664.9 358.5ZM615.2 358.5C610.8 354 611 349 611 348.8L611 333.5 618 333.5 618 346.5C618 350 619 353.2 620.7 356 620.7 356.1 622.2 358.2 623 359 625 361.3 627.1 363.2 629 365.1 622 364.3 618.6 362 615.2 358.5ZM675 348.5 675 327.5 662 327.5 662 320.5 640 320.5 618 320.5 618 327.5 605 327.5 605 348.4C605 349.4 605 356.3 610.7 362.4 616.2 368.2 622.9 371.2 634.6 371.4 635.5 372.9 636 374.6 636 376.4L636 389.4 631 389.4C628.8 389.4 627 391.2 627 393.4L622 393.4C619.8 393.4 618 395.2 618 397.4L618 399.4 662 399.4 662 397.4C662 395.2 660.2 393.4 658 393.4L653 393.4C653 391.2 651.2 389.4 649 389.4L644 389.4 644 376.5C644 374.7 644.5 373 645.4 371.5 657.1 371.3 663.8 368.2 669.3 362.5 675 356.5 675 349.5 675 348.5Z"/>
+    </symbol>
+    
+    <symbol id="icon-notes" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+    </symbol>
+    
+    <symbol id="icon-calendar" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+    </symbol>
+</svg>
 
 <script>
     // === CONFIGURACIÓN ===
@@ -2981,8 +3061,8 @@
         if (currentPortadaVideo && currentPortadaVideo.trim() !== '') {
             const videoId = extractVideoId(currentPortadaVideo);
             if (videoId) {
-                const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-                document.getElementById('portadaVideoThumbImg').src = thumbnailUrl;
+                // Usar el mismo reproductor que en las clases
+                createPortadaPlayer(videoId);
                 videoSection.style.display = 'block';
             } else {
                 videoSection.style.display = 'none';
@@ -3042,26 +3122,41 @@
         }
     }
 
-    // ✅ Abrir video de portada en modal
-    function abrirVideoPortada() {
-        if (!currentPortadaVideo) return;
+    // ✅ Crear reproductor para portada (mismo que en las clases)
+    function createPortadaPlayer(videoId) {
+        const playerContainer = document.getElementById('portadaPlayer');
+        playerContainer.innerHTML = '';
         
-        const videoId = extractVideoId(currentPortadaVideo);
-        if (!videoId) {
-            showNotification('❌ URL de video inválida', 'error');
-            return;
-        }
-        
-        const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
-        
-        document.getElementById('videoPortadaFrame').src = embedUrl;
-        document.getElementById('videoPortadaTitle').textContent = 'Video de Presentación';
-        document.getElementById('videoPortadaModal').style.display = 'flex';
+        currentPlayers['portada'] = new YT.Player('portadaPlayer', {
+            videoId: videoId,
+            playerVars: { 
+                controls: 1, 
+                modestbranding: 1, 
+                rel: 0, 
+                iv_load_policy: 3,
+                playsinline: 1
+            },
+            events: {
+                onReady: function() { 
+                    console.log('✅ Reproductor de portada listo');
+                    // Ajustar tamaño del reproductor
+                    adjustPortadaPlayerSize();
+                }
+            }
+        });
     }
 
-    function closeVideoPortada() {
-        document.getElementById('videoPortadaModal').style.display = 'none';
-        document.getElementById('videoPortadaFrame').src = '';
+    function adjustPortadaPlayerSize() {
+        const player = currentPlayers['portada'];
+        if (!player) return;
+        
+        const container = document.getElementById('portadaVideoContainer');
+        if (!container) return;
+        
+        var containerWidth = container.clientWidth;
+        var containerHeight = containerWidth * 9 / 16;
+        
+        player.setSize(containerWidth, containerHeight);
     }
 
     // ✅ Abrir temario en modal de manuales
@@ -3135,6 +3230,12 @@
         currentPortadaVideo = null;
         currentPortadaTemario = null;
         currentPreviewCurso = null;
+        
+        // Destruir reproductor de portada
+        if (currentPlayers['portada']) {
+            currentPlayers['portada'].destroy();
+            delete currentPlayers['portada'];
+        }
     }
 
     function verCursoDisponible(cursoId, grupoId) {
@@ -3297,7 +3398,8 @@
                         userProgress[item.ID_Clase] = {
                             completed: item.Completada === "Sí" || item.Completada === true,
                             notes: item.Notas_Alumno || '',
-                            calificacion: item.Calificacion || 0,
+                            // ✅ CORREGIDO: Usar Calificacion con C mayúscula (como viene del servidor)
+                            Calificacion: item.Calificacion || 0,
                             certificado: item.Certificado || '',
                             lastUpdate: item.Fecha_Guardado || new Date()
                         };
@@ -3315,7 +3417,7 @@
         }
     }
 
-    // ✅ CORREGIDO: Verificación mejorada para manejar calificación 0 vs vacío
+    // ✅ CORREGIDO: Verificación mejorada usando Calificacion con C mayúscula
     function renderCalificacionEstrellas(lessonId, tieneEncuesta) {
         // Si no tiene encuesta, no mostrar nada
         if (!tieneEncuesta) {
@@ -3338,10 +3440,17 @@
             `;
         }
         
-        // ✅ CORREGIDO: Solo mostrar calificación si existe y es mayor a 0
+        // ✅ CORREGIDO: Usar Calificacion con C mayúscula
         const tieneCalificacion = userProgress[lessonId] && 
                                  userProgress[lessonId].hasOwnProperty('Calificacion') && 
                                  userProgress[lessonId].Calificacion > 0;
+        
+        console.log('🔍 Verificando calificación para lección:', {
+            lessonId,
+            userProgress: userProgress[lessonId],
+            tieneCalificacion,
+            valorCalificacion: userProgress[lessonId]?.Calificacion
+        });
         
         if (!tieneCalificacion) {
             return '<div class="calificacion-container"><div class="calificacion-texto">Sin calificar</div></div>';
@@ -3403,7 +3512,7 @@
         
         console.log('📊 Estado del progreso local:', {
             existe: !!progresoClase,
-            calificacion: progresoClase?.Calificacion,
+            Calificacion: progresoClase?.Calificacion,
             tieneCalificacion: tieneCalificacion
         });
         
@@ -3435,7 +3544,7 @@
         
         if (botonEncuesta) {
             if (completada) {
-                botonEncuesta.innerHTML = '✅ Corregida';
+                botonEncuesta.innerHTML = '<svg class="icon icon-target" aria-hidden="true"><use xlink:href="#icon-target"></use></svg> <span class="btn-text">Corregida</span>';
                 botonEncuesta.classList.remove('btn-primary');
                 botonEncuesta.classList.add('btn-secondary');
                 botonEncuesta.style.opacity = '0.7';
@@ -3723,7 +3832,7 @@
                 if (!userProgress[currentClaseId]) {
                     userProgress[currentClaseId] = {};
                 }
-                userProgress[currentClaseId].calificacion = calificacion;
+                userProgress[currentClaseId].Calificacion = calificacion;
                 userProgress[currentClaseId].completed = true;
                 
                 await loadUserProgress(alumnoActual.ID_Alumno);
@@ -3917,8 +4026,14 @@
         closeSurveyModal();
         
         if (claseIdTemp && userProgress[claseIdTemp]) {
-            const calificacion = userProgress[claseIdTemp].calificacion || 0;
+            const calificacion = userProgress[claseIdTemp].Calificacion || 0;
             const calificacionContainer = document.querySelector(`[data-lesson="${claseIdTemp}"] .calificacion-container`);
+            
+            console.log('🔄 Actualizando UI con calificación:', {
+                claseId: claseIdTemp,
+                calificacion: calificacion,
+                containerExiste: !!calificacionContainer
+            });
             
             if (calificacionContainer) {
                 calificacionContainer.innerHTML = renderCalificacionEstrellasHTML(calificacion);
@@ -3926,7 +4041,7 @@
             
             const botonEncuesta = document.getElementById(`encuesta-btn-${claseIdTemp}`);
             if (botonEncuesta) {
-                botonEncuesta.innerHTML = '✅ Corregida';
+                botonEncuesta.innerHTML = '<svg class="icon icon-target" aria-hidden="true"><use xlink:href="#icon-target"></use></svg> <span class="btn-text">Corregida</span>';
                 botonEncuesta.classList.remove('btn-primary');
                 botonEncuesta.classList.add('btn-secondary');
                 botonEncuesta.style.opacity = '0.7';
@@ -3963,7 +4078,7 @@
                     });
                     
                     if (verificacion.success && verificacion.completada) {
-                        boton.innerHTML = '✅ Corregida';
+                        boton.innerHTML = '<svg class="icon icon-target" aria-hidden="true"><use xlink:href="#icon-target"></use></svg> <span class="btn-text">Corregida</span>';
                         boton.classList.remove('btn-primary');
                         boton.classList.add('btn-secondary');
                         boton.style.opacity = '0.7';
@@ -4064,104 +4179,44 @@
         infoContainer.style.display = hasInfo ? 'block' : 'none';
     }
 
+    // ✅ MEJORADO: Función para actualizar botones del encabezado del curso
     function updateCourseButtons() {
         const buttonsContainer = document.getElementById('courseButtonsContainer');
         buttonsContainer.innerHTML = '';
         
         let hasButtons = false;
         
-        const emojiContainer = document.createElement('div');
-        emojiContainer.className = 'course-emoji-btns';
-        
         if (currentCourseData.Manual_c) {
             hasButtons = true;
-            const emojiBtn = document.createElement('button');
-            emojiBtn.className = 'course-emoji-btn';
-            emojiBtn.innerHTML = '📘';
-            emojiBtn.title = 'Manual del Curso';
-            emojiBtn.onclick = function() {
+            const manualBtn = document.createElement('button');
+            manualBtn.className = 'course-header-btn';
+            manualBtn.innerHTML = '<svg class="icon icon-book" aria-hidden="true"><use xlink:href="#icon-book"></use></svg> Manual';
+            manualBtn.onclick = function() {
                 showCourseManual(currentCourseData.Manual_c);
             };
-            emojiContainer.appendChild(emojiBtn);
-        }
-        
-        if (currentCourseData.Calendario) {
-            hasButtons = true;
-            const emojiBtn = document.createElement('button');
-            emojiBtn.className = 'course-emoji-btn';
-            emojiBtn.innerHTML = '📅';
-            emojiBtn.title = 'Calendario Lectivo';
-            emojiBtn.onclick = function() {
-                openManualViewer(currentCourseData.Calendario, 'Calendario Lectivo');
-            };
-            emojiContainer.appendChild(emojiBtn);
+            buttonsContainer.appendChild(manualBtn);
         }
         
         if (currentCourseData.Whatsapp) {
             hasButtons = true;
-            const emojiBtn = document.createElement('button');
-            emojiBtn.className = 'course-emoji-btn whatsapp';
-            emojiBtn.innerHTML = '📱';
-            emojiBtn.title = 'WhatsApp del Grupo';
-            emojiBtn.onclick = function() {
+            const whatsappBtn = document.createElement('button');
+            whatsappBtn.className = 'course-header-btn';
+            whatsappBtn.innerHTML = '<svg class="icon icon-phone" aria-hidden="true"><use xlink:href="#icon-phone"></use></svg> WhatsApp';
+            whatsappBtn.onclick = function() {
                 window.open(currentCourseData.Whatsapp, '_blank');
             };
-            emojiContainer.appendChild(emojiBtn);
+            buttonsContainer.appendChild(whatsappBtn);
         }
         
-        if (hasButtons) {
-            const toggleBtn = document.createElement('button');
-            toggleBtn.className = 'course-toggle-btn';
-            toggleBtn.innerHTML = '📋 más...';
-            toggleBtn.onclick = function() {
-                const fullButtons = document.getElementById('courseFullButtons');
-                if (fullButtons.classList.contains('show')) {
-                    fullButtons.classList.remove('show');
-                    toggleBtn.innerHTML = '📋 más...';
-                } else {
-                    fullButtons.classList.add('show');
-                    toggleBtn.innerHTML = '📋 menos...';
-                }
+        if (currentCourseData.Calendario) {
+            hasButtons = true;
+            const calendarBtn = document.createElement('button');
+            calendarBtn.className = 'course-header-btn';
+            calendarBtn.innerHTML = '<svg class="icon icon-calendar" aria-hidden="true"><use xlink:href="#icon-calendar"></use></svg> Calendario';
+            calendarBtn.onclick = function() {
+                openManualViewer(currentCourseData.Calendario, 'Calendario Lectivo');
             };
-            
-            buttonsContainer.appendChild(emojiContainer);
-            buttonsContainer.appendChild(toggleBtn);
-            
-            const fullButtonsContainer = document.createElement('div');
-            fullButtonsContainer.id = 'courseFullButtons';
-            fullButtonsContainer.className = 'course-full-buttons';
-            
-            if (currentCourseData.Manual_c) {
-                const fullBtn = document.createElement('button');
-                fullBtn.className = 'btn btn-primary';
-                fullBtn.innerHTML = '📘 Manual del Curso';
-                fullBtn.onclick = function() {
-                    showCourseManual(currentCourseData.Manual_c);
-                };
-                fullButtonsContainer.appendChild(fullBtn);
-            }
-            
-            if (currentCourseData.Calendario) {
-                const fullBtn = document.createElement('button');
-                fullBtn.className = 'btn btn-secondary';
-                fullBtn.innerHTML = '📅 Calendario Lectivo';
-                fullBtn.onclick = function() {
-                    openManualViewer(currentCourseData.Calendario, 'Calendario Lectivo');
-                };
-                fullButtonsContainer.appendChild(fullBtn);
-            }
-            
-            if (currentCourseData.Whatsapp) {
-                const fullBtn = document.createElement('button');
-                fullBtn.className = 'btn btn-success';
-                fullBtn.innerHTML = '📱 WhatsApp del Grupo';
-                fullBtn.onclick = function() {
-                    window.open(currentCourseData.Whatsapp, '_blank');
-                };
-                fullButtonsContainer.appendChild(fullBtn);
-            }
-            
-            buttonsContainer.appendChild(fullButtonsContainer);
+            buttonsContainer.appendChild(calendarBtn);
         }
     }
 
@@ -4279,7 +4334,7 @@
                     <p class='module-description'>${selectedModule['Descripción del Módulo'] || 'No hay descripción disponible para este módulo.'}</p>
                     <div class='module-buttons'>
                         ${selectedModule['Manual_m'] && selectedModule['Manual_m'].trim() !== '' ? 
-                            `<button class='btn btn-secondary' onclick='showModuleManual("${selectedModule['Manual_m']}")'>📘 Manual del Módulo</button>` : 
+                            `<button class='course-header-btn' onclick='showModuleManual("${selectedModule['Manual_m']}")'><svg class="icon icon-book" aria-hidden="true"><use xlink:href="#icon-book"></use></svg> Manual del Módulo</button>` : 
                             ''
                         }
                     </div>
@@ -4343,10 +4398,10 @@
                     var thumbnailUrl = 'https://img.youtube.com/vi/' + videoId + '/mqdefault.jpg';
                     expandedContent += `
                                     <img src='${thumbnailUrl}' alt='Miniatura del video'>
-                                    <div class='play-icon'>▶</div>`;
+                                    <div class='play-icon'><svg class="icon icon-play" aria-hidden="true"><use xlink:href="#icon-play"></use></svg></div>`;
                 } else {
                     expandedContent += `
-                                    <div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; color: #64748b; font-size: 20px;">📹</div>`;
+                                    <div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; color: #64748b; font-size: 20px;"><svg class="icon icon-play" aria-hidden="true"><use xlink:href="#icon-play"></use></svg></div>`;
                 }
                 
                 expandedContent += `
@@ -4360,26 +4415,26 @@
                             <div class='lesson-quick-actions'>
                                 ${content['URL Video'] && content['URL Video'].trim() !== '' ? 
                                     `<button class='quick-action-btn' onclick="event.stopPropagation(); toggleVideoPlayer('${lessonId}', '${content['URL Video']}')" title="Ver Clase">
-                                        ▶️<span class='btn-text'>Ver Clase</span>
+                                        <svg class="icon icon-play" aria-hidden="true"><use xlink:href="#icon-play"></use></svg><span class='btn-text'>Ver Clase</span>
                                     </button>` : ''
                                 }
                                 ${content['URL Manual'] && content['URL Manual'].trim() !== '' ? 
                                     `<button class='quick-action-btn' onclick="event.stopPropagation(); showManual('${lessonId}', '${content['URL Manual']}')" title="Manual Completo">
-                                        📚<span class='btn-text'>Manual</span>
+                                        <svg class="icon icon-book" aria-hidden="true"><use xlink:href="#icon-book"></use></svg><span class='btn-text'>Manual</span>
                                     </button>` : ''
                                 }
                                 ${tieneEncuesta ? 
                                     `<button id='encuesta-btn-${lessonId}' class='quick-action-btn encuesta' onclick="event.stopPropagation(); ${encuestaCompletada ? `mostrarRevisionEncuesta('${content.ID_Encuesta}', '${lessonId}')` : `abrirEncuesta('${content.ID_Encuesta}', '${lessonId}')`}" title="${encuestaCompletada ? 'Corregida' : 'Pruébate'}">
-                                        🎯<span class='btn-text'>${encuestaCompletada ? 'Corregida' : 'Pruébate'}</span>
+                                        <svg class="icon icon-target" aria-hidden="true"><use xlink:href="#icon-target"></use></svg><span class='btn-text'>${encuestaCompletada ? 'Corregida' : 'Pruébate'}</span>
                                     </button>` : ''
                                 }
                                 ${tieneCertificado ? 
                                     `<button class='quick-action-btn certificado' onclick="event.stopPropagation(); verCertificado('${userProgress[lessonId].certificado}')" title="Ver Certificado">
-                                        🏆<span class='btn-text'>Certificado</span>
+                                        <svg class="icon icon-trophy" aria-hidden="true"><use xlink:href="#icon-trophy"></use></svg><span class='btn-text'>Certificado</span>
                                     </button>` : ''
                                 }
                                 <button class='quick-action-btn' onclick="event.stopPropagation(); toggleNotes('${lessonId}')" title="Mis Notas">
-                                    📝<span class='btn-text'>Notas</span>
+                                    <svg class="icon icon-notes" aria-hidden="true"><use xlink:href="#icon-notes"></use></svg><span class='btn-text'>Notas</span>
                                 </button>
                             </div>
                             
@@ -4393,25 +4448,25 @@
                     </div>
                     <div class='lesson-content'>
                         <div class='lesson-actions'>
-                            <button id='video-btn-${lessonId}' class='btn btn-secondary action-btn' onclick='toggleVideoPlayer("${lessonId}", "${content['URL Video']}")'>▶️ Ver Clase</button>`;
+                            <button id='video-btn-${lessonId}' class='btn btn-secondary action-btn' onclick='toggleVideoPlayer("${lessonId}", "${content['URL Video']}")'><svg class="icon icon-play" aria-hidden="true"><use xlink:href="#icon-play"></use></svg> Ver Clase</button>`;
                 
                 if (content['URL Manual'] && content['URL Manual'].trim() !== '') {
-                    expandedContent += `<button class='btn btn-secondary action-btn' onclick='showManual("${lessonId}", "${content['URL Manual']}")'>📚 Manual Completo</button>`;
+                    expandedContent += `<button class='btn btn-secondary action-btn' onclick='showManual("${lessonId}", "${content['URL Manual']}")'><svg class="icon icon-book" aria-hidden="true"><use xlink:href="#icon-book"></use></svg> Manual Completo</button>`;
                 }
                 
                 if (tieneEncuesta) {
                     if (encuestaCompletada) {
-                        expandedContent += `<button id='encuesta-btn-expanded-${lessonId}' class='btn btn-secondary action-btn' onclick='mostrarRevisionEncuesta("${content.ID_Encuesta}", "${lessonId}")' style="opacity: 0.7;">✅ Corregida</button>`;
+                        expandedContent += `<button id='encuesta-btn-expanded-${lessonId}' class='btn btn-secondary action-btn' onclick='mostrarRevisionEncuesta("${content.ID_Encuesta}", "${lessonId}")' style="opacity: 0.7;"><svg class="icon icon-target" aria-hidden="true"><use xlink:href="#icon-target"></use></svg> Corregida</button>`;
                     } else {
-                        expandedContent += `<button id='encuesta-btn-expanded-${lessonId}' class='btn btn-primary action-btn' onclick='abrirEncuesta("${content.ID_Encuesta}", "${lessonId}")'>🎯 Pruébate</button>`;
+                        expandedContent += `<button id='encuesta-btn-expanded-${lessonId}' class='btn btn-primary action-btn' onclick='abrirEncuesta("${content.ID_Encuesta}", "${lessonId}")'><svg class="icon icon-target" aria-hidden="true"><use xlink:href="#icon-target"></use></svg> Pruébate</button>`;
                     }
                 }
                 
                 if (tieneCertificado) {
-                    expandedContent += `<button class='btn btn-success action-btn' onclick='verCertificado("${userProgress[lessonId].certificado}")'>🏆 Ver Certificado</button>`;
+                    expandedContent += `<button class='btn btn-success action-btn' onclick='verCertificado("${userProgress[lessonId].certificado}")'><svg class="icon icon-trophy" aria-hidden="true"><use xlink:href="#icon-trophy"></use></svg> Ver Certificado</button>`;
                 }
                 
-                expandedContent += `<button id='notes-btn-${lessonId}' class='btn btn-primary action-btn' onclick='toggleNotes("${lessonId}")'>📝 Mis Notas</button>`;
+                expandedContent += `<button id='notes-btn-${lessonId}' class='btn btn-primary action-btn' onclick='toggleNotes("${lessonId}")'><svg class="icon icon-notes" aria-hidden="true"><use xlink:href="#icon-notes"></use></svg> Mis Notas</button>`;
                 
                 if (j < selectedModule.Clases.length - 1) {
                     expandedContent += `<button class='btn btn-secondary action-btn' onclick='nextClass("${lessonId}", "${moduleId}")'>➡️ Siguiente Clase</button>`;
@@ -4444,7 +4499,7 @@
                                 <div class='time-display' id='timeDisplay-${lessonId}'>0:00 / 0:00</div>
                             </div>
                             <div class='video-controls'>
-                                <button id='playPauseBtn-${lessonId}'>▶ Play</button>
+                                <button id='playPauseBtn-${lessonId}'><svg class="icon icon-play" aria-hidden="true"><use xlink:href="#icon-play"></use></svg> Play</button>
                                 <button id='restartBtn-${lessonId}'>⏮ Reiniciar</button>
                                 <button id='fullscreenBtn-${lessonId}'>⛶ Pantalla completa</button>
                             </div>
@@ -4455,7 +4510,7 @@
                 if (content['URL Manual'] && content['URL Manual'].trim() !== '') {
                     expandedContent += `<div id='manual-container-${lessonId}' class='manual-container card' style='display: none;'>
                         <div class='manual-header'>
-                            <h4>📚 Material de Estudio</h4>
+                            <h4><svg class="icon icon-book" aria-hidden="true"><use xlink:href="#icon-book"></use></svg> Material de Estudio</h4>
                             <p>Accede a tu contenido educativo</p>
                         </div>
                         <div class='content-links'>
@@ -4478,7 +4533,7 @@
                     expandedContent += userProgress[lessonId].notes;
                 }
                 expandedContent += `</textarea>
-                    <button id='save-notes-btn-${lessonId}' class='btn btn-primary save-notes-btn' onclick='saveNotes("${lessonId}", "${(selectedModule['Nombre del Módulo'] || selectedModule.Nombre_Modulo)}", "${(content['Nombre de la Clase'] || content.Nombre_Clase)}")'>Guardar notas</button>
+                    <button id='save-notes-btn-${lessonId}' class='btn btn-primary save-notes-btn' onclick='saveNotes("${lessonId}", "${(selectedModule['Nombre del Módulo'] || selectedModule.Nombre_Modulo)}", "${(content['Nombre de la Clase'] || content.Nombre_Clase)}")'><svg class="icon icon-notes" aria-hidden="true"><use xlink:href="#icon-notes"></use></svg> Guardar notas</button>
                 </div>`;
             }
             
@@ -4714,10 +4769,10 @@
         
         if (playerContainer.style.display === 'none' || !playerContainer.style.display) {
             showVideoPlayer(lessonId, videoUrl);
-            if (videoBtn) videoBtn.textContent = '❌ Cerrar Video';
+            if (videoBtn) videoBtn.textContent = '<svg class="icon icon-pause" aria-hidden="true"><use xlink:href="#icon-pause"></use></svg> Cerrar Video';
         } else {
             hideVideoPlayer(lessonId);
-            if (videoBtn) videoBtn.textContent = '▶️ Ver Clase';
+            if (videoBtn) videoBtn.textContent = '<svg class="icon icon-play" aria-hidden="true"><use xlink:href="#icon-play"></use></svg> Ver Clase';
         }
     }
 
@@ -4738,7 +4793,7 @@
                 const otherLessonId = container.id.replace('player-container-', '');
                 const otherVideoBtn = document.getElementById('video-btn-' + otherLessonId);
                 if (otherVideoBtn) {
-                    otherVideoBtn.textContent = '▶️ Ver Clase';
+                    otherVideoBtn.textContent = '<svg class="icon icon-play" aria-hidden="true"><use xlink:href="#icon-play"></use></svg> Ver Clase';
                 }
             }
         });
@@ -4769,7 +4824,7 @@
         
         const videoBtn = document.getElementById('video-btn-' + lessonId);
         if (videoBtn) {
-            videoBtn.textContent = '▶️ Ver Clase';
+            videoBtn.textContent = '<svg class="icon icon-play" aria-hidden="true"><use xlink:href="#icon-play"></use></svg> Ver Clase';
         }
     }
 
@@ -4816,7 +4871,7 @@
     function onPlayerStateChange(lessonId, event) {
         var btn = document.getElementById("playPauseBtn-" + lessonId);
         if (btn) {
-            btn.textContent = event.data === YT.PlayerState.PLAYING ? "⏸ Pause" : "▶ Play";
+            btn.innerHTML = event.data === YT.PlayerState.PLAYING ? '<svg class="icon icon-pause" aria-hidden="true"><use xlink:href="#icon-pause"></use></svg> Pause' : '<svg class="icon icon-play" aria-hidden="true"><use xlink:href="#icon-play"></use></svg> Play';
         }
     }
 
@@ -4929,13 +4984,13 @@
             saveButton.textContent = 'Guardado ✓';
             
             setTimeout(() => {
-                saveButton.textContent = 'Guardar notas';
+                saveButton.textContent = '<svg class="icon icon-notes" aria-hidden="true"><use xlink:href="#icon-notes"></use></svg> Guardar notas';
                 saveButton.disabled = false;
             }, 2000);
             
         } catch (error) {
             showNotification('❌ Error: ' + error.message, 'error');
-            saveButton.textContent = 'Guardar notas';
+            saveButton.textContent = '<svg class="icon icon-notes" aria-hidden="true"><use xlink:href="#icon-notes"></use></svg> Guardar notas';
             saveButton.disabled = false;
         }
     }
@@ -5203,7 +5258,6 @@
             closeForgotPasswordModal();
             closeCursoPreview();
             closePortadaPromo();
-            closeVideoPortada();
         }
     });
 
@@ -5227,25 +5281,27 @@
                 }
             });
         }
-    });
 
-    // Ajustar tamaño de video en resize
-    window.addEventListener('resize', function() {
-        for (var lessonId in currentPlayers) {
-            if (currentPlayers[lessonId]) {
-                adjustPlayerSize(lessonId);
+        // Ajustar tamaño del reproductor de portada en resize
+        window.addEventListener('resize', function() {
+            if (currentPlayers['portada']) {
+                adjustPortadaPlayerSize();
             }
-        }
+            
+            for (var lessonId in currentPlayers) {
+                if (currentPlayers[lessonId] && lessonId !== 'portada') {
+                    adjustPlayerSize(lessonId);
+                }
+            }
+        });
     });
 
-    console.log('✅ Sistema completo cargado correctamente - Versión 4.0 con Sistema PROMO');
+    console.log('✅ Sistema completo cargado correctamente - Versión 4.2 con Encabezado Mejorado');
     console.log('🔥 Nuevas características implementadas:');
-    console.log('   ✅ Sistema de cursos PROMO con portada completa');
-    console.log('   ✅ Videos de presentación en modal');
-    console.log('   ✅ Temarios en PDF');
-    console.log('   ✅ Envío de solicitudes de inscripción');
-    console.log('   ✅ Verificación de solicitudes existentes');
-    console.log('   ✅ Interfaz de portada moderna y atractiva');
+    console.log('   ✅ Encabezado del curso simplificado sin botón "más"');
+    console.log('   ✅ Botones Manual, WhatsApp y Calendario en lugar de iconos repetidos');
+    console.log('   ✅ Colores azules con fondo blanco para botones y reproductor');
+    console.log('   ✅ Estilo consistente en todo el sistema');
 </script>
 </body>
 </html>
