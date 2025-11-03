@@ -2057,6 +2057,31 @@
             height: 18px;
         }
 
+        /* === NUEVO: Campanita para notificaciones en tarjetas de curso === */
+        .curso-notificacion {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: var(--naranja);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 10;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
         /* === MEJORAS PARA BOTONES EN ACORDEÓN === */
         @media (min-width: 769px) {
             .lesson-quick-actions {
@@ -2065,6 +2090,11 @@
             
             .lesson-accordion.active .lesson-actions {
                 display: none;
+            }
+            
+            /* En desktop, mostrar texto en botones rápidos */
+            .lesson-quick-actions .btn-text {
+                display: inline;
             }
         }
 
@@ -2165,6 +2195,24 @@
                 width: 100%;
                 justify-content: center;
             }
+            
+            /* En móvil, ocultar texto en botones rápidos */
+            .lesson-quick-actions .btn-text {
+                display: none;
+            }
+            
+            /* En móvil, mostrar solo iconos en botones rápidos */
+            .lesson-quick-actions {
+                display: flex;
+                gap: 4px;
+            }
+            
+            .quick-action-btn {
+                padding: 8px;
+                width: 40px;
+                height: 40px;
+                justify-content: center;
+            }
         }
         
         @media (max-width: 480px) {
@@ -2190,6 +2238,51 @@
 
             .lesson-actions .btn {
                 width: 100%;
+            }
+        }
+
+        /* === CONTROLES FLOTANTES EN PANTALLA COMPLETA - MEJORA PARA LANDSCAPE === */
+        :-webkit-full-screen .controls-panel,
+        :-moz-full-screen .controls-panel,
+        :fullscreen .controls-panel {
+            position: absolute !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            width: 100% !important;
+            background: rgba(0, 0, 0, 0.8) !important;
+            backdrop-filter: blur(5px);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(100%);
+            transition: all 0.3s ease;
+            z-index: 40;
+        }
+
+        :fullscreen .controls-panel.show-controls {
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: translateY(0) !important;
+        }
+
+        /* Media query específica para landscape en móviles */
+        @media (max-width: 926px) and (orientation: landscape) {
+            :fullscreen .controls-panel {
+                position: absolute !important;
+                bottom: 0 !important;
+                min-height: 80px !important;
+                max-height: 80px !important;
+                padding: 10px 15px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-around !important;
+            }
+            
+            :fullscreen .video-container {
+                flex: 1 !important;
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
             }
         }
     </style>
@@ -2455,7 +2548,7 @@
         <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
     </symbol>
     
-    <symbol id="icon-target" viewBox="0 0 24 24">
+    <symbol id="icon-target" viewBox="0 0 96 96">
         <path d="M670.5 329.5 669.5 320.5 658.5 331.5 659.1 336.7 643.1 352.7C641.7 352 640.1 351.5 638.4 351.5 632.9 351.5 628.4 356 628.4 361.5 628.4 367 632.9 371.5 638.4 371.5 643.9 371.5 648.4 367 648.4 361.5 648.4 359.8 648 358.3 647.3 356.9L663.3 340.9 668.5 341.5 679.5 330.5 670.5 329.5Z"/>
         <path d="M671.3 344.3 670 345.7 668.1 345.5 666 345.2C668.8 350 670.5 355.5 670.5 361.5 670.5 379.1 656.1 393.5 638.5 393.5 620.9 393.5 606.5 379.1 606.5 361.5 606.5 343.9 620.9 329.5 638.5 329.5 644.4 329.5 650 331.1 654.8 334L654.6 332 654.3 330 655.7 328.6 656.4 327.9C651 325.1 645 323.5 638.5 323.5 617.5 323.5 600.5 340.5 600.5 361.5 600.5 382.5 617.5 399.5 638.5 399.5 659.5 399.5 676.5 382.5 676.5 361.5 676.5 355 674.9 349 672 343.7L671.3 344.3Z"/>
         <path d="M655.2 354.7C656.1 356.8 656.5 359.1 656.5 361.5 656.5 371.4 648.4 379.5 638.5 379.5 628.6 379.5 620.5 371.4 620.5 361.5 620.5 351.6 628.6 343.5 638.5 343.5 640.9 343.5 643.2 344 645.3 344.8L649.8 340.3C646.4 338.5 642.6 337.5 638.5 337.5 625.3 337.5 614.5 348.3 614.5 361.5 614.5 374.7 625.3 385.5 638.5 385.5 651.7 385.5 662.5 374.7 662.5 361.5 662.5 357.4 661.5 353.6 659.7 350.2L655.2 354.7Z"/>
@@ -2508,6 +2601,9 @@
     // Variables globales para el sistema de controles
     let controlsVisible = {};
     let controlsTimeout = {};
+
+    // Variables globales para el sistema de controles flotantes en pantalla completa
+    let floatingControls = {};
 
     // === VARIABLES PARA SISTEMA DE ENCUESTAS ===
     let todasEncuestas = [];
@@ -2899,6 +2995,9 @@
         
         container.innerHTML = cursos.map(curso => {
             const hasImage = curso.Foto_Portada && curso.Foto_Portada.trim() !== '';
+            // ✅ AGREGADO: Campanita si hay notificaciones (Mensaje)
+            const hasNotification = curso.Mensaje && curso.Mensaje.trim() !== '';
+            
             return `
             <div class="curso-card card" onclick="accederAlCurso('${curso.ID_Curso}', '${curso.ID_Grupo}')">
                 <div class="curso-imagen">
@@ -2910,6 +3009,8 @@
                         ''
                     }
                     <div class="image-fallback" style="${hasImage ? 'display: none;' : ''}">🎓</div>
+                    <!-- ✅ AGREGADO: Campanita de notificación -->
+                    ${hasNotification ? `<div class="curso-notificacion" title="Tienes una notificación">🔔</div>` : ''}
                 </div>
                 <div class="curso-content">
                     <h3 class="curso-titulo">${curso.Nombre_Curso}</h3>
@@ -2943,6 +3044,9 @@
             const hasImage = curso.Foto_Portada && curso.Foto_Portada.trim() !== '';
             const condicion = curso.Condicion || '';
             const nombreCurso = curso.Nombre_Curso || curso['Nombre del Curso'];
+            // ✅ AGREGADO: Campanita si hay notificaciones (Mensaje)
+            const hasNotification = curso.Mensaje && curso.Mensaje.trim() !== '';
+            
             let badgeColor = 'var(--success)';
             let badgeText = 'Disponible';
             let onClickFunction = '';
@@ -2977,6 +3081,8 @@
                     <div style="position: absolute; top: 10px; right: 10px; background: ${badgeColor}; color: white; padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: bold;">
                         ${badgeText}
                     </div>
+                    <!-- ✅ AGREGADO: Campanita de notificación -->
+                    ${hasNotification ? `<div class="curso-notificacion" title="Tienes una notificación">🔔</div>` : ''}
                 </div>
                 <div class="curso-content">
                     <h3 class="curso-disponible-titulo">${nombreCurso}</h3>
@@ -4495,6 +4601,7 @@
                             
                             ${renderCalificacionEstrellas(lessonId, tieneEncuesta)}
                             
+                            <!-- ✅ MEJORADO: Botones rápidos con solo iconos en móvil -->
                             <div class='lesson-quick-actions'>
                                 ${content['URL Video'] && content['URL Video'].trim() !== '' ? 
                                     `<button class='quick-action-btn' onclick="event.stopPropagation(); toggleVideoPlayer('${lessonId}', '${content['URL Video']}')" title="Ver Clase">
@@ -4535,6 +4642,7 @@
                         </div>
                     </div>
                     <div class='lesson-content'>
+                        <!-- ✅ MEJORADO: En móvil, cuando el acordeón se expande, mostrar botones con icono + texto -->
                         <div class='lesson-actions'>
                             <button id='video-btn-${lessonId}' class='btn btn-secondary action-btn' onclick='toggleVideoPlayer("${lessonId}", "${content['URL Video']}")'><svg class="icon icon-play" aria-hidden="true"><use xlink:href="#icon-play"></use></svg> Ver Clase</button>`;
                 
@@ -5030,6 +5138,7 @@
         setupHideControls(lessonId);
     }
 
+    // ✅ MEJORADO: Sistema de controles flotantes en pantalla completa
     function setupHideControls(lessonId) {
         const controlsPanel = document.getElementById('controls-panel-' + lessonId);
         const videoContainer = document.getElementById('videoContainer-' + lessonId);
@@ -5092,6 +5201,73 @@
                 showControls();
             });
         });
+        
+        // Configurar controles flotantes en pantalla completa
+        setupFloatingControls(lessonId);
+    }
+
+    // ✅ NUEVO: Sistema de controles flotantes en pantalla completa
+    function setupFloatingControls(lessonId) {
+        const controlsPanel = document.getElementById('controls-panel-' + lessonId);
+        const playerContainer = document.getElementById('player-container-' + lessonId);
+        
+        if (!controlsPanel || !playerContainer) return;
+        
+        // Agregar clase para controles flotantes cuando esté en pantalla completa
+        function handleFullscreenChange() {
+            if (document.fullscreenElement || 
+                document.webkitFullscreenElement || 
+                document.mozFullScreenElement || 
+                document.msFullscreenElement) {
+                
+                controlsPanel.classList.add('show-controls');
+                isFullscreen = true;
+            } else {
+                controlsPanel.classList.remove('show-controls');
+                isFullscreen = false;
+            }
+        }
+        
+        // Event listeners para cambios de pantalla completa
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+        document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+        
+        // Inicializar controles flotantes
+        floatingControls[lessonId] = {
+            showControls: function() {
+                if (isFullscreen) {
+                    controlsPanel.classList.add('show-controls');
+                    
+                    // Auto-ocultar después de 3 segundos
+                    if (floatingControls[lessonId].hideTimeout) {
+                        clearTimeout(floatingControls[lessonId].hideTimeout);
+                    }
+                    
+                    floatingControls[lessonId].hideTimeout = setTimeout(() => {
+                        controlsPanel.classList.remove('show-controls');
+                    }, 3000);
+                }
+            },
+            hideControls: function() {
+                if (isFullscreen) {
+                    controlsPanel.classList.remove('show-controls');
+                }
+            }
+        };
+        
+        // Mostrar controles al tocar/interactuar con el video
+        const videoContainer = document.getElementById('videoContainer-' + lessonId);
+        if (videoContainer) {
+            videoContainer.addEventListener('click', function() {
+                floatingControls[lessonId].showControls();
+            });
+            
+            videoContainer.addEventListener('mousemove', function() {
+                floatingControls[lessonId].showControls();
+            });
+        }
     }
 
     function seekVideo(lessonId, event) {
@@ -5617,13 +5793,12 @@
         });
     });
 
-    console.log('✅ Sistema completo cargado correctamente - Versión 4.5 con Mejoras Solicitadas');
+    console.log('✅ Sistema completo cargado correctamente - Versión 4.6 con Mejoras Solicitadas');
     console.log('🔥 Nuevas mejoras implementadas:');
-    console.log('   ✅ Botones en acordeón con nombres en PC');
-    console.log('   ✅ Botones ocultos en móvil cuando acordeón se despliega');
-    console.log('   ✅ Botón de certificado con emoji 🏆');
-    console.log('   ✅ Botón de notificación con campanita en cabecera del curso');
-    console.log('   ✅ Inscripción en grupo "Gratis" para cursos gratuitos');
+    console.log('   ✅ Campanita de notificación en tarjetas de curso');
+    console.log('   ✅ Botones con solo iconos en móvil debajo de la miniatura');
+    console.log('   ✅ Botones con icono + texto cuando el acordeón se expande');
+    console.log('   ✅ Sistema de controles flotantes en pantalla completa mejorado');
 </script>
 </body>
 </html>
