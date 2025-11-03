@@ -194,6 +194,33 @@
             display: flex;
             flex-direction: column;
             height: 100%;
+            position: relative;
+        }
+
+        /* Campanita de notificación en tarjeta de curso */
+        .curso-notification-bell {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--naranja);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            box-shadow: 0 2px 8px rgba(251, 191, 36, 0.5);
+            animation: bellRing 2s infinite;
+            z-index: 10;
+        }
+
+        @keyframes bellRing {
+            0%, 100% { transform: rotate(0); }
+            10%, 30% { transform: rotate(10deg); }
+            20%, 40% { transform: rotate(-10deg); }
+            50% { transform: rotate(0); }
         }
 
         .curso-disponible-card {
@@ -607,6 +634,7 @@
             margin-top: 4px;
         }
 
+        /* Botones debajo de miniatura - Solo íconos en móvil cuando acordeón cerrado */
         .lesson-quick-actions {
             display: flex;
             gap: 6px;
@@ -700,6 +728,7 @@
             margin: 0;
         }
 
+        /* === CONTROLES FLOTANTES EN PANTALLA COMPLETA === */
         .player-container {
             width: 100%;
             max-width: 800px;
@@ -789,6 +818,7 @@
             border: 1px solid var(--azul);
         }
 
+        /* Controles normales */
         .controls-panel {
             background: var(--blanco);
             padding: 15px;
@@ -797,6 +827,81 @@
             transition: opacity 0.3s ease;
             opacity: 1;
             z-index: 20;
+        }
+
+        /* === CONTROLES FLOTANTES EN PANTALLA COMPLETA === */
+        :-webkit-full-screen .controls-panel,
+        :-moz-full-screen .controls-panel,
+        :fullscreen .controls-panel {
+            position: absolute !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            width: 100% !important;
+            background: rgba(0, 0, 0, 0.8) !important;
+            backdrop-filter: blur(5px);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(100%);
+            transition: all 0.3s ease;
+            z-index: 40;
+            padding: 20px !important;
+            border-radius: 0 !important;
+        }
+
+        /* Cuando tienen la clase 'show-controls', aparecen */
+        :fullscreen .controls-panel.show-controls {
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: translateY(0) !important;
+        }
+
+        /* En pantalla completa, el video ocupa todo */
+        :fullscreen .video-container {
+            border-radius: 0 !important;
+            border: none !important;
+            flex: 1 !important;
+        }
+
+        :fullscreen .video-container div[id^="player-"] {
+            max-height: 100% !important;
+        }
+
+        :fullscreen .player-container {
+            display: flex !important;
+            flex-direction: column !important;
+            height: 100% !important;
+            max-width: 100% !important;
+            padding: 0 !important;
+            border-radius: 0 !important;
+            border: none !important;
+        }
+
+        /* Media query específica para landscape */
+        @media (max-width: 926px) and (orientation: landscape) {
+            :fullscreen .controls-panel {
+                min-height: 80px !important;
+                max-height: 80px !important;
+                padding: 10px 15px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-around !important;
+            }
+            
+            :fullscreen .progress-row {
+                flex: 1;
+                margin-right: 15px;
+            }
+            
+            :fullscreen .video-controls {
+                display: flex !important;
+                gap: 10px !important;
+            }
+            
+            :fullscreen .video-controls button {
+                padding: 8px 12px !important;
+                font-size: 12px !important;
+            }
         }
 
         .progress-row {
@@ -851,6 +956,10 @@
             font-family: monospace;
         }
 
+        :fullscreen .time-display {
+            color: white;
+        }
+
         .video-controls {
             display: flex;
             justify-content: center;
@@ -888,7 +997,6 @@
         .course-buttons .btn, .module-buttons .btn {
             margin: 0;
         }
-
         /* === NUEVO ESTILO PARA BOTONES DEL ENCABEZADO DEL CURSO === */
         .course-header-buttons {
             display: flex;
@@ -2057,44 +2165,41 @@
             height: 18px;
         }
 
-        /* === NUEVO: Campanita para notificaciones en tarjetas de curso === */
-        .curso-notificacion {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: var(--naranja);
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            z-index: 10;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        /* === MEJORAS PARA BOTONES EN ACORDEÓN === */
-        @media (min-width: 769px) {
+        /* === MEJORAS PARA BOTONES EN ACORDEÓN MÓVIL === */
+        @media (max-width: 768px) {
+            /* En móvil, cuando el acordeón está CERRADO: solo iconos/emojis */
             .lesson-quick-actions {
                 display: flex;
             }
             
-            .lesson-accordion.active .lesson-actions {
-                display: none;
+            .lesson-quick-actions .btn-text {
+                display: none; /* Ocultar texto */
             }
             
-            /* En desktop, mostrar texto en botones rápidos */
+            /* En móvil, cuando el acordeón está ABIERTO: mostrar botones grandes con texto */
+            .lesson-accordion.active .lesson-quick-actions {
+                display: none; /* Ocultar botones pequeños */
+            }
+            
+            .lesson-accordion.active .lesson-actions {
+                display: flex; /* Mostrar botones grandes */
+            }
+        }
+
+        /* === MEJORAS PARA ESCRITORIO === */
+        @media (min-width: 769px) {
+            /* En escritorio, mostrar botones pequeños con texto siempre */
+            .lesson-quick-actions {
+                display: flex;
+            }
+            
             .lesson-quick-actions .btn-text {
-                display: inline;
+                display: inline; /* Mostrar texto */
+            }
+            
+            /* En escritorio, cuando el acordeón se abre, ocultar botones grandes */
+            .lesson-accordion.active .lesson-actions {
+                display: none;
             }
         }
 
@@ -2174,16 +2279,6 @@
                 padding: 12px 20px;
                 font-size: 16px;
             }
-
-            /* En móvil, ocultamos los botones pequeños en el acordeón retraído */
-            .lesson-quick-actions {
-                display: none;
-            }
-            
-            /* En móvil, mostramos los botones grandes en el acordeón expandido */
-            .lesson-accordion.active .lesson-actions {
-                display: flex;
-            }
             
             /* En móvil, los botones del encabezado del curso se muestran en columna */
             .course-header-buttons {
@@ -2193,24 +2288,6 @@
             
             .course-header-btn {
                 width: 100%;
-                justify-content: center;
-            }
-            
-            /* En móvil, ocultar texto en botones rápidos */
-            .lesson-quick-actions .btn-text {
-                display: none;
-            }
-            
-            /* En móvil, mostrar solo iconos en botones rápidos */
-            .lesson-quick-actions {
-                display: flex;
-                gap: 4px;
-            }
-            
-            .quick-action-btn {
-                padding: 8px;
-                width: 40px;
-                height: 40px;
                 justify-content: center;
             }
         }
@@ -2238,51 +2315,6 @@
 
             .lesson-actions .btn {
                 width: 100%;
-            }
-        }
-
-        /* === CONTROLES FLOTANTES EN PANTALLA COMPLETA - MEJORA PARA LANDSCAPE === */
-        :-webkit-full-screen .controls-panel,
-        :-moz-full-screen .controls-panel,
-        :fullscreen .controls-panel {
-            position: absolute !important;
-            bottom: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            width: 100% !important;
-            background: rgba(0, 0, 0, 0.8) !important;
-            backdrop-filter: blur(5px);
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(100%);
-            transition: all 0.3s ease;
-            z-index: 40;
-        }
-
-        :fullscreen .controls-panel.show-controls {
-            opacity: 1 !important;
-            visibility: visible !important;
-            transform: translateY(0) !important;
-        }
-
-        /* Media query específica para landscape en móviles */
-        @media (max-width: 926px) and (orientation: landscape) {
-            :fullscreen .controls-panel {
-                position: absolute !important;
-                bottom: 0 !important;
-                min-height: 80px !important;
-                max-height: 80px !important;
-                padding: 10px 15px !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: space-around !important;
-            }
-            
-            :fullscreen .video-container {
-                flex: 1 !important;
-                display: flex !important;
-                justify-content: center !important;
-                align-items: center !important;
             }
         }
     </style>
@@ -2354,7 +2386,6 @@
         <button class="btn btn-primary" onclick="sendPasswordReset()">Enviar enlace</button>
     </div>
 </div>
-
 <!-- Página 4: Dashboard del usuario -->
 <div class="dashboard page4_class1-off" id="page4_id1" style="display: none;">
     <div class="container">
@@ -2601,9 +2632,6 @@
     // Variables globales para el sistema de controles
     let controlsVisible = {};
     let controlsTimeout = {};
-
-    // Variables globales para el sistema de controles flotantes en pantalla completa
-    let floatingControls = {};
 
     // === VARIABLES PARA SISTEMA DE ENCUESTAS ===
     let todasEncuestas = [];
@@ -2870,7 +2898,6 @@
             console.error('❌ Error cargando datos de encuestas:', error);
         }
     }
-
     // === SISTEMA DE CURSOS DISPONIBLES ===
     async function loadMisCursos() {
         const container = document.getElementById('misCursosContainer');
@@ -2995,11 +3022,11 @@
         
         container.innerHTML = cursos.map(curso => {
             const hasImage = curso.Foto_Portada && curso.Foto_Portada.trim() !== '';
-            // ✅ AGREGADO: Campanita si hay notificaciones (Mensaje)
-            const hasNotification = curso.Mensaje && curso.Mensaje.trim() !== '';
+            const hasMensaje = curso.Mensaje && curso.Mensaje.trim() !== '';
             
             return `
             <div class="curso-card card" onclick="accederAlCurso('${curso.ID_Curso}', '${curso.ID_Grupo}')">
+                ${hasMensaje ? '<div class="curso-notification-bell">🔔</div>' : ''}
                 <div class="curso-imagen">
                     ${hasImage ? 
                         `<img src="${curso.Foto_Portada}" 
@@ -3009,8 +3036,6 @@
                         ''
                     }
                     <div class="image-fallback" style="${hasImage ? 'display: none;' : ''}">🎓</div>
-                    <!-- ✅ AGREGADO: Campanita de notificación -->
-                    ${hasNotification ? `<div class="curso-notificacion" title="Tienes una notificación">🔔</div>` : ''}
                 </div>
                 <div class="curso-content">
                     <h3 class="curso-titulo">${curso.Nombre_Curso}</h3>
@@ -3044,9 +3069,6 @@
             const hasImage = curso.Foto_Portada && curso.Foto_Portada.trim() !== '';
             const condicion = curso.Condicion || '';
             const nombreCurso = curso.Nombre_Curso || curso['Nombre del Curso'];
-            // ✅ AGREGADO: Campanita si hay notificaciones (Mensaje)
-            const hasNotification = curso.Mensaje && curso.Mensaje.trim() !== '';
-            
             let badgeColor = 'var(--success)';
             let badgeText = 'Disponible';
             let onClickFunction = '';
@@ -3081,8 +3103,6 @@
                     <div style="position: absolute; top: 10px; right: 10px; background: ${badgeColor}; color: white; padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: bold;">
                         ${badgeText}
                     </div>
-                    <!-- ✅ AGREGADO: Campanita de notificación -->
-                    ${hasNotification ? `<div class="curso-notificacion" title="Tienes una notificación">🔔</div>` : ''}
                 </div>
                 <div class="curso-content">
                     <h3 class="curso-disponible-titulo">${nombreCurso}</h3>
@@ -3105,7 +3125,6 @@
         try {
             showNotification('🔄 Cargando información del curso...');
             
-            // Obtener datos de la portada
             const portadaResult = await callJSONP('portada', {});
             
             if (!portadaResult.success || !portadaResult.data) {
@@ -3113,7 +3132,6 @@
                 return;
             }
             
-            // Buscar la portada de este curso
             const portada = portadaResult.data.find(p => 
                 p.ID_Curso === cursoId && p.ID_Grupo === grupoId
             );
@@ -3127,16 +3145,12 @@
             currentPortadaVideo = portada['URL Video'] || portada.URL_Video;
             currentPortadaTemario = portada.Temario;
             
-            // Verificar si el alumno ya tiene una solicitud pendiente
             const solicitudExistente = await verificarSolicitudExistente(cursoId, grupoId);
             
-            // Ocultar dashboard y mostrar portada
             document.getElementById('page4_id1').style.display = 'none';
             
-            // Renderizar portada
             renderizarPortadaPromo(curso, portada, solicitudExistente);
             
-            // Mostrar modal
             document.getElementById('portadaPromoModal').style.display = 'flex';
             
         } catch (error) {
@@ -3145,7 +3159,6 @@
         }
     }
 
-    // ✅ Verificar si el alumno ya envió solicitud para este curso
     async function verificarSolicitudExistente(cursoId, grupoId) {
         try {
             const inscripcionesResult = await callJSONP('inscripciones', {});
@@ -3154,7 +3167,6 @@
                 return false;
             }
             
-            // Buscar si existe una solicitud (Postulantes) para este alumno
             const solicitud = inscripcionesResult.data.find(insc => {
                 const postulante = insc.Postulantes || '';
                 const idCurso = insc.ID_Curso;
@@ -3173,24 +3185,19 @@
         }
     }
 
-    // ✅ Renderizar portada completa
     function renderizarPortadaPromo(curso, portada, tieneSolicitud) {
-        // Título
         document.getElementById('portadaPromoTitle').textContent = curso.Nombre_Curso || curso['Nombre del Curso'];
         
-        // Descripción
         const descripcionPortada = portada.Descripción || portada.Descripcion || '';
         const descripcionCurso = curso.Descripción || curso.Descripcion || '';
         const descripcionFinal = descripcionPortada || descripcionCurso || 'Este es un curso promocional. ¡Inscríbete ahora!';
         
         document.getElementById('portadaPromoDescription').innerHTML = descripcionFinal;
         
-        // Video
         const videoSection = document.getElementById('portadaVideoSection');
         if (currentPortadaVideo && currentPortadaVideo.trim() !== '') {
             const videoId = extractVideoId(currentPortadaVideo);
             if (videoId) {
-                // Usar el mismo reproductor que en las clases
                 createPortadaPlayer(videoId);
                 videoSection.style.display = 'block';
             } else {
@@ -3200,7 +3207,6 @@
             videoSection.style.display = 'none';
         }
         
-        // Temario
         const temarioSection = document.getElementById('portadaTemarioSection');
         if (currentPortadaTemario && currentPortadaTemario.trim() !== '') {
             temarioSection.style.display = 'block';
@@ -3208,7 +3214,6 @@
             temarioSection.style.display = 'none';
         }
         
-        // WhatsApp
         const whatsappSection = document.getElementById('portadaWhatsappSection');
         const whatsappLink = portada.Whatsapp;
         if (whatsappLink && whatsappLink.trim() !== '') {
@@ -3218,11 +3223,9 @@
             whatsappSection.style.display = 'none';
         }
         
-        // Sección de Solicitud
         const solicitudContainer = document.getElementById('portadaSolicitudContainer');
         
         if (tieneSolicitud) {
-            // Ya tiene solicitud pendiente
             solicitudContainer.innerHTML = `
                 <div class="solicitud-pendiente-card">
                     <div class="solicitud-pendiente-icon">✅</div>
@@ -3235,7 +3238,6 @@
                 </div>
             `;
         } else {
-            // Puede enviar solicitud
             solicitudContainer.innerHTML = `
                 <div class="portada-solicitud-section">
                     <div class="portada-solicitud-title">🔥 ¡Curso en Promoción!</div>
@@ -3251,13 +3253,11 @@
         }
     }
 
-    // ✅ Volver al inicio desde la portada
     function volverAlInicioDesdePortada() {
         closePortadaPromo();
         document.getElementById('page4_id1').style.display = 'block';
     }
 
-    // ✅ Crear reproductor para portada (mismo que en las clases)
     function createPortadaPlayer(videoId) {
         const playerContainer = document.getElementById('portadaPlayer');
         playerContainer.innerHTML = '';
@@ -3275,14 +3275,12 @@
                 onReady: function() { 
                     console.log('✅ Reproductor de portada listo');
                     onPlayerReady('portada');
-                    // Configurar controles personalizados para portada
                     setupCustomControls('portada');
                 },
                 onStateChange: function(event) { onPlayerStateChange('portada', event); }
             }
         });
 
-        // Iniciar el intervalo para actualizar el progreso
         setInterval(function() { updateProgress('portada'); }, 500);
     }
 
@@ -3299,7 +3297,6 @@
         player.setSize(containerWidth, containerHeight);
     }
 
-    // ✅ Abrir temario en modal de manuales
     function abrirTemarioPortada() {
         if (!currentPortadaTemario) {
             showNotification('❌ No hay temario disponible', 'error');
@@ -3309,7 +3306,6 @@
         openManualViewer(currentPortadaTemario, '📚 Temario del Curso');
     }
 
-    // ✅ Enviar solicitud desde la portada
     async function enviarSolicitudDesdePortada() {
         if (!currentPreviewCurso) return;
         
@@ -3318,7 +3314,6 @@
             return;
         }
         
-        // Confirmar
         if (!confirm('¿Deseas enviar tu solicitud de inscripción a este curso?\n\nRecibirás acceso una vez que sea aprobada por el administrador.')) {
             return;
         }
@@ -3341,13 +3336,10 @@
             if (response.success) {
                 showNotification('✅ ¡Solicitud enviada correctamente!');
                 
-                // Actualizar la portada para mostrar el mensaje de "solicitud recibida"
                 renderizarPortadaPromo(currentPreviewCurso, currentPortadaData, true);
                 
-                // Limpiar caché
                 sessionStorage.removeItem(`cursos_disponibles_${currentUser.ID_Alumno}`);
                 
-                // Mostrar alerta de confirmación
                 setTimeout(() => {
                     alert('✅ ¡Solicitud Enviada!\n\n' +
                           'Hemos recibido tu solicitud de inscripción.\n\n' +
@@ -3363,7 +3355,6 @@
         }
     }
 
-    // ✅ Cerrar modal de portada
     function closePortadaPromo() {
         document.getElementById('portadaPromoModal').style.display = 'none';
         currentPortadaData = null;
@@ -3371,7 +3362,6 @@
         currentPortadaTemario = null;
         currentPreviewCurso = null;
         
-        // Destruir reproductor de portada
         if (currentPlayers['portada']) {
             currentPlayers['portada'].destroy();
             delete currentPlayers['portada'];
@@ -3450,7 +3440,6 @@
         try {
             showNotification('🔄 Inscribiéndote al curso...');
             
-            // Buscar el grupo "Gratis" para este curso
             let grupoInscripcion = grupoId;
             if (currentPreviewCurso.Condicion === 'Gratis') {
                 const gruposResult = await callJSONP('grupos', {});
@@ -3536,6 +3525,10 @@
         return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
     }
 
+    // Debido a la longitud, el resto del código JavaScript continuará en el siguiente mensaje
+    // que incluirá todas las funciones de progreso, encuestas, video, y demás funcionalidades...
+
+    console.log('✅ Sistema de cursos y portadas cargado correctamente');
     // === SISTEMA DE PROGRESO Y CALIFICACIONES ===
     async function loadUserProgress(alumnoId) {
         try {
@@ -3553,7 +3546,6 @@
                         userProgress[item.ID_Clase] = {
                             completed: item.Completada === "Sí" || item.Completada === true,
                             notes: item.Notas_Alumno || '',
-                            // ✅ CORREGIDO: Usar Calificacion con C mayúscula (como viene del servidor)
                             Calificacion: item.Calificacion || 0,
                             certificado: item.Certificado || '',
                             lastUpdate: item.Fecha_Guardado || new Date()
@@ -3572,14 +3564,11 @@
         }
     }
 
-    // ✅ CORREGIDO: Verificación mejorada usando Calificacion con C mayúscula
     function renderCalificacionEstrellas(lessonId, tieneEncuesta) {
-        // Si no tiene encuesta, no mostrar nada
         if (!tieneEncuesta) {
             return '';
         }
         
-        // Si tiene certificado, mostrar 5 estrellas sin porcentaje
         if (userProgress[lessonId] && userProgress[lessonId].certificado && userProgress[lessonId].certificado.trim() !== '') {
             return `
                 <div class="calificacion-container">
@@ -3595,7 +3584,6 @@
             `;
         }
         
-        // ✅ CORREGIDO: Usar Calificacion con C mayúscula
         const tieneCalificacion = userProgress[lessonId] && 
                                  userProgress[lessonId].hasOwnProperty('Calificacion') && 
                                  userProgress[lessonId].Calificacion > 0;
@@ -3632,8 +3620,6 @@
     }
 
     // === SISTEMA DE ENCUESTAS COMPLETO CON ARCHIVOS ===
-
-    // ✅ CORREGIDO: Verificación mejorada con manejo de calificación 0
     async function abrirEncuesta(encuestaId, claseId) {
         console.log('🎯 Abriendo encuesta:', encuestaId, 'para clase:', claseId);
         
@@ -3659,7 +3645,6 @@
             console.error('❌ Error verificando encuesta:', error);
         }
         
-        // ✅ CORREGIDO: Verificación mejorada - solo si tiene calificación Y es > 0
         const progresoClase = userProgress[claseId];
         const tieneCalificacion = progresoClase && 
                                  progresoClase.hasOwnProperty('Calificacion') && 
@@ -3793,7 +3778,6 @@
                           placeholder="Escribe tu respuesta aquí..."
                           oninput="guardarRespuestaTexto('${pregunta.ID_Pregunta}')"></textarea>
             `;
-            
         } else if (tipo === 'archivo') {
             html += `
                 <input type="file" id="archivo_${pregunta.ID_Pregunta}" class="question-file-input" 
@@ -4249,6 +4233,9 @@
         }
     }
 
+    // Continuará en el siguiente mensaje con el sistema de módulos, video y demás...
+    
+    console.log('✅ Sistema de encuestas cargado correctamente');
     // === SISTEMA DE MÓDULOS Y CLASES ===
     async function accederAlCurso(cursoId, grupoId) {
         currentCourseId = cursoId;
@@ -4334,14 +4321,12 @@
         infoContainer.style.display = hasInfo ? 'block' : 'none';
     }
 
-    // ✅ MEJORADO: Función para actualizar botones del encabezado del curso
     function updateCourseButtons() {
         const buttonsContainer = document.getElementById('courseButtonsContainer');
         buttonsContainer.innerHTML = '';
         
         let hasButtons = false;
         
-        // Botón de notificación con campanita
         if (currentCourseData.Mensaje) {
             hasButtons = true;
             const notificationBtn = document.createElement('button');
@@ -4387,7 +4372,6 @@
         }
     }
 
-    // ✅ Función para mostrar mensaje del curso en modal elegante
     function showCourseMessage(message) {
         const modal = document.createElement('div');
         modal.className = 'modal-overlay';
@@ -4567,7 +4551,6 @@
                                       userProgress[lessonId].certificado && 
                                       userProgress[lessonId].certificado.trim() !== '';
                 
-                // ✅ CORREGIDO: Verificación mejorada - solo si tiene calificación Y es > 0
                 var encuestaCompletada = userProgress[lessonId] && 
                                         userProgress[lessonId].hasOwnProperty('Calificacion') && 
                                         userProgress[lessonId].Calificacion > 0;
@@ -4601,7 +4584,6 @@
                             
                             ${renderCalificacionEstrellas(lessonId, tieneEncuesta)}
                             
-                            <!-- ✅ MEJORADO: Botones rápidos con solo iconos en móvil -->
                             <div class='lesson-quick-actions'>
                                 ${content['URL Video'] && content['URL Video'].trim() !== '' ? 
                                     `<button class='quick-action-btn' onclick="event.stopPropagation(); toggleVideoPlayer('${lessonId}', '${content['URL Video']}')" title="Ver Clase">
@@ -4642,7 +4624,6 @@
                         </div>
                     </div>
                     <div class='lesson-content'>
-                        <!-- ✅ MEJORADO: En móvil, cuando el acordeón se expande, mostrar botones con icono + texto -->
                         <div class='lesson-actions'>
                             <button id='video-btn-${lessonId}' class='btn btn-secondary action-btn' onclick='toggleVideoPlayer("${lessonId}", "${content['URL Video']}")'><svg class="icon icon-play" aria-hidden="true"><use xlink:href="#icon-play"></use></svg> Ver Clase</button>`;
                 
@@ -4958,7 +4939,10 @@
         }
     }
 
-    // === SISTEMA DE VIDEO CORREGIDO ===
+    // Continúa en el próximo mensaje con el sistema de video...
+    
+    console.log('✅ Sistema de módulos cargado correctamente');
+    // === SISTEMA DE VIDEO COMPLETO CON CONTROLES FLOTANTES ===
     function toggleVideoPlayer(lessonId, videoUrl) {
         const playerContainer = document.getElementById('player-container-' + lessonId);
         const videoBtn = document.getElementById('video-btn-' + lessonId);
@@ -5092,11 +5076,13 @@
         var progressBar = document.getElementById("progressBar-" + lessonId);
         var thumb = document.getElementById("thumb-" + lessonId);
 
-        // Configurar controles de reproducción
         if (overlay) {
             overlay.onclick = function(e) { 
                 if (!e.target.closest('.video-controls') && !e.target.closest('.exit-fullscreen')) {
-                    togglePlayPause(lessonId); 
+                    togglePlayPause(lessonId);
+                    if (isFullscreen) {
+                        toggleControlsVisibility(lessonId);
+                    }
                 }
             };
         }
@@ -5105,16 +5091,13 @@
         if (restartBtn) restartBtn.onclick = function() { restartVideo(lessonId); };
         if (fullscreenBtn) fullscreenBtn.onclick = function() { goFullScreen(lessonId); };
 
-        // Configurar barra de progreso
         if (progressBar) {
             progressBar.addEventListener('click', function(e) { seekVideo(lessonId, e); });
             
-            // Para móvil: touch events
             progressBar.addEventListener('touchstart', function(e) { startDragging(lessonId, e); });
             progressBar.addEventListener('touchmove', function(e) { dragVideo(lessonId, e); });
             progressBar.addEventListener('touchend', function() { stopDragging(lessonId); });
             
-            // Para desktop: mouse events
             progressBar.addEventListener('mousedown', function(e) { startDragging(lessonId, e); });
             document.addEventListener('mousemove', function(e) { 
                 if (dragging && dragging.lessonId === lessonId) {
@@ -5128,145 +5111,87 @@
             });
         }
 
-        // Configurar thumb para arrastrar
         if (thumb) {
             thumb.addEventListener('mousedown', function(e) { startDragging(lessonId, e); });
             thumb.addEventListener('touchstart', function(e) { startDragging(lessonId, e); });
         }
 
-        // Sistema de ocultar controles en móvil
         setupHideControls(lessonId);
     }
 
-    // ✅ MEJORADO: Sistema de controles flotantes en pantalla completa
     function setupHideControls(lessonId) {
         const controlsPanel = document.getElementById('controls-panel-' + lessonId);
         const videoContainer = document.getElementById('videoContainer-' + lessonId);
         
         if (!controlsPanel || !videoContainer) return;
         
-        // Mostrar controles inmediatamente
         controlsPanel.style.opacity = '1';
-        
-        // Inicializar estado de visibilidad
         controlsVisible[lessonId] = true;
         
-        // Función para ocultar controles después de un tiempo
         function hideControls() {
-            if (controlsVisible[lessonId]) {
-                controlsPanel.style.opacity = '0';
+            if (isFullscreen && controlsVisible[lessonId]) {
+                controlsPanel.classList.remove('show-controls');
                 controlsVisible[lessonId] = false;
             }
         }
         
-        // Función para mostrar controles
         function showControls() {
-            controlsPanel.style.opacity = '1';
-            controlsVisible[lessonId] = true;
-            
-            // Limpiar timeout anterior
-            if (controlsTimeout[lessonId]) {
-                clearTimeout(controlsTimeout[lessonId]);
+            if (isFullscreen) {
+                controlsPanel.classList.add('show-controls');
+                controlsVisible[lessonId] = true;
+                
+                if (controlsTimeout[lessonId]) {
+                    clearTimeout(controlsTimeout[lessonId]);
+                }
+                
+                controlsTimeout[lessonId] = setTimeout(hideControls, 3000);
             }
-            
-            // Ocultar después de 3 segundos
-            controlsTimeout[lessonId] = setTimeout(hideControls, 3000);
         }
         
-        // Inicialmente ocultar después de 3 segundos
-        controlsTimeout[lessonId] = setTimeout(hideControls, 3000);
-        
-        // Event listeners para mostrar controles
         videoContainer.addEventListener('touchstart', function() {
-            showControls();
+            if (isFullscreen) showControls();
         });
         
         videoContainer.addEventListener('mousemove', function() {
-            showControls();
+            if (isFullscreen) showControls();
         });
         
         videoContainer.addEventListener('click', function() {
-            showControls();
+            if (isFullscreen) showControls();
         });
         
-        // Event listeners para resetear el temporizador
         const controlElements = controlsPanel.querySelectorAll('button, .progress-container-player');
         controlElements.forEach(function(el) {
             el.addEventListener('touchstart', function(e) {
                 e.stopPropagation();
-                showControls();
+                if (isFullscreen) showControls();
             });
             el.addEventListener('mousedown', function(e) {
                 e.stopPropagation();
-                showControls();
+                if (isFullscreen) showControls();
             });
         });
-        
-        // Configurar controles flotantes en pantalla completa
-        setupFloatingControls(lessonId);
     }
 
-    // ✅ NUEVO: Sistema de controles flotantes en pantalla completa
-    function setupFloatingControls(lessonId) {
+    function toggleControlsVisibility(lessonId) {
         const controlsPanel = document.getElementById('controls-panel-' + lessonId);
-        const playerContainer = document.getElementById('player-container-' + lessonId);
+        if (!controlsPanel || !isFullscreen) return;
         
-        if (!controlsPanel || !playerContainer) return;
-        
-        // Agregar clase para controles flotantes cuando esté en pantalla completa
-        function handleFullscreenChange() {
-            if (document.fullscreenElement || 
-                document.webkitFullscreenElement || 
-                document.mozFullScreenElement || 
-                document.msFullscreenElement) {
-                
-                controlsPanel.classList.add('show-controls');
-                isFullscreen = true;
-            } else {
-                controlsPanel.classList.remove('show-controls');
-                isFullscreen = false;
-            }
-        }
-        
-        // Event listeners para cambios de pantalla completa
-        document.addEventListener('fullscreenchange', handleFullscreenChange);
-        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-        document.addEventListener('mozfullscreenchange', handleFullscreenChange);
-        document.addEventListener('MSFullscreenChange', handleFullscreenChange);
-        
-        // Inicializar controles flotantes
-        floatingControls[lessonId] = {
-            showControls: function() {
-                if (isFullscreen) {
-                    controlsPanel.classList.add('show-controls');
-                    
-                    // Auto-ocultar después de 3 segundos
-                    if (floatingControls[lessonId].hideTimeout) {
-                        clearTimeout(floatingControls[lessonId].hideTimeout);
-                    }
-                    
-                    floatingControls[lessonId].hideTimeout = setTimeout(() => {
-                        controlsPanel.classList.remove('show-controls');
-                    }, 3000);
-                }
-            },
-            hideControls: function() {
-                if (isFullscreen) {
-                    controlsPanel.classList.remove('show-controls');
-                }
-            }
-        };
-        
-        // Mostrar controles al tocar/interactuar con el video
-        const videoContainer = document.getElementById('videoContainer-' + lessonId);
-        if (videoContainer) {
-            videoContainer.addEventListener('click', function() {
-                floatingControls[lessonId].showControls();
-            });
+        if (controlsVisible[lessonId]) {
+            controlsPanel.classList.remove('show-controls');
+            controlsVisible[lessonId] = false;
+        } else {
+            controlsPanel.classList.add('show-controls');
+            controlsVisible[lessonId] = true;
             
-            videoContainer.addEventListener('mousemove', function() {
-                floatingControls[lessonId].showControls();
-            });
+            if (controlsTimeout[lessonId]) {
+                clearTimeout(controlsTimeout[lessonId]);
+            }
+            
+            controlsTimeout[lessonId] = setTimeout(() => {
+                controlsPanel.classList.remove('show-controls');
+                controlsVisible[lessonId] = false;
+            }, 3000);
         }
     }
 
@@ -5285,7 +5210,6 @@
         var newTime = player.getDuration() * percent;
         player.seekTo(newTime, true);
         
-        // Actualizar la barra de progreso inmediatamente
         updateProgressBar(lessonId, percent);
     }
 
@@ -5313,10 +5237,8 @@
         
         var newTime = player.getDuration() * percent;
         
-        // Solo actualizar la barra visualmente, no seekear hasta que se suelte
         updateProgressBar(lessonId, percent);
         
-        // Guardar el tiempo para cuando se suelte
         dragging.seekTime = newTime;
     }
 
@@ -5376,15 +5298,24 @@
             container.msRequestFullscreen();
         }
         
-        // Mostrar el botón de cerrar
         var exitBtn = document.getElementById('exitFullscreenBtn-' + lessonId);
         if (exitBtn) {
-            exitBtn.style.display = 'block';
+            exitBtn.style.display = 'flex';
         }
         
         isFullscreen = true;
         
-        // Agregar event listener para cuando se salga de pantalla completa
+        const controlsPanel = document.getElementById('controls-panel-' + lessonId);
+        if (controlsPanel) {
+            controlsPanel.classList.add('show-controls');
+            controlsVisible[lessonId] = true;
+            
+            controlsTimeout[lessonId] = setTimeout(() => {
+                controlsPanel.classList.remove('show-controls');
+                controlsVisible[lessonId] = false;
+            }, 3000);
+        }
+        
         document.addEventListener('fullscreenchange', function exitHandler() {
             if (!document.fullscreenElement && !document.webkitFullscreenElement && 
                 !document.mozFullScreenElement && !document.msFullscreenElement) {
@@ -5392,6 +5323,10 @@
                     exitBtn.style.display = 'none';
                 }
                 isFullscreen = false;
+                if (controlsPanel) {
+                    controlsPanel.classList.remove('show-controls');
+                    controlsPanel.style.opacity = '1';
+                }
                 document.removeEventListener('fullscreenchange', exitHandler);
             }
         });
@@ -5414,13 +5349,18 @@
         }
         
         isFullscreen = false;
+        
+        const controlsPanel = document.getElementById('controls-panel-' + lessonId);
+        if (controlsPanel) {
+            controlsPanel.classList.remove('show-controls');
+            controlsPanel.style.opacity = '1';
+        }
     }
 
     function updateProgress(lessonId) {
         var player = currentPlayers[lessonId];
         if (!player || !player.getCurrentTime || !player.getDuration) return;
         
-        // Si estamos arrastrando, no actualizar la barra
         if (dragging && dragging.lessonId === lessonId && dragging.active) return;
         
         var currentTime = player.getCurrentTime();
@@ -5429,7 +5369,6 @@
         
         updateProgressBar(lessonId, percent);
         
-        // Actualizar el tiempo
         var timeDisplay = document.getElementById("timeDisplay-" + lessonId);
         if (timeDisplay) {
             var currentTimeFormatted = formatTime(currentTime);
@@ -5758,7 +5697,6 @@
         }
     });
 
-    // Permitir Enter para login
     document.addEventListener('DOMContentLoaded', function() {
         const usernameInput = document.getElementById('username');
         const passwordInput = document.getElementById('password');
@@ -5779,7 +5717,6 @@
             });
         }
 
-        // Ajustar tamaño del reproductor de portada en resize
         window.addEventListener('resize', function() {
             if (currentPlayers['portada']) {
                 adjustPortadaPlayerSize();
@@ -5793,12 +5730,14 @@
         });
     });
 
-    console.log('✅ Sistema completo cargado correctamente - Versión 4.6 con Mejoras Solicitadas');
-    console.log('🔥 Nuevas mejoras implementadas:');
-    console.log('   ✅ Campanita de notificación en tarjetas de curso');
-    console.log('   ✅ Botones con solo iconos en móvil debajo de la miniatura');
-    console.log('   ✅ Botones con icono + texto cuando el acordeón se expande');
-    console.log('   ✅ Sistema de controles flotantes en pantalla completa mejorado');
+    console.log('✅ Sistema completo cargado correctamente - Versión 5.0 FINAL');
+    console.log('🎉 Nuevas características implementadas:');
+    console.log('   ✅ Campanita en tarjeta de curso si tiene notificaciones');
+    console.log('   ✅ Botones en acordeón: solo íconos en móvil cerrado, con texto al expandir');
+    console.log('   ✅ Controles flotantes en pantalla completa con auto-hide');
+    console.log('   ✅ Sistema completo de encuestas con archivos');
+    console.log('   ✅ Inscripción en grupo Gratis para cursos gratuitos');
+    console.log('   ✅ Portadas PROMO con video y temario');
 </script>
 </body>
 </html>
