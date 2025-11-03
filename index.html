@@ -643,13 +643,8 @@
         }
 
         .quick-action-btn .btn-text {
-            display: none;
             font-size: 12px;
             font-weight: 600;
-        }
-
-        .lesson-accordion.active .quick-action-btn .btn-text {
-            display: inline;
         }
 
         .vista-button-container {
@@ -801,6 +796,7 @@
             margin-top: 0;
             transition: opacity 0.3s ease;
             opacity: 1;
+            z-index: 20;
         }
 
         .progress-row {
@@ -2375,6 +2371,7 @@
     <div class="portada-promo-content">
         <div class="portada-header">
             <h2 class="portada-title" id="portadaPromoTitle">Curso Promocional</h2>
+            <button class="btn btn-secondary" onclick="volverAlInicioDesdePortada()" style="margin-right: 10px;">Volver al Inicio</button>
             <button class="close-portada" onclick="closePortadaPromo()">✕</button>
         </div>
         
@@ -2507,6 +2504,10 @@
     let currentPortadaVideo = null;
     let currentPortadaTemario = null;
     let solicitudesPendientes = [];
+
+    // Variables globales para el sistema de controles
+    let controlsVisible = {};
+    let controlsTimeout = {};
 
     // === VARIABLES PARA SISTEMA DE ENCUESTAS ===
     let todasEncuestas = [];
@@ -3023,6 +3024,9 @@
             // Verificar si el alumno ya tiene una solicitud pendiente
             const solicitudExistente = await verificarSolicitudExistente(cursoId, grupoId);
             
+            // Ocultar dashboard y mostrar portada
+            document.getElementById('page4_id1').style.display = 'none';
+            
             // Renderizar portada
             renderizarPortadaPromo(curso, portada, solicitudExistente);
             
@@ -3139,6 +3143,12 @@
                 </div>
             `;
         }
+    }
+
+    // ✅ Volver al inicio desde la portada
+    function volverAlInicioDesdePortada() {
+        closePortadaPromo();
+        document.getElementById('page4_id1').style.display = 'block';
     }
 
     // ✅ Crear reproductor para portada (mismo que en las clases)
@@ -3334,6 +3344,21 @@
         try {
             showNotification('🔄 Inscribiéndote al curso...');
             
+            // Buscar el grupo "Gratis" para este curso
+            let grupoInscripcion = grupoId;
+            if (currentPreviewCurso.Condicion === 'Gratis') {
+                const gruposResult = await callJSONP('grupos', {});
+                const grupoGratis = gruposResult.data.find(g => 
+                    g.ID_Curso === cursoId && g.Nombre_Grupo === 'Gratis'
+                );
+                if (grupoGratis) {
+                    grupoInscripcion = grupoGratis.ID_Grupo;
+                    console.log('✅ Usando grupo Gratis:', grupoInscripcion);
+                } else {
+                    console.warn('⚠️ No se encontró grupo Gratis para el curso', cursoId);
+                }
+            }
+            
             const inscripcionId = 'INS_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
             const fechaInscripcion = new Date().toISOString().split('T')[0];
             
@@ -3341,7 +3366,7 @@
                 ID_Inscripcion: inscripcionId,
                 ID_Alumno: currentUser.ID_Alumno,
                 ID_Curso: cursoId,
-                ID_Grupo: grupoId,
+                ID_Grupo: grupoInscripcion,
                 Fecha_Inscripcion: fechaInscripcion,
                 Postulantes: 'SI'
             });
@@ -3568,7 +3593,7 @@
         
         if (botonEncuesta) {
             if (completada) {
-                botonEncuesta.innerHTML = '<svg class="icon icon-target" aria-hidden="true"><use xlink:href="#icon-target"></use></svg> <span class="btn-text">Corregida</span>';
+                botonEncuesta.innerHTML = '🎯<span class="btn-text">Corregida</span>';
                 botonEncuesta.classList.remove('btn-primary');
                 botonEncuesta.classList.add('btn-secondary');
                 botonEncuesta.style.opacity = '0.7';
@@ -4065,7 +4090,7 @@
             
             const botonEncuesta = document.getElementById(`encuesta-btn-${claseIdTemp}`);
             if (botonEncuesta) {
-                botonEncuesta.innerHTML = '<svg class="icon icon-target" aria-hidden="true"><use xlink:href="#icon-target"></use></svg> <span class="btn-text">Corregida</span>';
+                botonEncuesta.innerHTML = '🎯<span class="btn-text">Corregida</span>';
                 botonEncuesta.classList.remove('btn-primary');
                 botonEncuesta.classList.add('btn-secondary');
                 botonEncuesta.style.opacity = '0.7';
@@ -4102,7 +4127,7 @@
                     });
                     
                     if (verificacion.success && verificacion.completada) {
-                        boton.innerHTML = '<svg class="icon icon-target" aria-hidden="true"><use xlink:href="#icon-target"></use></svg> <span class="btn-text">Corregida</span>';
+                        boton.innerHTML = '🎯<span class="btn-text">Corregida</span>';
                         boton.classList.remove('btn-primary');
                         boton.classList.add('btn-secondary');
                         boton.style.opacity = '0.7';
@@ -4210,6 +4235,18 @@
         
         let hasButtons = false;
         
+        // Botón de notificación con campanita
+        if (currentCourseData.Mensaje) {
+            hasButtons = true;
+            const notificationBtn = document.createElement('button');
+            notificationBtn.className = 'course-header-btn';
+            notificationBtn.innerHTML = '🔔 Mensaje';
+            notificationBtn.onclick = function() {
+                showCourseMessage(currentCourseData.Mensaje);
+            };
+            buttonsContainer.appendChild(notificationBtn);
+        }
+        
         if (currentCourseData.Manual_c) {
             hasButtons = true;
             const manualBtn = document.createElement('button');
@@ -4242,6 +4279,28 @@
             };
             buttonsContainer.appendChild(calendarBtn);
         }
+    }
+
+    // ✅ Función para mostrar mensaje del curso en modal elegante
+    function showCourseMessage(message) {
+        const modal = document.createElement('div');
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">🔔 Mensaje Importante</h2>
+                    <button class="close-modal" onclick="this.parentElement.parentElement.parentElement.remove()">✕</button>
+                </div>
+                <div style="padding: 20px; line-height: 1.6; color: var(--azul-profundo); background: var(--neutro); border-radius: 8px; margin: 15px 0;">
+                    ${message}
+                </div>
+                <div style="text-align: center; padding: 10px;">
+                    <button class="btn btn-primary" onclick="this.parentElement.parentElement.parentElement.remove()">Cerrar</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        modal.style.display = 'flex';
     }
 
     function showCourseManual(manualUrl) {
@@ -4439,26 +4498,31 @@
                             <div class='lesson-quick-actions'>
                                 ${content['URL Video'] && content['URL Video'].trim() !== '' ? 
                                     `<button class='quick-action-btn' onclick="event.stopPropagation(); toggleVideoPlayer('${lessonId}', '${content['URL Video']}')" title="Ver Clase">
-                                        <svg class="icon icon-play" aria-hidden="true"><use xlink:href="#icon-play"></use></svg><span class='btn-text'>Ver Clase</span>
+                                        <svg class="icon icon-play" aria-hidden="true"><use xlink:href="#icon-play"></use></svg>
+                                        <span class="btn-text">Ver</span>
                                     </button>` : ''
                                 }
                                 ${content['URL Manual'] && content['URL Manual'].trim() !== '' ? 
                                     `<button class='quick-action-btn' onclick="event.stopPropagation(); showManual('${lessonId}', '${content['URL Manual']}')" title="Manual Completo">
-                                        <svg class="icon icon-book" aria-hidden="true"><use xlink:href="#icon-book"></use></svg><span class='btn-text'>Manual</span>
+                                        <svg class="icon icon-book" aria-hidden="true"><use xlink:href="#icon-book"></use></svg>
+                                        <span class="btn-text">Manual</span>
                                     </button>` : ''
                                 }
                                 ${tieneEncuesta ? 
                                     `<button id='encuesta-btn-${lessonId}' class='quick-action-btn encuesta' onclick="event.stopPropagation(); ${encuestaCompletada ? `mostrarRevisionEncuesta('${content.ID_Encuesta}', '${lessonId}')` : `abrirEncuesta('${content.ID_Encuesta}', '${lessonId}')`}" title="${encuestaCompletada ? 'Corregida' : 'Pruébate'}">
-                                        <svg class="icon icon-target" aria-hidden="true"><use xlink:href="#icon-target"></use></svg><span class='btn-text'>${encuestaCompletada ? 'Corregida' : 'Pruébate'}</span>
+                                        🎯
+                                        <span class="btn-text">${encuestaCompletada ? 'Corregida' : 'Pruébate'}</span>
                                     </button>` : ''
                                 }
                                 ${tieneCertificado ? 
                                     `<button class='quick-action-btn certificado' onclick="event.stopPropagation(); verCertificado('${userProgress[lessonId].certificado}')" title="Ver Certificado">
-                                        <svg class="icon icon-trophy" aria-hidden="true"><use xlink:href="#icon-trophy"></use></svg><span class='btn-text'>Certificado</span>
+                                        🏆
+                                        <span class="btn-text">Certificado</span>
                                     </button>` : ''
                                 }
                                 <button class='quick-action-btn' onclick="event.stopPropagation(); toggleNotes('${lessonId}')" title="Mis Notas">
-                                    <svg class="icon icon-notes" aria-hidden="true"><use xlink:href="#icon-notes"></use></svg><span class='btn-text'>Notas</span>
+                                    <svg class="icon icon-notes" aria-hidden="true"><use xlink:href="#icon-notes"></use></svg>
+                                    <span class="btn-text">Notas</span>
                                 </button>
                             </div>
                             
@@ -4480,14 +4544,14 @@
                 
                 if (tieneEncuesta) {
                     if (encuestaCompletada) {
-                        expandedContent += `<button id='encuesta-btn-expanded-${lessonId}' class='btn btn-secondary action-btn' onclick='mostrarRevisionEncuesta("${content.ID_Encuesta}", "${lessonId}")' style="opacity: 0.7;"><svg class="icon icon-target" aria-hidden="true"><use xlink:href="#icon-target"></use></svg> Corregida</button>`;
+                        expandedContent += `<button id='encuesta-btn-expanded-${lessonId}' class='btn btn-secondary action-btn' onclick='mostrarRevisionEncuesta("${content.ID_Encuesta}", "${lessonId}")' style="opacity: 0.7;">🎯 Corregida</button>`;
                     } else {
-                        expandedContent += `<button id='encuesta-btn-expanded-${lessonId}' class='btn btn-primary action-btn' onclick='abrirEncuesta("${content.ID_Encuesta}", "${lessonId}")'><svg class="icon icon-target" aria-hidden="true"><use xlink:href="#icon-target"></use></svg> Pruébate</button>`;
+                        expandedContent += `<button id='encuesta-btn-expanded-${lessonId}' class='btn btn-primary action-btn' onclick='abrirEncuesta("${content.ID_Encuesta}", "${lessonId}")'>🎯 Pruébate</button>`;
                     }
                 }
                 
                 if (tieneCertificado) {
-                    expandedContent += `<button class='btn btn-success action-btn' onclick='verCertificado("${userProgress[lessonId].certificado}")'><svg class="icon icon-trophy" aria-hidden="true"><use xlink:href="#icon-trophy"></use></svg> Ver Certificado</button>`;
+                    expandedContent += `<button class='btn btn-success action-btn' onclick='verCertificado("${userProgress[lessonId].certificado}")'>🏆 Ver Certificado</button>`;
                 }
                 
                 expandedContent += `<button id='notes-btn-${lessonId}' class='btn btn-primary action-btn' onclick='toggleNotes("${lessonId}")'><svg class="icon icon-notes" aria-hidden="true"><use xlink:href="#icon-notes"></use></svg> Mis Notas</button>`;
@@ -4972,35 +5036,61 @@
         
         if (!controlsPanel || !videoContainer) return;
         
-        let hideTimer;
+        // Mostrar controles inmediatamente
+        controlsPanel.style.opacity = '1';
         
-        function resetHideTimer() {
-            clearTimeout(hideTimer);
-            controlsPanel.style.opacity = '1';
-            
-            hideTimer = setTimeout(() => {
+        // Inicializar estado de visibilidad
+        controlsVisible[lessonId] = true;
+        
+        // Función para ocultar controles después de un tiempo
+        function hideControls() {
+            if (controlsVisible[lessonId]) {
                 controlsPanel.style.opacity = '0';
-            }, 3000);
+                controlsVisible[lessonId] = false;
+            }
         }
         
+        // Función para mostrar controles
         function showControls() {
-            clearTimeout(hideTimer);
             controlsPanel.style.opacity = '1';
+            controlsVisible[lessonId] = true;
+            
+            // Limpiar timeout anterior
+            if (controlsTimeout[lessonId]) {
+                clearTimeout(controlsTimeout[lessonId]);
+            }
+            
+            // Ocultar después de 3 segundos
+            controlsTimeout[lessonId] = setTimeout(hideControls, 3000);
         }
         
         // Inicialmente ocultar después de 3 segundos
-        resetHideTimer();
+        controlsTimeout[lessonId] = setTimeout(hideControls, 3000);
         
         // Event listeners para mostrar controles
-        videoContainer.addEventListener('touchstart', showControls);
-        videoContainer.addEventListener('mousemove', showControls);
-        videoContainer.addEventListener('click', showControls);
+        videoContainer.addEventListener('touchstart', function() {
+            showControls();
+        });
+        
+        videoContainer.addEventListener('mousemove', function() {
+            showControls();
+        });
+        
+        videoContainer.addEventListener('click', function() {
+            showControls();
+        });
         
         // Event listeners para resetear el temporizador
         const controlElements = controlsPanel.querySelectorAll('button, .progress-container-player');
         controlElements.forEach(function(el) {
-            el.addEventListener('touchstart', resetHideTimer);
-            el.addEventListener('mousedown', resetHideTimer);
+            el.addEventListener('touchstart', function(e) {
+                e.stopPropagation();
+                showControls();
+            });
+            el.addEventListener('mousedown', function(e) {
+                e.stopPropagation();
+                showControls();
+            });
         });
     }
 
@@ -5212,16 +5302,16 @@
             
             updateLocalCache();
             showNotification('✅ Notas guardadas correctamente');
-            saveButton.textContent = 'Guardado ✓';
+            saveButton.innerHTML = '<svg class="icon icon-notes" aria-hidden="true"><use xlink:href="#icon-notes"></use></svg> Nota guardada';
             
             setTimeout(() => {
-                saveButton.textContent = '<svg class="icon icon-notes" aria-hidden="true"><use xlink:href="#icon-notes"></use></svg> Guardar notas';
+                saveButton.innerHTML = '<svg class="icon icon-notes" aria-hidden="true"><use xlink:href="#icon-notes"></use></svg> Guardar notas';
                 saveButton.disabled = false;
             }, 2000);
             
         } catch (error) {
             showNotification('❌ Error: ' + error.message, 'error');
-            saveButton.textContent = '<svg class="icon icon-notes" aria-hidden="true"><use xlink:href="#icon-notes"></use></svg> Guardar notas';
+            saveButton.innerHTML = '<svg class="icon icon-notes" aria-hidden="true"><use xlink:href="#icon-notes"></use></svg> Guardar notas';
             saveButton.disabled = false;
         }
     }
@@ -5527,12 +5617,13 @@
         });
     });
 
-    console.log('✅ Sistema completo cargado correctamente - Versión 4.3 con Reproductor Corregido');
-    console.log('🔥 Nuevas correcciones implementadas:');
-    console.log('   ✅ Barra de progreso funcional con arrastre');
-    console.log('   ✅ Controles que se ocultan automáticamente en móvil');
-    console.log('   ✅ Botón "Ver Clase" cambia a "Cerrar Video"');
-    console.log('   ✅ Reproductor de portada con mismos controles que las clases');
+    console.log('✅ Sistema completo cargado correctamente - Versión 4.5 con Mejoras Solicitadas');
+    console.log('🔥 Nuevas mejoras implementadas:');
+    console.log('   ✅ Botones en acordeón con nombres en PC');
+    console.log('   ✅ Botones ocultos en móvil cuando acordeón se despliega');
+    console.log('   ✅ Botón de certificado con emoji 🏆');
+    console.log('   ✅ Botón de notificación con campanita en cabecera del curso');
+    console.log('   ✅ Inscripción en grupo "Gratis" para cursos gratuitos');
 </script>
 </body>
 </html>
